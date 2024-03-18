@@ -1,15 +1,21 @@
-/*
-function: 仿QQ客户端。
-author: zouyujie
-date: 2024.3.18
-*/
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include "tcpclient.h"
-
-#include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    TcpClient w;
-    return a.exec();
+    QGuiApplication app(argc, argv);
+
+    QQmlApplicationEngine engine;
+    //添加C++类,直接使用其方法
+    TcpClient client;
+    engine.rootContext()->setContextObject(&client);
+    const QUrl url(u"qrc:/Client/Main.qml"_qs);
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+        &app, []() { QCoreApplication::exit(-1); },
+        Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
 }

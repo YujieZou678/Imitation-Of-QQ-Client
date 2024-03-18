@@ -1,4 +1,4 @@
-﻿/*
+/*
 function: 仿QQ客户端。
 author: zouyujie
 date: 2024.3.18

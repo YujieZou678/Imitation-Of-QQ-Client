@@ -1,4 +1,4 @@
-﻿/*
+/*
 function: 仿QQ客户端。
 author: zouyujie
 date: 2024.3.18
@@ -20,7 +20,12 @@ TcpClient::TcpClient(QObject *parent)
     client->connectToHost(QHostAddress::LocalHost, 2222);  //与服务端建立连接
 
     connect(client, &QTcpSocket::connected, this, [=](){
-        //
+        qDebug() << "与服务器连接成功。";
+
+        QString ip_port = client->localAddress().toString()  //ip
+                          +":"
+                          +QString::number(client->localPort());  //port
+        qDebug() << ip_port;
     });
     connect(client, &QTcpSocket::disconnected, this, [=](){
         //
