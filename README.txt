@@ -24,6 +24,9 @@
  1.传输Json数据。
  2.开始使用git管理项目。
  
+ //2024.3.19
+ 1.登陆和注册客户端界面。
+ 
  目前正在实现的功能：
  
  1.注册功能。暂时是客户端与服务端1对1。
@@ -33,4 +36,11 @@
  QTextStream, QDataStream; 文本流(文本格式)和数据流(二进制格式)。
  QByteArray: 字节数组。
  QJsonDocument, QJsonObject, QJsonValue。
+ 
+ Qml:
+ Layout布局
+ OpacityMask: 扣取图像。
+ TextFiled: 输入框。
+ Shape: 划线。
+ CheckBox: 复选框。
  

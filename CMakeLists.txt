@@ -15,6 +15,10 @@ qt_add_qml_module(appClient
         Main.qml
     SOURCES
         tcpclient.h tcpclient.cpp
+        QML_FILES LayoutLoginView.qml
+        QML_FILES LayoutRegisterView.qml
+        RESOURCES resource.qrc
+        QML_FILES ProfileImage.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)

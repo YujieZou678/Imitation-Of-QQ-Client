@@ -56,6 +56,7 @@ QByteArray TcpClient::toJson_Register(const QString &accountNumber, const QStrin
 {
     QJsonObject json;
     json.insert("ip_port", ip_port);  //识别码
+    json.insert("purpose", "Register");  //目的
     json.insert("accountNumber", accountNumber);  //账号
     json.insert("passWord", passWord);  //密码
     QJsonDocument doc(json);
