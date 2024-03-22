@@ -11,14 +11,30 @@ Rectangle {
 
     property string imgSrc: "qrc:/image/12.png"
 
+    id: self
+
     radius: 100
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: {
+            self.scale = 1.15
+            cursorShape = Qt.PointingHandCursor
+        }
+        onExited: {
+            self.scale = 1
+        }
+    }
+    Behavior on scale {
+        NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
+    }
 
     Image {
         id: image
         anchors.centerIn: parent
         source: imgSrc
-        height: parent.height*0.9
-        width: parent.width*0.9
+        height: parent.height*0.93
+        width: parent.width*0.93
         fillMode: Image.PreserveAspectCrop  //图像被均匀缩放以填充，必要时进行裁剪
         antialiasing: true  //抗锯齿
         visible: false

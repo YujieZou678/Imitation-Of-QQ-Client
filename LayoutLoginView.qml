@@ -9,6 +9,11 @@ import QtQuick.Layouts
 import QtQuick.Shapes
 
 ColumnLayout {
+
+    property string profileImage: "qrc:/image/12.png"  //头像
+    property string accountNumberImage: "qrc:/image/QQ.png"  //账号前的图标
+    property string passWordImage: "qrc:/image/bg-lock.png"  //密码前的图标
+
     anchors.fill: parent
     spacing: 0
 
@@ -21,6 +26,60 @@ ColumnLayout {
             width: parent.width
             height: 160
             color: "lightblue"
+
+            Item {  //菜单栏
+                height: 35
+                width: parent.width
+
+                RowLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    DragHandler {  //跟随移动
+                        grabPermissions: PointerHandler.CanTakeOverFromAnything
+                        onActiveChanged: if (active) { window.startSystemMove() }
+                    }
+
+                    Item {
+                        Layout.preferredWidth: 18
+                    }
+                    Item {
+                        height: 35
+                        width: 40
+                        Image {
+                            anchors.fill: parent
+                            source: "qrc:/image/QQ-01.png"
+                            fillMode: Image.PreserveAspectFit
+                            scale: 1.5
+                            opacity: 0.8
+                        }
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                    }
+                    Item{
+                        height: 35
+                        width: 40
+                        MyToolButton {
+                            iconSource: "qrc:/image/最小化.png"
+                            onClicked: {
+                                window.showMinimized()
+                            }
+                        }
+                    }
+                    Item {
+                        height: 35
+                        width: 40
+                        MyToolButton {
+                            iconSource: "qrc:/image/关闭.png"
+                            onClicked: {
+                                Qt.quit()
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         ProfileImage {
@@ -32,6 +91,7 @@ ColumnLayout {
                 topMargin: -55
                 horizontalCenter: parent.horizontalCenter
             }
+            imgSrc: profileImage
         }
     }
     Item {  //下半部分
@@ -42,7 +102,7 @@ ColumnLayout {
             anchors.fill: parent
             spacing: 0
 
-            Item {
+            Item {  //左一
                 Layout.preferredWidth: 80
                 Layout.fillHeight: true
 
@@ -60,12 +120,15 @@ ColumnLayout {
                         Text {
                             text: "注册账号"
                             anchors.centerIn: parent
+                            color: "#848482"
+                            font.family: mFONT_FAMILY
+                            opacity: 0.7
                         }
                     }
                 }
             }
 
-            Item {
+            Item {  //左二（中间）
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
@@ -79,13 +142,19 @@ ColumnLayout {
                         Item {
                             Layout.fillWidth: true
                         }
-                        Rectangle {
+                        Item {
                             Layout.preferredHeight: 30
                             Layout.preferredWidth: 30
-                            color: "red"
+                            Image {
+                                anchors.fill: parent
+                                source: accountNumberImage
+                            }
                         }
                         TextField {  //账号
                             id: accountNumber
+                            placeholderText: "账号"
+                            placeholderTextColor: "#b2bbbe"
+
                             font {
                                 family: window.mFONT_FAMILY
                                 pixelSize: 18
@@ -93,7 +162,7 @@ ColumnLayout {
                             background: Rectangle {
                                 id: bac
                                 implicitHeight: 30
-                                implicitWidth: 300
+                                implicitWidth: 250
                                 color: "#00000000"
 
                                 Shape {
@@ -104,12 +173,12 @@ ColumnLayout {
                                         strokeColor: "black"
                                         strokeStyle: ShapePath.SolidLine
                                         startX: -30
-                                        startY: bac.height
+                                        startY: bac.height+5
                                         PathLine {
-                                            x: -30; y: bac.height
+                                            x: -30; y: bac.height+5
                                         }
                                         PathLine {
-                                            x: bac.width; y: bac.height
+                                            x: bac.width; y: bac.height+5
                                         }
                                     }
                                 }
@@ -126,13 +195,20 @@ ColumnLayout {
                         Item {
                             Layout.fillWidth: true
                         }
-                        Rectangle {
+                        Item {
                             Layout.preferredHeight: 30
                             Layout.preferredWidth: 30
-                            color: "red"
+                            Image {
+                                anchors.fill: parent
+                                source: passWordImage
+                                scale: 0.8
+                            }
                         }
                         TextField {  //密码
                             id: passWord
+                            placeholderText: "密码"
+                            placeholderTextColor: "#b2bbbe"
+
                             font {
                                 family: window.mFONT_FAMILY
                                 pixelSize: 18
@@ -141,7 +217,7 @@ ColumnLayout {
                             background: Rectangle {
                                 id: bac1
                                 implicitHeight: 30
-                                implicitWidth: 300
+                                implicitWidth: 250
                                 color: "#00000000"
 
                                 Shape {
@@ -152,12 +228,12 @@ ColumnLayout {
                                         strokeColor: "black"
                                         strokeStyle: ShapePath.SolidLine
                                         startX: -30
-                                        startY: bac1.height
+                                        startY: bac1.height+5
                                         PathLine {
-                                            x: -30; y: bac1.height
+                                            x: -30; y: bac1.height+5
                                         }
                                         PathLine {
-                                            x: bac1.width; y: bac1.height
+                                            x: bac1.width; y: bac1.height+5
                                         }
                                     }
                                 }
@@ -175,7 +251,7 @@ ColumnLayout {
                             Layout.fillWidth: true
                         }
                         Item {
-                            Layout.preferredWidth: 340
+                            Layout.preferredWidth: 290
                             Layout.preferredHeight: 15
 
                             RowLayout {
@@ -185,6 +261,13 @@ ColumnLayout {
                                 CheckBox {
                                     id: autoLog
                                     text: "自动登陆"
+                                    contentItem: Text {
+                                        text: autoLog.text
+                                        font.family: mFONT_FAMILY
+                                        color: "#848482"
+                                        leftPadding: autoLog.indicator.width + autoLog.spacing
+                                        opacity: 0.7
+                                    }
                                 }
                                 Item {
                                     Layout.fillWidth: true
@@ -192,6 +275,13 @@ ColumnLayout {
                                 CheckBox {
                                     id: remmenberPW
                                     text: "记住密码"
+                                    contentItem: Text {
+                                        text: remmenberPW.text
+                                        font.family: mFONT_FAMILY
+                                        color: "#848482"
+                                        leftPadding: remmenberPW.indicator.width + remmenberPW.spacing
+                                        opacity: 0.7
+                                    }
                                 }
 
                                 Item {
@@ -199,6 +289,9 @@ ColumnLayout {
                                 }
                                 Text {
                                     text: "找回密码"
+                                    color: "#848482"
+                                    opacity: 0.7
+                                    font.family: mFONT_FAMILY
                                 }
                             }
                         }
@@ -215,9 +308,27 @@ ColumnLayout {
                             Layout.fillWidth: true
                         }
                         ToolButton {
+                            id: logButton
                             text: "安全登陆"
+                            font {
+                                family: mFONT_FAMILY
+                                bold: true
+                                pixelSize: 15
+                            }
+                            palette.buttonText: "white"
+                            background: Rectangle {
+                                anchors.fill: parent
+                                color: logButton.down ? "#8fb2c9":"#5698c3"
+                                radius: 3
+                            }
+
                             implicitHeight: 40
-                            implicitWidth: 200
+                            implicitWidth: 280
+                            icon.source: "qrc:/image/安全.png"
+                            icon.height: 18
+                            icon.width: 18
+                            icon.color: "#ffffff"
+
                             onClicked: {
                                 console.log(accountNumber.text)
                                 console.log(passWord.text)
@@ -232,7 +343,7 @@ ColumnLayout {
                 }
             }
 
-            Item {
+            Item {  //左三
                 Layout.preferredWidth: 80
                 Layout.fillHeight: true
             }

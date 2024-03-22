@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
         <file>image/12.png</file>
+        <file>image/QQ.png</file>
+        <file>image/bg-lock.png</file>
+        <file>image/安全.png</file>
+        <file>image/QQ-01.png</file>
+        <file>image/关闭.png</file>
+        <file>image/最小化.png</file>
     </qresource>
 </RCC>
