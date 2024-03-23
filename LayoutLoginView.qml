@@ -82,7 +82,7 @@ ColumnLayout {
             }
         }
 
-        ProfileImage {
+        MyProfileImage {
             id: centerView
             width: 100
             height: 100
@@ -156,38 +156,11 @@ ColumnLayout {
                                 source: accountNumberImage
                             }
                         }
-                        TextField {  //账号
+                        MyTextField {
                             id: accountNumber
-                            placeholderText: "账号"
-                            placeholderTextColor: "#b2bbbe"
-
-                            font {
-                                family: window.mFONT_FAMILY
-                                pixelSize: 18
-                            }
-                            background: Rectangle {
-                                id: bac
-                                implicitHeight: 30
-                                implicitWidth: 250
-                                color: "#00000000"
-
-                                Shape {
-                                    anchors.fill: parent
-                                    opacity: 0.1
-                                    ShapePath {
-                                        strokeWidth: 0
-                                        strokeColor: "black"
-                                        strokeStyle: ShapePath.SolidLine
-                                        startX: -30
-                                        startY: bac.height+5
-                                        PathLine {
-                                            x: -30; y: bac.height+5
-                                        }
-                                        PathLine {
-                                            x: bac.width; y: bac.height+5
-                                        }
-                                    }
-                                }
+                            myText: "账号"
+                            validator: RegularExpressionValidator {
+                                regularExpression: /[1-9]\d{9}/
                             }
                         }
                         Item {
@@ -210,39 +183,21 @@ ColumnLayout {
                                 scale: 0.8
                             }
                         }
-                        TextField {  //密码
+                        MyTextField {
                             id: passWord
-                            placeholderText: "密码"
-                            placeholderTextColor: "#b2bbbe"
-
-                            font {
-                                family: window.mFONT_FAMILY
-                                pixelSize: 18
+                            myText: "密码"
+                            myWidth: 220
+                            rightExtend: 30
+                            echoMode: myShowPasswordImage.showPassWord ? TextInput.Normal:TextInput.Password
+                            validator: RegularExpressionValidator {
+                                regularExpression: /\w{6,15}/
                             }
-                            echoMode: TextInput.Password  //密码样式
-                            background: Rectangle {
-                                id: bac1
-                                implicitHeight: 30
-                                implicitWidth: 250
-                                color: "#00000000"
-
-                                Shape {
-                                    anchors.fill: parent
-                                    opacity: 0.1
-                                    ShapePath {
-                                        strokeWidth: 0
-                                        strokeColor: "black"
-                                        strokeStyle: ShapePath.SolidLine
-                                        startX: -30
-                                        startY: bac1.height+5
-                                        PathLine {
-                                            x: -30; y: bac1.height+5
-                                        }
-                                        PathLine {
-                                            x: bac1.width; y: bac1.height+5
-                                        }
-                                    }
-                                }
+                        }
+                        Item {
+                            Layout.preferredHeight: 30
+                            Layout.preferredWidth: 30
+                            MyShowPasswordImage {
+                                id: myShowPasswordImage
                             }
                         }
                         Item {

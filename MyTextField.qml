@@ -10,6 +10,8 @@ import QtQuick.Shapes
 TextField {
 
     property string myText: "这个人很懒......"  //提示语
+    property int myWidth: 250
+    property int rightExtend: 0  //线往右延长
 
     id: accountNumber
     placeholderText: myText
@@ -17,12 +19,12 @@ TextField {
 
     font {
         family: window.mFONT_FAMILY
-        pixelSize: 18
+        pixelSize: 15
     }
     background: Rectangle {
         id: bac
         implicitHeight: 30
-        implicitWidth: 250
+        implicitWidth: myWidth
         color: "#00000000"
 
         Shape {
@@ -38,7 +40,7 @@ TextField {
                     x: -30; y: bac.height+5
                 }
                 PathLine {
-                    x: bac.width; y: bac.height+5
+                    x: bac.width+rightExtend; y: bac.height+5
                 }
             }
         }

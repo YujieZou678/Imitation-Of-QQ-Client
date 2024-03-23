@@ -82,7 +82,7 @@ ColumnLayout {
             }
         }
 
-        ProfileImage {
+        MyProfileImage {
             id: centerView
             width: 100
             height: 100
@@ -157,7 +157,10 @@ ColumnLayout {
                             }
                         }
                         MyTextField {
-                            myText: "注册账号"
+                            myText: "注册账号(10个有效数字)"
+                            validator: RegularExpressionValidator {
+                                regularExpression: /[1-9]\d{9}/
+                            }
                         }
                         Item {
                             Layout.fillWidth: true
@@ -180,15 +183,27 @@ ColumnLayout {
                             }
                         }
                         MyTextField {
-                            myText: "密码"
-                            echoMode: TextInput.Password
+                            myText: "密码(字母数字最长15个字符)"
+                            myWidth: 220
+                            rightExtend: 30
+                            echoMode: myShowPasswordImage.showPassWord ? TextInput.Normal:TextInput.Password
+                            validator: RegularExpressionValidator {
+                                regularExpression: /\w{6,15}/
+                            }
+                        }
+                        Item {
+                            Layout.preferredHeight: 30
+                            Layout.preferredWidth: 30
+                            MyShowPasswordImage {
+                                id: myShowPasswordImage
+                            }
                         }
                         Item {
                             Layout.fillWidth: true
                         }
                     }
 
-                    RowLayout {  //再次确认密码
+                    RowLayout {  //再次输入密码
                         spacing: 0
 
                         Item {
@@ -204,8 +219,11 @@ ColumnLayout {
                             }
                         }
                         MyTextField {
-                            myText: "再次确认密码"
+                            myText: "再次输入密码"
                             echoMode: TextInput.Password
+                            validator: RegularExpressionValidator {
+                                regularExpression: /\w{6,15}/
+                            }
                         }
                         Item {
                             Layout.fillWidth: true
