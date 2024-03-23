@@ -123,6 +123,12 @@ ColumnLayout {
                             color: "#848482"
                             font.family: mFONT_FAMILY
                             opacity: 0.7
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    window.switchRegisterView()
+                                }
+                            }
                         }
                     }
                 }
@@ -330,10 +336,7 @@ ColumnLayout {
                             icon.color: "#ffffff"
 
                             onClicked: {
-                                console.log(accountNumber.text)
-                                console.log(passWord.text)
-                                console.log(autoLog.checked)
-                                console.log(remmenberPW.checked)
+                                console.log("检测登陆信息......")
                             }
                         }
                         Item {

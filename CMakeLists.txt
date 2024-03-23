@@ -21,6 +21,8 @@ qt_add_qml_module(appClient
         QML_FILES ProfileImage.qml
         QML_FILES Test.qml
         QML_FILES MyToolButton.qml
+        QML_FILES MyTextField.qml
+        QML_FILES MyRadioButton.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)

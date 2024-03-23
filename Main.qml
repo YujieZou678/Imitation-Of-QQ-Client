@@ -14,8 +14,13 @@ ApplicationWindow {
 
     property string mFONT_FAMILY: "微软雅黑"
 
+    /* 各个界面视图声明 */
+    property alias layoutLoginView: layoutLoginView  //登陆界面
+    property alias layoutRegisterView: layoutRegisterView  //注册界面
+
     width: 520
     height: 400
+    //height: 460
     visible: true
     title: qsTr("登陆&注册")
 
@@ -67,7 +72,32 @@ ApplicationWindow {
     LayoutLoginView {  //登陆界面
         id: layoutLoginView
     }
+
+    LayoutRegisterView {
+        id: layoutRegisterView
+        visible: false
+    }
+
 //    Test {
 //        anchors.fill: parent
 //    }
+
+    function switchRegisterView() {  //切换到注册界面
+        window.width = 520
+        window.height = 460
+        window.x = (Screen.desktopAvailableWidth-width)/2
+        window.y = (Screen.desktopAvailableHeight-height)/2
+
+        layoutLoginView.visible = false
+        layoutRegisterView.visible = true
+    }
+    function switchLoginView() {  //切换到登陆界面
+        window.width = 520
+        window.height = 400
+        window.x = (Screen.desktopAvailableWidth-width)/2
+        window.y = (Screen.desktopAvailableHeight-height)/2
+
+        layoutRegisterView.visible = false
+        layoutLoginView.visible = true
+    }
 }
