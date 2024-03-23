@@ -89,6 +89,7 @@ ApplicationWindow {
         window.y = (Screen.desktopAvailableHeight-height)/2
 
         layoutLoginView.visible = false
+        layoutRegisterView.clearView()
         layoutRegisterView.visible = true
     }
     function switchLoginView() {  //切换到登陆界面
@@ -98,6 +99,7 @@ ApplicationWindow {
         window.y = (Screen.desktopAvailableHeight-height)/2
 
         layoutRegisterView.visible = false
+        layoutLoginView.clearView()
         layoutLoginView.visible = true
     }
 }

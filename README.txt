@@ -32,7 +32,8 @@
  
  //2024.3.23
  1.实现注册界面。
- 2.注册登陆输入的格式检查。
+ 2.实现注册登陆输入格式的检查。
+ 3.上条加上了动画, 并且界面的接口完毕。
  
  目前正在实现的功能：
  
@@ -47,7 +48,9 @@
  Qml:
  Layout布局
  OpacityMask: 扣取图像。
- TextFiled: 输入框。
+ TextFiled: 输入框；validator: 限制输入(基于js的正则表达式)。
  Shape: 划线。
  CheckBox: 复选框。
+ RadioButton: 单选框。
+ 
  

@@ -9,5 +9,7 @@
         <file>image/最小化.png</file>
         <file>image/@2x密码不显示.png</file>
         <file>image/密码显示.png</file>
+        <file>image/错误.png</file>
+        <file>image/正确.png</file>
     </qresource>
 </RCC>

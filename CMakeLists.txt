@@ -24,6 +24,7 @@ qt_add_qml_module(appClient
         QML_FILES MyTextField.qml
         QML_FILES MyRadioButton.qml
         QML_FILES MyShowPasswordImage.qml
+        QML_FILES MyCheckImage.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)

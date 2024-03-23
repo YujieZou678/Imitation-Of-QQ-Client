@@ -9,7 +9,7 @@ import QtQuick.Layouts
 
 RadioButton {
 
-    property bool ifSelect: ifSelect.visible  //是否勾选协议
+    property bool ifSelect: false  //是否勾选协议
 
     function prompt() {  //没勾选协议提示
         myIndicatorAnimation.start()
@@ -26,7 +26,7 @@ RadioButton {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                ifSelect.visible = !ifSelect.visible
+                ifSelect = !ifSelect
             }
         }
         SequentialAnimation {
@@ -48,13 +48,12 @@ RadioButton {
         }
 
         Rectangle {
-            id: ifSelect
             width: 10
             height: 10
             anchors.centerIn: parent
             radius: 100
             color: "#619ac3"
-            visible: false
+            visible: ifSelect
         }
     }
 

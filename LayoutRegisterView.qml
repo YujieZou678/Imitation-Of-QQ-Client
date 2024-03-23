@@ -14,6 +14,16 @@ ColumnLayout {
     property string accountNumberImage: "qrc:/image/QQ.png"  //账号前的图标
     property string passWordImage: "qrc:/image/bg-lock.png"  //密码前的图标
 
+    function clearView() {  //清空注册视图数据
+        accountNumber.text = ""
+        passWord.text = ""
+        passWordAgain.text = ""
+        checkAccountNumber.visible = false
+        checkPassWord1.visible = false
+        checkPassWord2.visible = false
+        myRadioButton.ifSelect = false
+    }
+
     anchors.fill: parent
     spacing: 0
 
@@ -157,9 +167,23 @@ ColumnLayout {
                             }
                         }
                         MyTextField {
+                            id: accountNumber
                             myText: "注册账号(10个有效数字)"
                             validator: RegularExpressionValidator {
                                 regularExpression: /[1-9]\d{9}/
+                            }
+                            onTextChanged: {
+                                if (!acceptableInput) {
+                                    checkAccountNumber.isRight = false
+                                    checkAccountNumber.visible = true
+                                }
+                                else {
+                                    console.log("发送到服务器检测......")
+                                    //
+                                    //
+                                    checkAccountNumber.isRight = true
+                                    checkAccountNumber.visible = true
+                                }
                             }
                         }
                         Item {
@@ -183,12 +207,23 @@ ColumnLayout {
                             }
                         }
                         MyTextField {
+                            id: passWord
                             myText: "密码(字母数字最长15个字符)"
                             myWidth: 220
                             rightExtend: 30
                             echoMode: myShowPasswordImage.showPassWord ? TextInput.Normal:TextInput.Password
                             validator: RegularExpressionValidator {
                                 regularExpression: /\w{6,15}/
+                            }
+                            onTextChanged: {
+                                if (!acceptableInput) {
+                                    checkPassWord1.isRight = false
+                                    checkPassWord1.visible = true
+                                }
+                                else {
+                                    checkPassWord1.isRight = true
+                                    checkPassWord1.visible = true
+                                }
                             }
                         }
                         Item {
@@ -219,10 +254,21 @@ ColumnLayout {
                             }
                         }
                         MyTextField {
+                            id: passWordAgain
                             myText: "再次输入密码"
                             echoMode: TextInput.Password
                             validator: RegularExpressionValidator {
                                 regularExpression: /\w{6,15}/
+                            }
+                            onTextChanged: {
+                                if (passWord.text !== passWordAgain.text) {
+                                    checkPassWord2.isRight = false
+                                    checkPassWord2.visible = true
+                                }
+                                else {
+                                    checkPassWord2.isRight = true
+                                    checkPassWord2.visible = true
+                                }
                             }
                         }
                         Item {
@@ -279,12 +325,24 @@ ColumnLayout {
                             icon.color: "#ffffff"
 
                             onClicked: {
-                                if (!myRadioButton.ifSelect) {
-                                    myRadioButton.prompt()
-                                    return
-                                }
+                                checkAccountNumber.visible = true
+                                checkPassWord1.visible = true
+                                checkPassWord2.visible = true
 
-                                console.log("检测注册信息......")
+                                if (!checkAccountNumber.isRight) { checkAccountNumber.prompt() }
+                                if (!checkPassWord1.isRight) { checkPassWord1.prompt() }
+                                if (!checkPassWord2.isRight) { checkPassWord2.prompt() }
+                                if (!myRadioButton.ifSelect) { myRadioButton.prompt() }
+
+                                if (!checkAccountNumber.isRight|!checkPassWord1.isRight|!checkPassWord2.isRight|!myRadioButton.ifSelect) return
+
+                                console.log("注册成功。")
+                                switchLoginView()
+
+//                                var data = {
+//                                    accountNumber: accountNumber.text,
+//                                    passWord: passWord.text
+//                                }
                             }
                         }
                         Item {
@@ -297,6 +355,36 @@ ColumnLayout {
             Item {  //左三
                 Layout.preferredWidth: 80
                 Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Item {
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 30
+                        MyCheckImage {
+                            id: checkAccountNumber
+                        }
+                    }
+                    Item {
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 30
+                        MyCheckImage {
+                            id: checkPassWord1
+                        }
+                    }
+                    Item {
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 30
+                        MyCheckImage {
+                            id: checkPassWord2
+                        }
+                    }
+                    Item {
+                        Layout.preferredHeight: 45
+                    }
+                }
             }
         }
     }  // end 下半部分

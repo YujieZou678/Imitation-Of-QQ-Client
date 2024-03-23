@@ -14,6 +14,12 @@ ColumnLayout {
     property string accountNumberImage: "qrc:/image/QQ.png"  //账号前的图标
     property string passWordImage: "qrc:/image/bg-lock.png"  //密码前的图标
 
+    function clearView() {  ////清空登陆视图数据
+        accountNumber.text = ""
+        passWord.text = ""
+        checkAccountNumber.visible = false
+    }
+
     anchors.fill: parent
     spacing: 0
 
@@ -162,6 +168,19 @@ ColumnLayout {
                             validator: RegularExpressionValidator {
                                 regularExpression: /[1-9]\d{9}/
                             }
+                            onTextChanged: {
+                                if (!acceptableInput) {
+                                    checkAccountNumber.isRight = false
+                                    checkAccountNumber.visible = true
+                                }
+                                else {
+                                    console.log("发送到服务器检测......")
+                                    //
+                                    //
+                                    checkAccountNumber.isRight = true
+                                    checkAccountNumber.visible = true
+                                }
+                            }
                         }
                         Item {
                             Layout.fillWidth: true
@@ -291,7 +310,10 @@ ColumnLayout {
                             icon.color: "#ffffff"
 
                             onClicked: {
-                                console.log("检测登陆信息......")
+                                checkAccountNumber.visible = true
+                                if (!checkAccountNumber.isRight) { checkAccountNumber.prompt(); return }
+
+                                console.log("检测密码......")
                             }
                         }
                         Item {
@@ -304,6 +326,29 @@ ColumnLayout {
             Item {  //左三
                 Layout.preferredWidth: 80
                 Layout.fillHeight: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Item {
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 30
+                        MyCheckImage {
+                            id: checkAccountNumber
+                        }
+                    }
+                    Item {
+                        Layout.preferredHeight: 30
+                        Layout.preferredWidth: 30
+//                        MyCheckImage {
+//                            id: checkPassWord
+//                        }
+                    }
+                    Item {
+                        Layout.preferredHeight: 45
+                    }
+                }
             }
         }
     }  // end 下半部分
