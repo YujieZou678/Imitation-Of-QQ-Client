@@ -18,7 +18,11 @@ public:
     TcpClient(QObject *parent = nullptr);
     ~TcpClient();
 
-    QByteArray toJson_Register(const QString&, const QString&);  //注册信息转json格式发送
+    Q_INVOKABLE void postRequest(const QByteArray&);  //发送请求
+    Q_INVOKABLE QByteArray toJson_CheckAccountNumber(const QString&);  //验证账号是否存在
+    Q_INVOKABLE QByteArray toJson_Register(const QString&, const QString&);  //注册信息转json格式发送
+signals:
+    void getReply(const QString&);  //发送收到回复的信号
 
 public slots:
     void onConnected();     //连接到服务器
@@ -27,7 +31,6 @@ public slots:
 
 private:
     QTcpSocket *client;  //嵌套字
-    QString ip_port;     //本端的识别码，相当于身份证
 };
 
 #endif // TCPCLIENT_H

@@ -35,6 +35,9 @@
  2.实现注册登陆输入格式的检查。
  3.上条加上了动画, 并且界面的接口完毕。
  
+ //2024.3.24
+ 1.客户端与服务端交互，进行登陆注册的检验。
+ 
  目前正在实现的功能：
  
  1.注册功能。暂时是客户端与服务端1对1。
@@ -44,6 +47,7 @@
  QTextStream, QDataStream; 文本流(文本格式)和数据流(二进制格式)。
  QByteArray: 字节数组。
  QJsonDocument, QJsonObject, QJsonValue。
+ enum: 枚举。用于switch(enum)。
  
  Qml:
  Layout布局

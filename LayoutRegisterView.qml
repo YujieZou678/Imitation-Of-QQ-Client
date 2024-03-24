@@ -178,11 +178,18 @@ ColumnLayout {
                                     checkAccountNumber.visible = true
                                 }
                                 else {
-                                    console.log("发送到服务器检测......")
-                                    //
-                                    //
-                                    checkAccountNumber.isRight = true
-                                    checkAccountNumber.visible = true
+                                    console.log("账号发送到服务器检测......")
+                                    function onReply(isExit) {  //参数：账号是否已经存在
+                                        if (isExit === "false") {
+                                            checkAccountNumber.isRight = true
+                                            checkAccountNumber.visible = true
+                                        }
+
+                                        onGetReply.disconnect(onReply)  //断开连接
+                                    }
+                                    onGetReply.connect(onReply)  //连接
+
+                                    postRequest(toJson_CheckAccountNumber(accountNumber.text))
                                 }
                             }
                         }

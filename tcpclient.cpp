@@ -33,29 +33,41 @@ TcpClient::~TcpClient()
 void TcpClient::onConnected()
 {
     qDebug() << "与服务器连接成功。";
-
-    ip_port = client->localAddress().toString()  //ip
-              +":"
-              +QString::number(client->localPort());  //port
-
-    client->write(toJson_Register("572211", "123"));
 }
 
 void TcpClient::onDisconnected()
 {
-
+    qDebug() << "与服务器断开连接。";
 }
 
 void TcpClient::onReadyRead()
 {
     if (client->bytesAvailable() <= 0) return;  //字节为空则退出
-    //
+    QByteArray data = client->readAll();
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QString reply = doc["Reply"].toString();
+    emit getReply(reply);
+}
+
+void TcpClient::postRequest(const QByteArray &data)
+{
+    client->write(data);
+}
+
+QByteArray TcpClient::toJson_CheckAccountNumber(const QString &accountNumber)
+{
+    QJsonObject json;
+    json.insert("purpose", "CheckAccountNumber");  //目的
+    json.insert("accountNumber", accountNumber);  //账号
+    QJsonDocument doc(json);
+    QByteArray data = doc.toJson();
+
+    return data;
 }
 
 QByteArray TcpClient::toJson_Register(const QString &accountNumber, const QString &passWord)
 {
     QJsonObject json;
-    json.insert("ip_port", ip_port);  //识别码
     json.insert("purpose", "Register");  //目的
     json.insert("accountNumber", accountNumber);  //账号
     json.insert("passWord", passWord);  //密码
@@ -64,6 +76,4 @@ QByteArray TcpClient::toJson_Register(const QString &accountNumber, const QStrin
 
     return data;
 }
-
-
 
