@@ -185,11 +185,11 @@ ColumnLayout {
                                             checkAccountNumber.visible = true
                                         }
 
-                                        onGetReply.disconnect(onReply)  //断开连接
+                                        onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
-                                    onGetReply.connect(onReply)  //连接
+                                    onGetReply_CheckAccountNumber.connect(onReply)  //连接
 
-                                    postRequest(toJson_CheckAccountNumber(accountNumber.text))
+                                    postRequest(info_CheckAccountNumber(accountNumber.text))
                                 }
                             }
                         }
@@ -223,6 +223,7 @@ ColumnLayout {
                                 regularExpression: /\w{6,15}/
                             }
                             onTextChanged: {
+                                //检测自身
                                 if (!acceptableInput) {
                                     checkPassWord1.isRight = false
                                     checkPassWord1.visible = true
@@ -230,6 +231,16 @@ ColumnLayout {
                                 else {
                                     checkPassWord1.isRight = true
                                     checkPassWord1.visible = true
+                                }
+
+                                //检测再次输入
+                                if (passWord.text !== passWordAgain.text) {
+                                    checkPassWord2.isRight = false
+                                    checkPassWord2.visible = true
+                                }
+                                else {
+                                    checkPassWord2.isRight = true
+                                    checkPassWord2.visible = true
                                 }
                             }
                         }
@@ -263,7 +274,7 @@ ColumnLayout {
                         MyTextField {
                             id: passWordAgain
                             myText: "再次输入密码"
-                            echoMode: TextInput.Password
+                            echoMode: myShowPasswordImage.showPassWord ? TextInput.Normal:TextInput.Password
                             validator: RegularExpressionValidator {
                                 regularExpression: /\w{6,15}/
                             }
@@ -343,13 +354,10 @@ ColumnLayout {
 
                                 if (!checkAccountNumber.isRight|!checkPassWord1.isRight|!checkPassWord2.isRight|!myRadioButton.ifSelect) return
 
+                                //存入到服务器数据库
+                                postRequest(info_Register(accountNumber.text, passWord.text))
                                 console.log("注册成功。")
                                 switchLoginView()
-
-//                                var data = {
-//                                    accountNumber: accountNumber.text,
-//                                    passWord: passWord.text
-//                                }
                             }
                         }
                         Item {

@@ -174,11 +174,18 @@ ColumnLayout {
                                     checkAccountNumber.visible = true
                                 }
                                 else {
-                                    console.log("发送到服务器检测......")
-                                    //
-                                    //
-                                    checkAccountNumber.isRight = true
-                                    checkAccountNumber.visible = true
+                                    console.log("账号发送到服务器检测......")
+                                    function onReply(isExit) {  //参数：账号是否已经存在
+                                        if (isExit === "true") {
+                                            checkAccountNumber.isRight = true
+                                            checkAccountNumber.visible = true
+                                        }
+
+                                        onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
+                                    }
+                                    onGetReply_CheckAccountNumber.connect(onReply)  //连接
+
+                                    postRequest(info_CheckAccountNumber(accountNumber.text))
                                 }
                             }
                         }
@@ -314,6 +321,25 @@ ColumnLayout {
                                 if (!checkAccountNumber.isRight) { checkAccountNumber.prompt(); return }
 
                                 console.log("检测密码......")
+                                if (!passWord.acceptableInput) {  //内部检测
+                                    console.log("密码错误!");
+                                    return
+                                }
+
+                                //服务器检测
+                                function onReply(isRight) {  //密码是否正确
+                                    if (isRight === "true") {
+                                        console.log("登陆成功!")
+                                    }
+                                    else {
+                                        console.log("密码错误!");
+                                    }
+
+                                    onGetReply_Login.disconnect(onReply)
+                                }
+                                onGetReply_Login.connect(onReply)
+
+                                postRequest(info_Login(accountNumber.text, passWord.text))
                             }
                         }
                         Item {

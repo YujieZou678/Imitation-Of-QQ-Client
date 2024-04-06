@@ -6,9 +6,10 @@ date: 2024.3.18
 #ifndef TCPCLIENT_H
 #define TCPCLIENT_H
 
-class QTcpSocket;
-
 #include <QObject>
+#include <QMap>
+
+class QTcpSocket;
 
 class TcpClient : public QObject
 {
@@ -19,10 +20,13 @@ public:
     ~TcpClient();
 
     Q_INVOKABLE void postRequest(const QByteArray&);  //发送请求
-    Q_INVOKABLE QByteArray toJson_CheckAccountNumber(const QString&);  //验证账号是否存在
-    Q_INVOKABLE QByteArray toJson_Register(const QString&, const QString&);  //注册信息转json格式发送
+    Q_INVOKABLE QByteArray info_CheckAccountNumber(const QString&);  //验证账号是否存在
+    Q_INVOKABLE QByteArray info_Register(const QString&, const QString&);  //存入注册信息
+    Q_INVOKABLE QByteArray info_Login(const QString&, const QString&);  //验证登陆信息
+
 signals:
-    void getReply(const QString&);  //发送收到回复的信号
+    void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
+    void getReply_Login(const QString&);  //信号：收到登陆的回复
 
 public slots:
     void onConnected();     //连接到服务器
@@ -30,6 +34,14 @@ public slots:
     void onReadyRead();     //收到服务器的信息
 
 private:
+    enum class Purpose {  //枚举(class内部使用)
+        CheckAccountNumber,
+        Register,
+        Login,
+        SingleChat
+    };
+
+    QMap<QString, enum Purpose> map_Switch;  //用于寻找信息是哪个目的
     QTcpSocket *client;  //嵌套字
 };
 
