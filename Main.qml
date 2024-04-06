@@ -18,8 +18,8 @@ ApplicationWindow {
     property alias layoutLoginView: layoutLoginView  //登陆界面
     property alias layoutRegisterView: layoutRegisterView  //注册界面
 
-    width: 520
-    height: 400
+    width: 430
+    height: 800
     //height: 460
     visible: true
     title: qsTr("登陆&注册")
@@ -71,11 +71,16 @@ ApplicationWindow {
 
     LayoutLoginView {  //登陆界面
         id: layoutLoginView
+        visible: false
     }
 
-    LayoutRegisterView {
+    LayoutRegisterView {  //注册界面
         id: layoutRegisterView
         visible: false
+    }
+
+    LayoutUserView {  //登陆成功进入用户界面
+        id: layoutUserView
     }
 
 //    Test {
