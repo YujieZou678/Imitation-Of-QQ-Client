@@ -11,6 +11,7 @@ Rectangle {
 
     property string imgSrc: "qrc:/image/12.png"
     property bool ifNeedSpacing: true  //是否需要间隙
+    property bool ifNeedScale: true    //是否需要放大动态特性
 
     id: self
 
@@ -19,10 +20,12 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
+            if (!ifNeedScale) return
             self.scale = 1.15
             cursorShape = Qt.PointingHandCursor
         }
         onExited: {
+            if (!ifNeedScale) return
             self.scale = 1
         }
     }

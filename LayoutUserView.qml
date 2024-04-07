@@ -143,7 +143,6 @@ ColumnLayout {
     Rectangle {  //中
         Layout.fillWidth: true
         Layout.preferredHeight: 530
-        color: "lightyellow"
 
         ColumnLayout {
             anchors.fill: parent
@@ -297,19 +296,10 @@ ColumnLayout {
                     lineEndY: 470
                 }
 
-                ColumnLayout {
+                Item {
                     anchors.fill: parent
-                    spacing: 0
-
-                    Item {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 235
-                        //color: "lightblue"
-                    }
-                    Item {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 235
-                        //color: "lightblue"
+                    MyListView {
+                        id: newsListView
                     }
                 }
             }

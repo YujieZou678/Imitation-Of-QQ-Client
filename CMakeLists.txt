@@ -27,6 +27,7 @@ qt_add_qml_module(appClient
         QML_FILES MyCheckImage.qml
         QML_FILES LayoutUserView.qml
         QML_FILES MyShapeLine.qml
+        QML_FILES MyListView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)
