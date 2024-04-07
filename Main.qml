@@ -18,7 +18,7 @@ ApplicationWindow {
     property alias layoutLoginView: layoutLoginView  //登陆界面
     property alias layoutRegisterView: layoutRegisterView  //注册界面
 
-    width: 430
+    width: 400
     height: 800
     //height: 460
     visible: true

@@ -6,6 +6,7 @@ date: 2024.4.6
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Shapes
 
 ColumnLayout {
 
@@ -152,13 +153,42 @@ ColumnLayout {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 60
 
+                MyShapeLine {  //底下那根可以切换的线
+                    id: lineSwitch
+                    lineColor: "lightblue"
+                    lineWidth: 2.5
+                    lineStartX: 20
+                    lineStartY: 60
+                    lineEndX: 80
+                    lineEndY: 60
+                }
+
+                MyShapeLine {  //底下那根线
+                    lineOpacity: 0.1
+                    lineStartX: 0
+                    lineStartY: 60
+                    lineEndX: window.width
+                    lineEndY: 60
+                }
+
                 RowLayout {
                     anchors.fill: parent
                     spacing: 0
 
                     Item {  //消息
                         Layout.fillHeight: true
-                        Layout.preferredWidth: 430/4
+                        Layout.preferredWidth: window.width/4
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                news.color = "gray"
+                                contacts.color = "lightgray"
+                                space.color = "lightgray"
+                                channel.color = "lightgray"
+                                lineSwitch.lineStartX = 20
+                                lineSwitch.lineEndX = 80
+                            }
+                        }
 
                         Text {
                             id: news
@@ -174,7 +204,18 @@ ColumnLayout {
 
                     Item {  //联系人
                         Layout.fillHeight: true
-                        Layout.preferredWidth: 430/4
+                        Layout.preferredWidth: window.width/4
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                contacts.color = "gray"
+                                news.color = "lightgray"
+                                space.color = "lightgray"
+                                channel.color = "lightgray"
+                                lineSwitch.lineStartX = 20 + window.width/4
+                                lineSwitch.lineEndX = 80 + window.width/4
+                            }
+                        }
 
                         Text {
                             id: contacts
@@ -190,7 +231,18 @@ ColumnLayout {
 
                     Item {  //空间
                         Layout.fillHeight: true
-                        Layout.preferredWidth: 430/4
+                        Layout.preferredWidth: window.width/4
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                space.color = "gray"
+                                contacts.color = "lightgray"
+                                news.color = "lightgray"
+                                channel.color = "lightgray"
+                                lineSwitch.lineStartX = 20 + window.width/4*2
+                                lineSwitch.lineEndX = 80 + window.width/4*2
+                            }
+                        }
 
                         Text {
                             id: space
@@ -206,7 +258,18 @@ ColumnLayout {
 
                     Item {  //频道
                         Layout.fillHeight: true
-                        Layout.preferredWidth: 430/4
+                        Layout.preferredWidth: window.width/4
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                channel.color = "gray"
+                                space.color = "lightgray"
+                                contacts.color = "lightgray"
+                                news.color = "lightgray"
+                                lineSwitch.lineStartX = 20 + window.width/4*3
+                                lineSwitch.lineEndX = 80 + window.width/4*3
+                            }
+                        }
 
                         Text {
                             id: channel
@@ -222,11 +285,17 @@ ColumnLayout {
                 }
             }
 
-            Frame {  //消息列表
+            Item {  //消息列表
                 Layout.fillWidth: true
                 Layout.preferredHeight: 470
 
-                padding: 0
+                MyShapeLine {  //底下那根线
+                    lineOpacity: 0.1
+                    lineStartX: 0
+                    lineStartY: 470
+                    lineEndX: window.width
+                    lineEndY: 470
+                }
 
                 ColumnLayout {
                     anchors.fill: parent
