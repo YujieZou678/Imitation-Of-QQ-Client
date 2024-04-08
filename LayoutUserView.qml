@@ -60,6 +60,7 @@ ColumnLayout {
                         width: 40
                         MyToolButton {
                             iconSource: "qrc:/image/最小化.png"
+                            icon.color: "white"
                             onClicked: {
                                 window.showMinimized()
                             }
@@ -70,6 +71,7 @@ ColumnLayout {
                         width: 40
                         MyToolButton {
                             iconSource: "qrc:/image/关闭.png"
+                            icon.color: "white"
                             onClicked: {
                                 Qt.quit()
                             }
@@ -142,7 +144,26 @@ ColumnLayout {
 
     Rectangle {  //中
         Layout.fillWidth: true
-        Layout.preferredHeight: 530
+        Layout.preferredHeight: 540
+
+        ColumnLayout {  //底端菜单窗口
+            id: menu
+            anchors.fill: parent
+            spacing: 0
+            z: 10
+
+            Item {
+                Layout.fillHeight: true
+            }
+            Item {
+                Layout.preferredHeight: 200
+                Layout.preferredWidth: 240
+                MyMenuView {
+                    id: myMenuView
+                    visible: false
+                }
+            }
+        }
 
         ColumnLayout {
             anchors.fill: parent
@@ -286,15 +307,7 @@ ColumnLayout {
 
             Item {  //消息列表
                 Layout.fillWidth: true
-                Layout.preferredHeight: 470
-
-                MyShapeLine {  //底下那根线
-                    lineOpacity: 0.1
-                    lineStartX: 0
-                    lineStartY: 470
-                    lineEndX: window.width
-                    lineEndY: 470
-                }
+                Layout.preferredHeight: 480
 
                 Item {
                     anchors.fill: parent
@@ -308,7 +321,84 @@ ColumnLayout {
 
     Rectangle {  //下
         Layout.fillWidth: true
-        Layout.preferredHeight: 70
-        //color: "lightpink"
+        Layout.preferredHeight: 60
+
+        MyShapeLine {  //上面那根线
+            lineOpacity: 0.1
+            lineStartX: 0
+            lineStartY: 0
+            lineEndX: window.width
+            lineEndY: 0
+        }
+
+        RowLayout {
+            anchors.fill: parent
+            spacing: 0
+
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 80
+
+                MyToolButton {
+                    id: menuButton
+                    iconSource: "qrc:/image/菜单.png"
+                    icon.height: 32
+                    icon.width: 32
+                    clickColor: "#e2e1e4"
+                    clickOpacity: 0.7
+                    onClicked: {
+                        focus = true
+                        myMenuView.visible = !myMenuView.visible
+                    }
+                    onFocusChanged: {
+                        myMenuView.visible = false
+                    }
+                }
+            }
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 80
+                MyToolButton {
+                    iconSource: "qrc:/image/加好友.png"
+                    icon.height: 32
+                    icon.width: 32
+                    clickColor: "#e2e1e4"
+                    clickOpacity: 0.7
+                }
+            }
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 80
+                MyToolButton {
+                    iconSource: "qrc:/image/游戏_填充.png"
+                    icon.height: 32
+                    icon.width: 32
+                    clickColor: "#e2e1e4"
+                    clickOpacity: 0.7
+                }
+            }
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 80
+                MyToolButton {
+                    iconSource: "qrc:/image/听歌.png"
+                    icon.height: 32
+                    icon.width: 32
+                    clickColor: "#e2e1e4"
+                    clickOpacity: 0.7
+                }
+            }
+            Item {
+                Layout.fillHeight: true
+                Layout.preferredWidth: 80
+                MyToolButton {
+                    iconSource: "qrc:/image/云空间.png"
+                    icon.height: 32
+                    icon.width: 32
+                    clickColor: "#e2e1e4"
+                    clickOpacity: 0.7
+                }
+            }
+        }
     }
 }

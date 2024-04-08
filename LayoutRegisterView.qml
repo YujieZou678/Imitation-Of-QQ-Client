@@ -73,6 +73,7 @@ ColumnLayout {
                         width: 40
                         MyToolButton {
                             iconSource: "qrc:/image/最小化.png"
+                            icon.color: "white"
                             onClicked: {
                                 window.showMinimized()
                             }
@@ -83,6 +84,7 @@ ColumnLayout {
                         width: 40
                         MyToolButton {
                             iconSource: "qrc:/image/关闭.png"
+                            icon.color: "white"
                             onClicked: {
                                 Qt.quit()
                             }
@@ -102,6 +104,20 @@ ColumnLayout {
                 horizontalCenter: parent.horizontalCenter
             }
             imgSrc: profileImage
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    centerView.scale = 1.15
+                    cursorShape = Qt.PointingHandCursor
+                }
+                onExited: {
+                    centerView.scale = 1
+                }
+            }
+            Behavior on scale {
+                NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
+            }
         }
     }
     Item {  //下半部分

@@ -16,22 +16,26 @@ Item {
         anchors.fill: parent
         model: 10
         delegate: listViewDelegate
-//        highlight: Rectangle {
-//            color: "#cfccc9"
-//        }
-//        highlightMoveDuration: 1000
-//        highlightResizeDuration: 0
+        highlight: Rectangle {
+            opacity: 0.5
+            color: "#e2e1e4"
+        }
+        highlightMoveDuration: 0
         clip: true
     }
 
     Component {
         id: listViewDelegate
-        Rectangle {
+        ToolButton {  //为了获得focus
             id: listViewDelegateItem
-            height: 470/5
+            height: 480/5
             width: listView.width
             //将颜色置为无色，方便显示第二层hightlight的颜色
-            color: "#00000000"
+            //color: "#00000000"
+            background: Rectangle {
+                anchors.fill: parent
+                color: "#00000000"
+            }
 
             MyShapeLine {  //底线
                 lineOpacity: 0.1
@@ -41,19 +45,23 @@ Item {
                 lineEndY: listViewDelegateItem.height
             }
 
-            MouseArea {
-                anchors.fill: parent
-                hoverEnabled: true
-                onEntered: {
-                    color = "#20f0f0f0"
-                }
-                onExited: {
-                    color = "#00000000"
-                }
-                onClicked: {
-                    listView.currentIndex = index
-                }
+            onClicked: {
+                listView.currentIndex = index
             }
+
+//            MouseArea {
+//                anchors.fill: parent
+//                hoverEnabled: true
+//                onEntered: {
+//                    //color = "#20f0f0f0"
+//                }
+//                onExited: {
+//                    //color = "#00000000"
+//                }
+//                onClicked: {
+//                    listView.currentIndex = index
+//                }
+//            }
 
             RowLayout {
                 anchors.fill: parent
@@ -69,7 +77,6 @@ Item {
                         anchors.centerIn: parent
                         imgSrc: "qrc:/image/12.png"
                         ifNeedSpacing: false
-                        ifNeedScale: false
                     }
                 }
                 Item {  //消息介绍/描述

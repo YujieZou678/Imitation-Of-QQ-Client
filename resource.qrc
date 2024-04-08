@@ -11,5 +11,11 @@
         <file>image/密码显示.png</file>
         <file>image/错误.png</file>
         <file>image/正确.png</file>
+        <file>image/菜单.png</file>
+        <file>image/加好友.png</file>
+        <file>image/听歌.png</file>
+        <file>image/游戏_填充.png</file>
+        <file>image/云空间.png</file>
+        <file>image/退出.png</file>
     </qresource>
 </RCC>

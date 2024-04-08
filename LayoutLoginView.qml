@@ -18,6 +18,7 @@ ColumnLayout {
         accountNumber.text = ""
         passWord.text = ""
         checkAccountNumber.visible = false
+        checkPassWord.visible = false
     }
 
     anchors.fill: parent
@@ -69,6 +70,7 @@ ColumnLayout {
                         width: 40
                         MyToolButton {
                             iconSource: "qrc:/image/最小化.png"
+                            icon.color: "white"
                             onClicked: {
                                 window.showMinimized()
                             }
@@ -79,6 +81,7 @@ ColumnLayout {
                         width: 40
                         MyToolButton {
                             iconSource: "qrc:/image/关闭.png"
+                            icon.color: "white"
                             onClicked: {
                                 Qt.quit()
                             }
@@ -98,6 +101,20 @@ ColumnLayout {
                 horizontalCenter: parent.horizontalCenter
             }
             imgSrc: profileImage
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    centerView.scale = 1.15
+                    cursorShape = Qt.PointingHandCursor
+                }
+                onExited: {
+                    centerView.scale = 1
+                }
+            }
+            Behavior on scale {
+                NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
+            }
         }
     }
     Item {  //下半部分
@@ -218,6 +235,9 @@ ColumnLayout {
                             validator: RegularExpressionValidator {
                                 regularExpression: /\w{6,15}/
                             }
+                            onTextChanged: {
+                                checkPassWord.visible = false
+                            }
                         }
                         Item {
                             Layout.preferredHeight: 30
@@ -323,6 +343,9 @@ ColumnLayout {
                                 console.log("检测密码......")
                                 if (!passWord.acceptableInput) {  //内部检测
                                     console.log("密码错误!");
+                                    checkPassWord.isRight = false
+                                    checkPassWord.visible = true
+                                    checkPassWord.prompt()
                                     return
                                 }
 
@@ -330,9 +353,14 @@ ColumnLayout {
                                 function onReply(isRight) {  //密码是否正确
                                     if (isRight === "true") {
                                         console.log("登陆成功!")
+                                        checkPassWord.isRight = true
+                                        switchUserView()
                                     }
                                     else {
                                         console.log("密码错误!");
+                                        checkPassWord.isRight = false
+                                        checkPassWord.visible = true
+                                        checkPassWord.prompt()
                                     }
 
                                     onGetReply_Login.disconnect(onReply)
@@ -367,9 +395,9 @@ ColumnLayout {
                     Item {
                         Layout.preferredHeight: 30
                         Layout.preferredWidth: 30
-//                        MyCheckImage {
-//                            id: checkPassWord
-//                        }
+                        MyCheckImage {
+                            id: checkPassWord
+                        }
                     }
                     Item {
                         Layout.preferredHeight: 45

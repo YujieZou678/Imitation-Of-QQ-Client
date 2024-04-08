@@ -9,15 +9,19 @@ import QtQuick.Controls
 ToolButton {
 
     property string iconSource: icon.source
+    property int iconHeight: 40
+    property int iconWidth: 40
+    property string clickColor: "#f07c82"
+    property real clickOpacity: 1
 
     id: self
 
     anchors.fill: parent
     icon.source: iconSource
-    icon.color: "white"
-    icon.height: 40
-    icon.width: 40
+    icon.height: iconHeight
+    icon.width: iconWidth
     background: Rectangle {
-        color: self.down ? "#f07c82":"#00000000"
+        color: self.down ? clickColor:"#00000000"
+        opacity: clickOpacity
     }
 }

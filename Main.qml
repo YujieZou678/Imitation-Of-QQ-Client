@@ -18,11 +18,9 @@ ApplicationWindow {
     property alias layoutLoginView: layoutLoginView  //登陆界面
     property alias layoutRegisterView: layoutRegisterView  //注册界面
 
-    width: 400
-    height: 800
-    //height: 460
+    width: 520
+    height: 400
     visible: true
-    title: qsTr("登陆&注册")
 
     flags: Qt.Window|Qt.FramelessWindowHint  //无边框全套处理
     property int bw: 3
@@ -71,7 +69,6 @@ ApplicationWindow {
 
     LayoutLoginView {  //登陆界面
         id: layoutLoginView
-        visible: false
     }
 
     LayoutRegisterView {  //注册界面
@@ -81,6 +78,7 @@ ApplicationWindow {
 
     LayoutUserView {  //登陆成功进入用户界面
         id: layoutUserView
+        visible: false
     }
 
 //    Test {
@@ -106,5 +104,15 @@ ApplicationWindow {
         layoutRegisterView.visible = false
         layoutLoginView.clearView()
         layoutLoginView.visible = true
+    }
+    function switchUserView() {  //切换到用户界面
+        window.width = 400
+        window.height = 800
+        window.x = (Screen.desktopAvailableWidth-width)/2
+        window.y = (Screen.desktopAvailableHeight-height)/2
+
+        layoutLoginView.visible = false
+        layoutRegisterView.visible = false
+        layoutUserView.visible = true
     }
 }
