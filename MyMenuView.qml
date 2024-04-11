@@ -43,6 +43,10 @@ Rectangle {
                 onExited: {
                     parent.color = "#00000000"
                 }
+                onClicked: {
+                    personalSettingView.visible = true
+                    personalSettingView.raise()
+                }
             }
 
             RowLayout {
@@ -154,5 +158,10 @@ Rectangle {
                 }
             }
         }
+    }
+
+    PersonalSettingView {
+        id: personalSettingView
+        visible: false
     }
 }

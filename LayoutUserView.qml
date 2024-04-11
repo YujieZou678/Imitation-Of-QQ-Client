@@ -93,11 +93,30 @@ ColumnLayout {
                         Layout.preferredWidth: 130
 
                         MyProfileImage {
+                            id: myProfileImage
                             width: 100
                             height: 100
                             anchors.centerIn: parent
                             imgSrc: profileImage
                             ifNeedSpacing: false
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onEntered: {
+                                    myProfileImage.scale = 1.15
+                                    cursorShape = Qt.PointingHandCursor
+                                }
+                                onExited: {
+                                    myProfileImage.scale = 1
+                                }
+                                onClicked: {
+                                    personalDataView.visible = true
+                                    personalDataView.raise()
+                                }
+                            }
+                            Behavior on scale {
+                                NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
+                            }
                         }
                     }
 
@@ -400,5 +419,10 @@ ColumnLayout {
                 }
             }
         }
+    }
+
+    PersonalDataView {  //个人资料视图
+        id: personalDataView
+        visible: false
     }
 }

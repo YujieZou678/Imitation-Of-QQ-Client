@@ -19,7 +19,7 @@ qt_add_qml_module(appClient
         QML_FILES LayoutRegisterView.qml
         RESOURCES resource.qrc
         QML_FILES MyProfileImage.qml
-        QML_FILES Test.qml
+        QML_FILES
         QML_FILES MyToolButton.qml
         QML_FILES MyTextField.qml
         QML_FILES MyRadioButton.qml
@@ -29,6 +29,8 @@ qt_add_qml_module(appClient
         QML_FILES MyShapeLine.qml
         QML_FILES MyListView.qml
         QML_FILES MyMenuView.qml
+        QML_FILES PersonalSettingView.qml
+        QML_FILES PersonalDataView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)

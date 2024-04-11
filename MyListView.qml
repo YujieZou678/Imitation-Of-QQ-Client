@@ -26,16 +26,11 @@ Item {
 
     Component {
         id: listViewDelegate
-        ToolButton {  //为了获得focus
+        Rectangle {
             id: listViewDelegateItem
             height: 480/5
             width: listView.width
-            //将颜色置为无色，方便显示第二层hightlight的颜色
-            //color: "#00000000"
-            background: Rectangle {
-                anchors.fill: parent
-                color: "#00000000"
-            }
+            color: "#00000000"
 
             MyShapeLine {  //底线
                 lineOpacity: 0.1
@@ -45,23 +40,16 @@ Item {
                 lineEndY: listViewDelegateItem.height
             }
 
-            onClicked: {
-                listView.currentIndex = index
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    listView.currentIndex = index
+                }
+                onClicked: {
+                    listViewDelegateItem.forceActiveFocus()  //获取焦点
+                }
             }
-
-//            MouseArea {
-//                anchors.fill: parent
-//                hoverEnabled: true
-//                onEntered: {
-//                    //color = "#20f0f0f0"
-//                }
-//                onExited: {
-//                    //color = "#00000000"
-//                }
-//                onClicked: {
-//                    listView.currentIndex = index
-//                }
-//            }
 
             RowLayout {
                 anchors.fill: parent
@@ -145,5 +133,5 @@ Item {
                 }
             }
         }
-    }
+    }  //end Component
 }
