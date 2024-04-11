@@ -30,7 +30,7 @@ Window {
         anchors.fill: parent
         spacing: 0
 
-        Item {  //左
+        Item {  //左半边
             Layout.fillHeight: true
             Layout.preferredWidth: self.width/2
 
@@ -125,10 +125,82 @@ Window {
                 }
             }
         }
-        Rectangle {  //右
+        Item {  //右半边
             Layout.fillHeight: true
             Layout.preferredWidth: self.width/2
-            color: "lightblue"
+
+            RowLayout {
+                anchors.fill: parent
+                spacing: 0
+
+                Item {
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 20
+                }
+                Item {  //中间
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+
+                    ColumnLayout {
+                        anchors.fill: parent
+                        spacing: 0
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 50
+                        }
+                        Rectangle {  //qq号
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            color: "red"
+                        }
+                        Rectangle {  //属相
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            color: "lightblue"
+                        }
+                        Rectangle {  //等级
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            color: "red"
+                        }
+                        Rectangle {  //空间
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            color: "lightblue"
+                        }
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            MenuSeparator { width: parent.width; anchors.centerIn: parent }
+                        }
+                        Rectangle {  //Q龄
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            color: "red"
+                        }
+                        Rectangle {  //血型
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            color: "lightblue"
+                        }
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 40
+                            MenuSeparator { width: parent.width; anchors.centerIn: parent }
+                        }
+                        Rectangle {  //照片墙
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            color: "red"
+                        }
+                    }
+                }  //end 中间
+                Item {
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 20
+                }
+            }
         }
     }
 
@@ -173,7 +245,7 @@ Window {
                     width: 40
                     MyToolButton {
                         iconSource: "qrc:/image/最小化.png"
-                        icon.color: "white"
+                        icon.color: "gray"
                         onClicked: {
                             self.showMinimized()
                         }
@@ -184,7 +256,7 @@ Window {
                     width: 40
                     MyToolButton {
                         iconSource: "qrc:/image/关闭.png"
-                        icon.color: "white"
+                        icon.color: "gray"
                         onClicked: {
                             self.close()
                         }
