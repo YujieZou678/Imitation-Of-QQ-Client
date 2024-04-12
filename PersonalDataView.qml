@@ -149,50 +149,322 @@ Window {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 50
                         }
-                        Rectangle {  //qq号
+                        Item {  //qq号
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            color: "red"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //qq号图标
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 40
+                                    Image {
+                                        height: parent.height*0.7
+                                        width: parent.height*0.7
+                                        source: "qrc:/image/QQ-1.png"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                                Item {  //qq号
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 100
+                                    Text {
+                                        text: "2894841947"
+                                        font {
+                                            pointSize: 12
+                                            family: mFONT_FAMILY
+                                        }
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                                Item {
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                }
+                                Item {  //编辑资料
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 70
+                                    Text {
+                                        text: "编辑资料"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font {
+                                            pointSize: 12
+                                            family: mFONT_FAMILY
+                                        }
+                                        color: "#5698c3"
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            hoverEnabled: true
+                                            onEntered: {
+                                                cursorShape = Qt.PointingHandCursor
+                                            }
+                                            onClicked: {
+                                                //
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Rectangle {  //属相
+                        Item {  //属相
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            color: "lightblue"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //属相图标
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 40
+                                    Image {
+                                        source: "qrc:/image/用户.png"
+                                        height: parent.height*0.7
+                                        width: parent.height*0.7
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                                Item {
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                    Text {
+                                        text: "属"+"狗"
+                                        font {
+                                            pointSize: 12
+                                            family: mFONT_FAMILY
+                                        }
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                            }
                         }
-                        Rectangle {  //等级
+                        Item {  //等级
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            color: "red"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //等级图标
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 40
+                                    Image {
+                                        source: "qrc:/image/重要等级.png"
+                                        height: parent.height*0.7
+                                        width: parent.height*0.7
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                                Item {  //等级
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        spacing: 0
+
+                                        Item {  //等级图标1
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 32
+
+                                            Image {
+                                                height: parent.height*0.7
+                                                width: parent.height*0.7
+                                                source: "qrc:/image/等级.png"
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+                                        }
+                                        Item {  //等级图标2
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 32
+                                            Image {
+                                                height: parent.height*0.7
+                                                width: parent.height*0.7
+                                                source: "qrc:/image/等级.png"
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+                                        }
+                                        Item {  //等级图标3
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 32
+                                            Image {
+                                                height: parent.height*0.7
+                                                width: parent.height*0.7
+                                                source: "qrc:/image/等级.png"
+                                                anchors.verticalCenter: parent.verticalCenter
+                                            }
+                                        }
+                                        Item {
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: true
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Rectangle {  //空间
+                        Item {  //空间
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            color: "lightblue"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //空间图标
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 40
+                                    Image {
+                                        source: "qrc:/image/QQ空间.png"
+                                        height: parent.height*0.7
+                                        width: parent.height*0.7
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                                Item {  //XX的空间
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                    Text {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: "Simple的空间"
+                                        font {
+                                            pointSize: 12
+                                            family: mFONT_FAMILY
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Item {
+                        Item {  //分割线1
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 40
+                            Layout.preferredHeight: 12
                             MenuSeparator { width: parent.width; anchors.centerIn: parent }
                         }
-                        Rectangle {  //Q龄
+                        Item {  //Q龄
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            color: "red"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //Q龄图标
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 40
+                                    Image {
+                                        source: "qrc:/image/ic_聊天.png"
+                                        height: parent.height*0.7
+                                        width: parent.height*0.7
+                                        anchors.verticalCenter: parent.verticalCenter
+                                    }
+                                }
+                                Item {  //Q龄
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 85
+                                    Text {
+                                        text: "Q龄"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font {
+                                            pointSize: 13
+                                            family: mFONT_FAMILY
+                                        }
+                                        color: "gray"
+                                    }
+                                }
+                                Item {
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                    Text {
+                                        text: "10" + "年"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font {
+                                            pointSize: 13
+                                            family: mFONT_FAMILY
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Rectangle {  //血型
+                        Item {  //血型
                             Layout.fillWidth: true
                             Layout.preferredHeight: 40
-                            color: "lightblue"
+
+                            RowLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 40
+                                }
+                                Item {  //血型
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: 85
+                                    Text {
+                                        text: "血型"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font {
+                                            pointSize: 13
+                                            family: mFONT_FAMILY
+                                        }
+                                        color: "gray"
+                                    }
+                                }
+                                Item {
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                    Text {
+                                        text: "其他血型"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font {
+                                            pointSize: 13
+                                            family: mFONT_FAMILY
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        Item {
+                        Item {  //分割线2
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 40
+                            Layout.preferredHeight: 12
                             MenuSeparator { width: parent.width; anchors.centerIn: parent }
                         }
-                        Rectangle {  //照片墙
+                        Item {  //照片墙
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            color: "red"
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //照片墙
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 40
+                                    Text {
+                                        text: "照片墙"
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        font {
+                                            pointSize: 12
+                                            family: mFONT_FAMILY
+                                        }
+                                    }
+                                }
+                                Item {  //图片
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    Image {
+                                        anchors.fill: parent
+                                        source: "qrc:/image/12.png"
+                                        fillMode: Image.PreserveAspectCrop
+                                    }
+                                }
+                                Item {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 10
+                                }
+                            }
                         }
                     }
                 }  //end 中间

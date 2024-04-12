@@ -17,5 +17,12 @@
         <file>image/游戏_填充.png</file>
         <file>image/云空间.png</file>
         <file>image/退出.png</file>
+        <file>image/QQ-1.png</file>
+        <file>image/用户.png</file>
+        <file>image/等级.png</file>
+        <file>image/重要等级.png</file>
+        <file>image/等级星星.png</file>
+        <file>image/QQ空间.png</file>
+        <file>image/ic_聊天.png</file>
     </qresource>
 </RCC>
