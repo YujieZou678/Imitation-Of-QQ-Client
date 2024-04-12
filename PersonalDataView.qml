@@ -78,6 +78,10 @@ Window {
                                         onExited: {
                                             myProfileImage.scale = 1
                                         }
+                                        onClicked: {  //点击头像
+                                            changeAvatarView.visible = true
+                                            changeAvatarView.raise()
+                                        }
                                     }
                                     Behavior on scale {
                                         NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
@@ -540,5 +544,10 @@ Window {
             Layout.fillHeight: true
             Layout.fillWidth: true
         }
+    }
+
+    ChangeAvatarView {  //更换头像视图
+        id: changeAvatarView
+        visible: false
     }
 }

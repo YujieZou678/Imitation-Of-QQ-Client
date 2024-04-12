@@ -31,6 +31,7 @@ qt_add_qml_module(appClient
         QML_FILES MyMenuView.qml
         QML_FILES PersonalSettingView.qml
         QML_FILES PersonalDataView.qml
+        QML_FILES ChangeAvatarView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)
