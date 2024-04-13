@@ -18,6 +18,10 @@ ApplicationWindow {
     property alias layoutLoginView: layoutLoginView  //登陆界面
     property alias layoutRegisterView: layoutRegisterView  //注册界面
 
+    /* 个人数据 */
+    property string profileImage: "qrc:/image/12.png"  //头像
+    property string id: "2894841947"  //qq号
+
 //    width: 520
 //    height: 400
     width: 400

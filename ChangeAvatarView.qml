@@ -6,13 +6,17 @@ date: 2024.4.12
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Qt.labs.platform
+import Qt5Compat.GraphicalEffects
 
 Window {
+
+    property string imgSource: "qrc:/image/12.png"  //照片路径
 
     id: self
 
     width: 500
-    height: 550
+    height: 550+75
     flags: Qt.Window|Qt.FramelessWindowHint  //无边框全套处理
     onYChanged: {
         if (y > Screen.desktopAvailableHeight - 30) {
@@ -128,7 +132,7 @@ Window {
                                         pointSize: 11
                                     }
                                     onClicked: {
-                                        //
+                                        fileDialog.open()
                                     }
                                 }
                             }
@@ -137,9 +141,24 @@ Window {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
                             Image {
+                                id: image
                                 anchors.fill: parent
-                                source: "qrc:/image/12.png"
+                                source: imgSource
                                 fillMode: Image.PreserveAspectCrop
+                                visible: false
+                            }
+                            ColorOverlay {  //颜色滤镜
+                                id: colorOverlay
+                                anchors.fill: parent
+                                source: image
+                                color: "#35000000"
+                            }
+                            MyProfileImage {  //头像
+                                y: 10
+                                anchors.fill: parent
+                                imgSrc: imgSource
+                                ifNeedSpacing: false
+                                imgRadius: 450
                             }
                         }
                         Item {
@@ -190,7 +209,32 @@ Window {
                             bacColor: "#11659a"
                             clickColor: "#5698c3"
                             onClicked: {
-                                //
+                                profileImage = imgSource
+                                /* 上传到服务器 */
+                                function onReply(isOk) {  //服务器是否准备好接收文件
+                                    if (isOk) {
+                                        console.log("开始发送文件......")
+
+                                        function onReply2(isFinished) {  //服务器是否接收完毕
+                                            if (isFinished) {
+                                                console.log("服务器接收完毕")
+                                            }
+
+                                            onGetReply_SendFile.disconnect(onReply2)
+                                        }
+                                        onGetReply_SendFile.connect(onReply2)
+                                        sendFile(imgSource)  //发送文件
+
+                                    } else {
+                                        console.log("取消发送文件")
+                                    }
+
+                                    onGetReply_PrepareSendFile.disconnect(onReply)
+                                }
+                                onGetReply_PrepareSendFile.connect(onReply)
+                                postRequest(info_PrepareSendFile(id))
+
+                                self.close()
                             }
                         }
                     }
@@ -226,6 +270,17 @@ Window {
                     Layout.preferredWidth: 20
                 }
             }
+        }
+    }
+
+    FileDialog {
+        id: fileDialog
+        fileMode: FileDialog.OpenFile
+        nameFilters: ["Image File(*.png *.jpg)"]
+        acceptLabel: "确定"
+        rejectLabel: "取消"
+        onAccepted: {
+            imgSource = file
         }
     }
 }

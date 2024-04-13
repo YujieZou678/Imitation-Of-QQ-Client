@@ -354,6 +354,7 @@ ColumnLayout {
                                     if (isRight === "true") {
                                         console.log("登陆成功!")
                                         checkPassWord.isRight = true
+                                        id = accountNumber.text
                                         switchUserView()
                                     }
                                     else {

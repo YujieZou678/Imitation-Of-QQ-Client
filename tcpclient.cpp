@@ -6,6 +6,9 @@ date: 2024.3.18
 #include <QObject>
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <QImage>
+#include <QBuffer>
+#
 
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -27,6 +30,8 @@ TcpClient::TcpClient(QObject *parent)
         {"CheckAccountNumber", Purpose::CheckAccountNumber},
         {"Register", Purpose::Register},
         {"Login", Purpose::Login},
+        {"PrepareSendFile", Purpose::PrepareSendFile},
+        {"SendFile", Purpose::SendFile},
         {"SingleChat", Purpose::SingleChat}
     };
 }
@@ -65,6 +70,16 @@ void TcpClient::onReadyRead()
     case Purpose::Login: {
         QString reply = doc["Reply"].toString();
         emit getReply_Login(reply);
+        break;
+    }
+    case Purpose::PrepareSendFile: {
+        QString reply = doc["Reply"].toString();
+        emit getReply_PrepareSendFile(reply);
+        break;
+    }
+    case Purpose::SendFile: {
+        QString reply = doc["Reply"].toString();
+        emit getReply_SendFile(reply);
         break;
     }
     default:
@@ -110,5 +125,36 @@ QByteArray TcpClient::info_Login(const QString &accountNumber, const QString &pa
     QByteArray data = doc.toJson();
 
     return data;
+}
+
+QByteArray TcpClient::info_PrepareSendFile(const QString &id)
+{
+    QImage image("/root/我的文件/静态壁纸/1Z42G40629-2-1200.jpg");
+    QBuffer buffer;
+    image.save(&buffer, "PNG", 0);
+
+    QJsonObject json;
+    json.insert("Purpose", "PrepareSendFile");  //目的
+    json.insert("FileSize", buffer.size());
+    json.insert("ID", id);
+    QJsonDocument doc(json);
+    QByteArray data = doc.toJson();
+
+    buffer.close();
+    return data;
+}
+
+void TcpClient::sendFile(const QString &path)
+{
+    qDebug() << path;
+
+    QImage image("/root/我的文件/静态壁纸/1Z42G40629-2-1200.jpg");
+    QByteArray _data;
+    QBuffer buffer(&_data);
+    image.save(&buffer, "PNG", 0);
+    QByteArray data = _data.toBase64();
+    buffer.close();
+
+    client->write(data);
 }
 

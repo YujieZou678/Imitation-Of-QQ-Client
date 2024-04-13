@@ -10,8 +10,6 @@ import QtQuick.Shapes
 
 ColumnLayout {
 
-    property string profileImage: "qrc:/image/12.png"  //头像
-
     anchors.fill: parent
     spacing: 0
 

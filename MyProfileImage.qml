@@ -11,9 +11,10 @@ Rectangle {
 
     property string imgSrc: "qrc:/image/12.png"
     property bool ifNeedSpacing: true  //是否需要间隙
+    property int imgRadius: 100
 
     id: self
-    radius: 100
+    radius: imgRadius
 
     Image {
         id: image
@@ -27,10 +28,10 @@ Rectangle {
     }
 
     Rectangle{
-        id:mask
+        id: mask
         color: "black"
         anchors.fill: parent
-        radius: 100
+        radius: imgRadius
         antialiasing: true  //抗锯齿
         visible: false
     }

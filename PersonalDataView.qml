@@ -65,6 +65,7 @@ Window {
                                 Layout.preferredWidth: parent.width*0.4
                                 MyProfileImage {
                                     id: myProfileImage
+                                    imgSrc: profileImage
                                     width: 100
                                     height: 100
                                     anchors.centerIn: parent
