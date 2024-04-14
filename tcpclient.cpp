@@ -8,13 +8,13 @@ date: 2024.3.18
 #include <QHostAddress>
 #include <QImage>
 #include <QBuffer>
-#
 
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 
 #include "tcpclient.h"
+#include "mysubthread.h"
 
 TcpClient::TcpClient(QObject *parent)
     : QObject(parent)
@@ -24,6 +24,7 @@ TcpClient::TcpClient(QObject *parent)
     client->connectToHost(QHostAddress::LocalHost, 2222);  //与服务端建立连接
     connect(client, &QTcpSocket::connected, this, &TcpClient::onConnected);
     connect(client, &QTcpSocket::readyRead, this, &TcpClient::onReadyRead);
+    connect(client, &QTcpSocket::disconnected, this, &TcpClient::onDisconnected);
 
     //map_Switch
     map_Switch = {
@@ -38,12 +39,30 @@ TcpClient::TcpClient(QObject *parent)
 
 TcpClient::~TcpClient()
 {
-    client->disconnectFromHost();
+    qDebug() << "主线程" << QThread::currentThread() << ":"
+             <<"主线程析构";
+    client->disconnectFromHost();  //断开连接
+
+    delete mySubThread;
+    mySubThread = nullptr;
+
+    thread->quit();
+    thread->wait();
+    delete thread;
+    thread = nullptr;
 }
 
 void TcpClient::onConnected()
 {
     qDebug() << "与服务器连接成功。";
+
+    //mySubThread
+    mySubThread = new MySubThread(client->socketDescriptor());
+    thread = new QThread;
+    mySubThread->moveToThread(thread);
+    connect(this, &TcpClient::sendFile_SubThread, mySubThread, &MySubThread::onSendFile);
+    connect(this, &TcpClient::prepareSendFile_SubThread, mySubThread, &MySubThread::onPrepareSendFile);
+    connect(mySubThread, &MySubThread::closeSubSignal, this, &TcpClient::onCloseSubThread);
 }
 
 void TcpClient::onDisconnected()
@@ -87,6 +106,13 @@ void TcpClient::onReadyRead()
     }
 }
 
+void TcpClient::onCloseSubThread()
+{
+    thread->quit();
+    qDebug() << "主线程" << QThread::currentThread() << ":"
+             << "子线程已关闭";
+}
+
 void TcpClient::postRequest(const QByteArray &data)
 {
     client->write(data);
@@ -127,34 +153,19 @@ QByteArray TcpClient::info_Login(const QString &accountNumber, const QString &pa
     return data;
 }
 
-QByteArray TcpClient::info_PrepareSendFile(const QString &id)
+void TcpClient::prepareSendFile(const QString &id)
 {
-    QImage image("/root/我的文件/静态壁纸/1Z42G40629-2-1200.jpg");
-    QBuffer buffer;
-    image.save(&buffer, "PNG", 0);
-
-    QJsonObject json;
-    json.insert("Purpose", "PrepareSendFile");  //目的
-    json.insert("FileSize", buffer.size());
-    json.insert("ID", id);
-    QJsonDocument doc(json);
-    QByteArray data = doc.toJson();
-
-    buffer.close();
-    return data;
+    thread->start();
+    qDebug() << "主线程" << QThread::currentThread() << ":"
+             << "子线程已启用";
+    emit prepareSendFile_SubThread(id);
 }
 
-void TcpClient::sendFile(const QString &path)
+void TcpClient::sendFile()
 {
-    qDebug() << path;
-
-    QImage image("/root/我的文件/静态壁纸/1Z42G40629-2-1200.jpg");
-    QByteArray _data;
-    QBuffer buffer(&_data);
-    image.save(&buffer, "PNG", 0);
-    QByteArray data = _data.toBase64();
-    buffer.close();
-
-    client->write(data);
+    thread->start();
+    qDebug() << "主线程" << QThread::currentThread() << ":"
+             << "子线程已启用";
+    emit sendFile_SubThread();
 }
 

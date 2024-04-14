@@ -223,7 +223,7 @@ Window {
                                             onGetReply_SendFile.disconnect(onReply2)
                                         }
                                         onGetReply_SendFile.connect(onReply2)
-                                        sendFile(imgSource)  //发送文件
+                                        sendFile()  //发送文件
 
                                     } else {
                                         console.log("取消发送文件")
@@ -232,7 +232,7 @@ Window {
                                     onGetReply_PrepareSendFile.disconnect(onReply)
                                 }
                                 onGetReply_PrepareSendFile.connect(onReply)
-                                postRequest(info_PrepareSendFile(id))
+                                prepareSendFile(id);  //准备发送文件
 
                                 self.close()
                             }
