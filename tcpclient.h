@@ -9,7 +9,7 @@ date: 2024.3.18
 #include <QObject>
 #include <QThread>
 
-class MySocket;
+class MyThread;
 
 class TcpClient : public QObject
 {
@@ -41,8 +41,8 @@ public slots:
     void getReplyFromSub_Login(const QString&);
 
 private:
-    QThread *thread;     //子线程
-    MySocket *mySocket;  //封装的socket
+    QThread *thread;
+    MyThread *myThread;  //子线程
 };
 
 #endif // TCPCLIENT_H

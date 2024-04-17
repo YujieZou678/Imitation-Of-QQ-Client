@@ -3,20 +3,20 @@ function: 封装socket及对它的操作，方便移入新线程。
 author: zouyujie
 date: 2024.4.16
 */
-#ifndef MYSOCKET_H
-#define MYSOCKET_H
+#ifndef MYTHREAD_H
+#define MYTHREAD_H
 
 #include <QObject>
 #include <QTcpSocket>
 #include <QBuffer>
 
-class MySocket : public QObject
+class MyThread : public QObject
 {
     Q_OBJECT
 
 public:
-    MySocket(QObject *parent = nullptr);
-    ~MySocket();
+    MyThread(QObject *parent = nullptr);
+    ~MyThread();
 
     void buildConnection();  //构建连接
 
@@ -65,8 +65,8 @@ private:
     int count{0};           //接收次数
 
     /* 大文件传输 */
-//    MySocket *mySocket;     //新连接
-//    QThread *thread;        //新线程
+//    MyThread *MyThread;     //子线程
+//    QThread *thread;
 };
 
-#endif // MYSOCKET_H
+#endif // MYTHREAD_H

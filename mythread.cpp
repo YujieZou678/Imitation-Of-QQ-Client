@@ -10,9 +10,9 @@ date: 2024.4.16
 #include <QJsonObject>
 #include <QJsonValue>
 
-#include "mysocket.h"
+#include "mythread.h"
 
-MySocket::MySocket(QObject *parent) :
+MyThread::MyThread(QObject *parent) :
     QObject(parent)
 {
     //map_Switch
@@ -30,7 +30,7 @@ MySocket::MySocket(QObject *parent) :
     buffer = new QBuffer(&data, this);
 }
 
-MySocket::~MySocket()
+MyThread::~MyThread()
 {
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "子线程析构。";
@@ -38,29 +38,29 @@ MySocket::~MySocket()
     socket->disconnectFromHost();
 }
 
-void MySocket::buildConnection()
+void MyThread::buildConnection()
 {
     //socket
     socket = new QTcpSocket(this);
     socket->connectToHost(QHostAddress::LocalHost, 2222);  //与服务端建立连接
-    connect(socket, &QTcpSocket::connected, this, &MySocket::onConnected);
-    connect(socket, &QTcpSocket::readyRead, this, &MySocket::onReadyRead);
-    connect(socket, &QTcpSocket::disconnected, this, &MySocket::onDisconnected);
+    connect(socket, &QTcpSocket::connected, this, &MyThread::onConnected);
+    connect(socket, &QTcpSocket::readyRead, this, &MyThread::onReadyRead);
+    connect(socket, &QTcpSocket::disconnected, this, &MyThread::onDisconnected);
 }
 
-void MySocket::onConnected()
+void MyThread::onConnected()
 {
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "与服务器连接成功。";
 }
 
-void MySocket::onDisconnected()
+void MyThread::onDisconnected()
 {
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "与服务器断开连接。";
 }
 
-void MySocket::onReadyRead()
+void MyThread::onReadyRead()
 {
     if (socket->bytesAvailable() <= 0) return;  //字节为空则退出
     QByteArray data = socket->readAll();
@@ -99,7 +99,7 @@ void MySocket::onReadyRead()
     }
 }
 
-void MySocket::toServer_CheckAccountNumber(const QString &accountNumber)
+void MyThread::toServer_CheckAccountNumber(const QString &accountNumber)
 {
     QJsonObject json;
     json.insert("Purpose", "CheckAccountNumber");  //目的
@@ -110,7 +110,7 @@ void MySocket::toServer_CheckAccountNumber(const QString &accountNumber)
     socket->write(data);
 }
 
-void MySocket::toServer_Register(const QString &accountNumber, const QString &password)
+void MyThread::toServer_Register(const QString &accountNumber, const QString &password)
 {
     QJsonObject json;
     json.insert("Purpose", "Register");  //目的
@@ -122,7 +122,7 @@ void MySocket::toServer_Register(const QString &accountNumber, const QString &pa
     socket->write(data);
 }
 
-void MySocket::toServer_Login(const QString &accountNumber, const QString &password)
+void MyThread::toServer_Login(const QString &accountNumber, const QString &password)
 {
     QJsonObject json;
     json.insert("Purpose", "Login");  //目的
@@ -134,7 +134,7 @@ void MySocket::toServer_Login(const QString &accountNumber, const QString &passw
     socket->write(data);
 }
 
-void MySocket::toServer_ReceiveFile()
+void MyThread::toServer_ReceiveFile()
 {
     QJsonObject json;
     json.insert("Purpose", "ReceiveFile");  //目的
@@ -145,7 +145,7 @@ void MySocket::toServer_ReceiveFile()
     socket->write(data);
 }
 
-void MySocket::toServer_PrepareSendFile()
+void MyThread::toServer_PrepareSendFile()
 {
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "准备发送图像文件";
@@ -180,7 +180,7 @@ void MySocket::toServer_PrepareSendFile()
              << "图像文件准备完毕 大小："+QString::number(data.size());
 }
 
-void MySocket::toServer_SendFile()
+void MyThread::toServer_SendFile()
 {
     qintptr oneSend_Size = 4000000;     //一次最大传输:四百万 字节
     if (data.size() < oneSend_Size) {   //一次性传输

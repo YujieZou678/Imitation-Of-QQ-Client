@@ -4,26 +4,26 @@ author: zouyujie
 date: 2024.3.18
 */
 #include "tcpclient.h"
-#include "mysocket.h"
+#include "mythread.h"
 
 TcpClient::TcpClient(QObject *parent)
     : QObject(parent)
 {
     /* 开启子线程 */
     thread = new QThread;     //不能设置父类
-    mySocket = new MySocket;  //不能设置父类
-    mySocket->moveToThread(thread);
+    myThread = new MyThread;  //不能设置父类
+    myThread->moveToThread(thread);
     thread->start();
 
     /* 信号与槽机制 主线程和子线程交互 */
     /* 主——>子 */
-    connect(this, &TcpClient::buildConnection, mySocket, &MySocket::buildConnection);
-    connect(this, &TcpClient::toSubThread_CheckAccountNumber, mySocket, &MySocket::toServer_CheckAccountNumber);
-    connect(this, &TcpClient::toSubThread_Register, mySocket, &MySocket::toServer_Register);
-    connect(this, &TcpClient::toSubThread_Login, mySocket, &MySocket::toServer_Login);
+    connect(this, &TcpClient::buildConnection, myThread, &MyThread::buildConnection);
+    connect(this, &TcpClient::toSubThread_CheckAccountNumber, myThread, &MyThread::toServer_CheckAccountNumber);
+    connect(this, &TcpClient::toSubThread_Register, myThread, &MyThread::toServer_Register);
+    connect(this, &TcpClient::toSubThread_Login, myThread, &MyThread::toServer_Login);
     /* 子——>主 */
-    connect(mySocket, &MySocket::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
-    connect(mySocket, &MySocket::getReply_Login, this, &TcpClient::getReplyFromSub_Login);
+    connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
+    connect(myThread, &MyThread::getReply_Login, this, &TcpClient::getReplyFromSub_Login);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -33,7 +33,7 @@ TcpClient::~TcpClient()
     qDebug() << "主线程" << QThread::currentThread() << ":"
              <<"主线程析构";
 
-    mySocket->deleteLater();  //子线程析构，直接释放则为主线程
+    myThread->deleteLater();  //子线程析构，直接释放则为主线程
 
     thread->quit();
     thread->wait();

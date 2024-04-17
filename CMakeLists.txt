@@ -33,7 +33,7 @@ qt_add_qml_module(appClient
         QML_FILES PersonalDataView.qml
         QML_FILES ChangeAvatarView.qml
         SOURCES
-        SOURCES mysocket.h mysocket.cpp
+        SOURCES mythread.h mythread.cpp
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)
