@@ -20,10 +20,10 @@ public:
     ~TcpClient();
 
     /* qml使用 */
-    Q_INVOKABLE void toServer_CheckAccountNumber(const QString&, const QString&);        //验证账号是否存在
-    Q_INVOKABLE void toServer_Register(const QString&, const QString&);  //存入注册信息
-    Q_INVOKABLE void toServer_Login(const QString&, const QString&);     //验证登陆信息
-    Q_INVOKABLE void toServer_PrepareSendFile();                         //发送文件的准备
+    Q_INVOKABLE void toServer_CheckAccountNumber(const QString&, const QString&);  //验证账号是否存在
+    Q_INVOKABLE void toServer_Register(const QString&, const QString&);            //存入注册信息
+    Q_INVOKABLE void toServer_Login(const QString&, const QString&);               //验证登陆信息
+    Q_INVOKABLE void toServer_PrepareSendFile(const QString&, const QString&);     //发送文件的准备
 
 signals:
     /* 与子线程通信 */
@@ -31,7 +31,7 @@ signals:
     void toSubThread_CheckAccountNumber(const QString&, const QString&);
     void toSubThread_Register(const QString&, const QString&);
     void toSubThread_Login(const QString&, const QString&);
-    void toSubThread_PrepareSendFile();
+    void toSubThread_PrepareSendFile(const QString&, const QString&);
 
     /* 与qml通信 */
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复

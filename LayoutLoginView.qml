@@ -189,9 +189,10 @@ ColumnLayout {
                                     checkAccountNumber.isRight = false
                                     checkAccountNumber.visible = true
 
-                                    profileImage = "qrc:/image/12.png"
+                                    profileImage = "qrc:/image/profileImage.png"
                                 }
                                 else {
+                                    id = accountNumber.text  //改变id
                                     console.log("账号发送到服务器检测......")
                                     function onReply(isExit) {  //检测账号
                                         if (isExit === "true") {
@@ -202,7 +203,9 @@ ColumnLayout {
                                         onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
                                     function onFinished() {  //收到图像文件
-                                        profileImage = "file:///root/my_test/Client/build/config/profileImage/test.png"
+                                        profileImage = "file:///root/my_test/Client/build/config/profileImage/"+id+".png"
+                                        centerView.imageHeight = centerView.height*0.93
+                                        centerView.imageWidth = centerView.width*0.93
                                         onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
                                     }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接

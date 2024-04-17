@@ -20,8 +20,8 @@ ApplicationWindow {
     property alias layoutUserView: layoutUserView          //用户界面
 
     /* 个人数据 */
-    property string profileImage: "qrc:/image/12.png"  //头像
-    property string id: "2894841947"                   //qq号
+    property string profileImage: "qrc:/image/profileImage.png"  //登陆头像
+    property string id: "2894841947"                             //登陆账号
 
     width: 520
     height: 400

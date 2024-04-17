@@ -59,9 +59,9 @@ void TcpClient::toServer_Login(const QString &checkAccountNumber, const QString 
     emit toSubThread_Login(checkAccountNumber, password);
 }
 
-void TcpClient::toServer_PrepareSendFile()
+void TcpClient::toServer_PrepareSendFile(const QString&url, const QString&id)
 {
-    emit toSubThread_PrepareSendFile();
+    emit toSubThread_PrepareSendFile(url, id);
 }
 
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)

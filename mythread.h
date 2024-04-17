@@ -23,8 +23,8 @@ public:
     void toServer_CheckAccountNumber(const QString&, const QString&);  //验证账号是否存在
     void toServer_Register(const QString&, const QString&);            //存入注册信息
     void toServer_Login(const QString&, const QString&);               //验证登陆信息
-    void toServer_ReceiveFile();                                       //准备好接收文件
-    void toServer_PrepareSendFile();                                   //发送文件的准备
+    void toServer_ReceiveFile(const QString&);                         //准备好接收文件
+    void toServer_PrepareSendFile(const QString&, const QString&);                                   //发送文件的准备
     void toServer_SendFile();                                          //开始发送文件
 
 signals:
@@ -59,7 +59,7 @@ private:
     /* 接收文件数据 */
     bool ifNeedReceiveFile{false};  //是否需要接收文件
     QByteArray file;                //文件数据
-    QString ID;                     //qq号
+    QString accountNumber;          //账号
     qint64 fileSize{0};             //文件大小
     qint64 receiveSize{0};          //已接收大小
     int count{0};                   //接收次数

@@ -11,8 +11,6 @@ import Qt5Compat.GraphicalEffects
 
 Window {
 
-    property string imgSource: "qrc:/image/12.png"  //照片路径
-
     id: self
 
     width: 500
@@ -143,7 +141,7 @@ Window {
                             Image {
                                 id: image
                                 anchors.fill: parent
-                                source: imgSource
+                                source: profileImage
                                 fillMode: Image.PreserveAspectCrop
                                 visible: false
                             }
@@ -154,10 +152,12 @@ Window {
                                 color: "#35000000"
                             }
                             MyProfileImage {  //头像
+                                id: myProfileImage
                                 y: 10
                                 anchors.fill: parent
-                                imgSrc: imgSource
-                                ifNeedSpacing: false
+                                imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                                imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
+                                imgSrc: profileImage
                                 imgRadius: 450
                             }
                         }
@@ -209,7 +209,12 @@ Window {
                             bacColor: "#11659a"
                             clickColor: "#5698c3"
                             onClicked: {
-                                profileImage = imgSource
+                                if (profileImage === image.source+"") {
+                                    self.close()
+                                    return
+                                }
+
+                                profileImage = image.source
                                 console.log("开始缓冲")
                                 /* 上传到服务器 */
                                 function onReply() {
@@ -218,7 +223,14 @@ Window {
                                 }
                                 onFinished_SeverReceiveFile.connect(onReply)  //连接
 
-                                toServer_PrepareSendFile()  //准备发送文件
+                                /* 处理地址：file:///... */
+                                var source = profileImage.split("/")
+                                source.shift()
+                                source.shift()
+                                source.shift()
+                                source = source.join("/")
+                                source = "/"+source
+                                toServer_PrepareSendFile(source, id)  //准备发送文件
 
                                 self.close()
                             }
@@ -246,7 +258,7 @@ Window {
                             bacColor: "white"
                             clickColor: "#baccd9"
                             onClicked: {
-                                //
+                                self.close()
                             }
                         }
                     }
@@ -266,7 +278,8 @@ Window {
         acceptLabel: "确定"
         rejectLabel: "取消"
         onAccepted: {
-            imgSource = file
+            image.source = file
+            myProfileImage.imgSrc = file
         }
     }
 }

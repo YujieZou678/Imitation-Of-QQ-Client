@@ -68,6 +68,8 @@ Window {
                                     imgSrc: profileImage
                                     width: 100
                                     height: 100
+                                    imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height*0.93
+                                    imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width*0.93
                                     anchors.centerIn: parent
                                     MouseArea {
                                         anchors.fill: parent

@@ -64,7 +64,8 @@ Item {
                         height: 80
                         anchors.centerIn: parent
                         imgSrc: "qrc:/image/12.png"
-                        ifNeedSpacing: false
+                        imageHeight: height
+                        imageWidth: width
                     }
                 }
                 Item {  //消息介绍/描述

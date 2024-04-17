@@ -96,7 +96,8 @@ ColumnLayout {
                             height: 100
                             anchors.centerIn: parent
                             imgSrc: profileImage
-                            ifNeedSpacing: false
+                            imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                            imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
                             MouseArea {
                                 anchors.fill: parent
                                 hoverEnabled: true

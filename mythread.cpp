@@ -84,7 +84,7 @@ void MyThread::onReadyRead()
 
             QImage image;
             image.loadFromData(file);
-            if (!image.save("/root/my_test/Client/build/config/profileImage/test.png", "PNG", 0)) {
+            if (!image.save("/root/my_test/Client/build/config/profileImage/"+accountNumber+".png", "PNG", 0)) {
                 qDebug() << "接收文件：图像文件保存失败！";
             }
 
@@ -106,18 +106,20 @@ void MyThread::onReadyRead()
         QString reply = doc["Reply"].toString();
         emit getReply_CheckAccountNumber(reply);
 
+        if (reply == "false") return;  //账号错误
         QString check = doc["Check"].toString();
         if (check == "Login") {
             /* 准备接收文件 */
             fileSize = doc["FileSize"].toInt();
             qDebug() << "子线程" << QThread::currentThread() << ":"
                      << "准备接收图像文件 大小："+QString::number(fileSize);
-                                ID = doc["ID"].toString();
+            if (fileSize == 0) return;  //如果为0,服务端没有数据,就不需要接收文件
+            accountNumber = doc["AccountNumber"].toString();
             file.clear();
             receiveSize = 0;
             count = 0;
             ifNeedReceiveFile = true;
-            toServer_ReceiveFile();  //准备好接收文件
+            toServer_ReceiveFile(accountNumber);  //准备好接收文件
         }
         break;
     }
@@ -188,28 +190,29 @@ void MyThread::toServer_Login(const QString &accountNumber, const QString &passw
     socket->write(data);
 }
 
-void MyThread::toServer_ReceiveFile()
+void MyThread::toServer_ReceiveFile(const QString &accountNumber)
 {
     QJsonObject json;
     json.insert("Purpose", "ReceiveFile");  //目的
     json.insert("Reply", "true");
+    json.insert("AccountNumber", accountNumber);
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();
 
     socket->write(data);
 }
 
-void MyThread::toServer_PrepareSendFile()
+void MyThread::toServer_PrepareSendFile(const QString&url, const QString&id)
 {
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "准备发送图像文件";
 
     /* 准备发送文件 */
-    file.clear();       //清空文件数据
-    ID = "2894841947";  //赋值
+    file.clear();        //清空文件数据
+    accountNumber = id;  //赋值
 
     buffer->open(QIODevice::WriteOnly);  //打开
-    QImage image("/root/我的文件/静态壁纸/23.png");
+    QImage image(url);
     if (!image.save(buffer, "PNG", 0)) {
         qDebug() << "准备发送：图像文件保存失败";
     }
@@ -225,7 +228,7 @@ void MyThread::toServer_PrepareSendFile()
     QJsonObject json;
     json.insert("Purpose", "PrepareSendFile");  //目的
     json.insert("FileSize", file.size());
-    json.insert("ID", ID);
+    json.insert("AccountNumber", accountNumber);
     QJsonDocument doc(json);
     QByteArray send_Data = doc.toJson();
 

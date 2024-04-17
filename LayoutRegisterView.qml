@@ -10,7 +10,7 @@ import QtQuick.Shapes
 
 ColumnLayout {
 
-    property string profileImage: "qrc:/image/12.png"  //头像
+    property string profileImage: "qrc:/image/profileImage.png"  //头像
     property string accountNumberImage: "qrc:/image/QQ.png"  //账号前的图标
     property string passWordImage: "qrc:/image/bg-lock.png"  //密码前的图标
 

@@ -9,8 +9,10 @@ import Qt5Compat.GraphicalEffects
 
 Rectangle {
 
-    property string imgSrc: "qrc:/image/12.png"
-    property bool ifNeedSpacing: true  //是否需要间隙
+    property string imgSrc: ""
+
+    property real imageHeight: self.height*0.75
+    property real imageWidth: self.width*0.75
     property int imgRadius: 100
 
     id: self
@@ -20,8 +22,8 @@ Rectangle {
         id: image
         anchors.centerIn: parent
         source: imgSrc
-        height: ifNeedSpacing ? parent.height*0.93:parent.height
-        width: ifNeedSpacing ? parent.width*0.93:parent.width
+        height: imageHeight
+        width: imageWidth
         fillMode: Image.PreserveAspectCrop  //图像被均匀缩放以填充，必要时进行裁剪
         antialiasing: true  //抗锯齿
         visible: false
