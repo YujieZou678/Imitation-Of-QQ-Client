@@ -205,7 +205,7 @@ ColumnLayout {
                                     }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接
 
-                                    postRequest(info_CheckAccountNumber(accountNumber.text))
+                                    toServer_CheckAccountNumber(accountNumber.text)  //请求验证账号
                                 }
                             }
                         }
@@ -371,7 +371,7 @@ ColumnLayout {
                                 if (!checkAccountNumber.isRight|!checkPassWord1.isRight|!checkPassWord2.isRight|!myRadioButton.ifSelect) return
 
                                 //存入到服务器数据库
-                                postRequest(info_Register(accountNumber.text, passWord.text))
+                                toServer_Register(accountNumber.text, passWord.text)
                                 console.log("注册成功。")
                                 switchLoginView()
                             }

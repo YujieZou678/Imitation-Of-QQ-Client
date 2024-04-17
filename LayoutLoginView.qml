@@ -202,7 +202,7 @@ ColumnLayout {
                                     }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接
 
-                                    postRequest(info_CheckAccountNumber(accountNumber.text))
+                                    toServer_CheckAccountNumber(accountNumber.text)  //请求验证账号
                                 }
                             }
                         }
@@ -368,7 +368,7 @@ ColumnLayout {
                                 }
                                 onGetReply_Login.connect(onReply)
 
-                                postRequest(info_Login(accountNumber.text, passWord.text))
+                                toServer_Login(accountNumber.text, passWord.text)  //请求登陆验证
                             }
                         }
                         Item {
