@@ -205,7 +205,7 @@ ColumnLayout {
                                     }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接
 
-                                    toServer_CheckAccountNumber(accountNumber.text)  //请求验证账号
+                                    toServer_CheckAccountNumber(accountNumber.text, "Register")  //请求验证账号
                                 }
                             }
                         }

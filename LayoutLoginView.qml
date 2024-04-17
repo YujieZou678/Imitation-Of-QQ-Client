@@ -10,7 +10,6 @@ import QtQuick.Shapes
 
 ColumnLayout {
 
-    property string profileImage: "qrc:/image/12.png"  //头像
     property string accountNumberImage: "qrc:/image/QQ.png"  //账号前的图标
     property string passWordImage: "qrc:/image/bg-lock.png"  //密码前的图标
 
@@ -189,10 +188,12 @@ ColumnLayout {
                                 if (!acceptableInput) {
                                     checkAccountNumber.isRight = false
                                     checkAccountNumber.visible = true
+
+                                    profileImage = "qrc:/image/12.png"
                                 }
                                 else {
                                     console.log("账号发送到服务器检测......")
-                                    function onReply(isExit) {  //参数：账号是否已经存在
+                                    function onReply(isExit) {  //检测账号
                                         if (isExit === "true") {
                                             checkAccountNumber.isRight = true
                                             checkAccountNumber.visible = true
@@ -200,9 +201,14 @@ ColumnLayout {
 
                                         onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
+                                    function onFinished() {  //收到图像文件
+                                        profileImage = "file:///root/my_test/Client/build/config/profileImage/test.png"
+                                        onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
+                                    }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接
+                                    onFinished_ReceiveFile.connect(onFinished)      //连接
 
-                                    toServer_CheckAccountNumber(accountNumber.text)  //请求验证账号
+                                    toServer_CheckAccountNumber(accountNumber.text, "Login")  //请求验证账号
                                 }
                             }
                         }

@@ -21,9 +21,12 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_CheckAccountNumber, myThread, &MyThread::toServer_CheckAccountNumber);
     connect(this, &TcpClient::toSubThread_Register, myThread, &MyThread::toServer_Register);
     connect(this, &TcpClient::toSubThread_Login, myThread, &MyThread::toServer_Login);
+    connect(this, &TcpClient::toSubThread_PrepareSendFile, myThread, &MyThread::toServer_PrepareSendFile);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Login, this, &TcpClient::getReplyFromSub_Login);
+    connect(myThread, &MyThread::finished_ReceiveFile, this, &TcpClient::getReplyFromSub_ReceiveFile);
+    connect(myThread, &MyThread::finished_SeverReceiveFile, this, &TcpClient::getReplyFromSub_SeverReceiveFile);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -41,9 +44,9 @@ TcpClient::~TcpClient()
     thread = nullptr;
 }
 
-void TcpClient::toServer_CheckAccountNumber(const QString &checkAccountNumber)
+void TcpClient::toServer_CheckAccountNumber(const QString &checkAccountNumber, const QString &check)
 {
-    emit toSubThread_CheckAccountNumber(checkAccountNumber);
+    emit toSubThread_CheckAccountNumber(checkAccountNumber, check);
 }
 
 void TcpClient::toServer_Register(const QString &checkAccountNumber, const QString &password)
@@ -56,6 +59,11 @@ void TcpClient::toServer_Login(const QString &checkAccountNumber, const QString 
     emit toSubThread_Login(checkAccountNumber, password);
 }
 
+void TcpClient::toServer_PrepareSendFile()
+{
+    emit toSubThread_PrepareSendFile();
+}
+
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
 {
     emit getReply_CheckAccountNumber(isExit);
@@ -64,5 +72,15 @@ void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
 void TcpClient::getReplyFromSub_Login(const QString &isRight)
 {
     emit getReply_Login(isRight);
+}
+
+void TcpClient::getReplyFromSub_ReceiveFile()
+{
+    emit finished_ReceiveFile();
+}
+
+void TcpClient::getReplyFromSub_SeverReceiveFile()
+{
+    emit finished_SeverReceiveFile();
 }
 

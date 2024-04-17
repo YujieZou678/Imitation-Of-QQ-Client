@@ -210,29 +210,15 @@ Window {
                             clickColor: "#5698c3"
                             onClicked: {
                                 profileImage = imgSource
+                                console.log("开始缓冲")
                                 /* 上传到服务器 */
-                                function onReply(isOk) {  //服务器是否准备好接收文件
-                                    if (isOk) {
-                                        console.log("开始发送文件......")
-
-                                        function onReply2(isFinished) {  //服务器是否接收完毕
-                                            if (isFinished) {
-                                                console.log("服务器接收完毕")
-                                            }
-
-                                            onGetReply_SendFile.disconnect(onReply2)
-                                        }
-                                        onGetReply_SendFile.connect(onReply2)
-                                        sendFile()  //发送文件
-
-                                    } else {
-                                        console.log("取消发送文件")
-                                    }
-
-                                    onGetReply_PrepareSendFile.disconnect(onReply)
+                                function onReply() {
+                                    console.log("服务端文件接收完毕,退出缓冲");
+                                    onFinished_SeverReceiveFile.disconnect(onReply)  //连接
                                 }
-                                onGetReply_PrepareSendFile.connect(onReply)
-                                prepareSendFile(id);  //准备发送文件
+                                onFinished_SeverReceiveFile.connect(onReply)  //连接
+
+                                toServer_PrepareSendFile()  //准备发送文件
 
                                 self.close()
                             }
