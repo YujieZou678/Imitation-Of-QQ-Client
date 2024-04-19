@@ -22,11 +22,13 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_Register, myThread, &MyThread::toServer_Register);
     connect(this, &TcpClient::toSubThread_Login, myThread, &MyThread::toServer_Login);
     connect(this, &TcpClient::toSubThread_PrepareSendFile, myThread, &MyThread::toServer_PrepareSendFile);
+    connect(this, &TcpClient::toSubThread_ChangePersonalData, myThread, &MyThread::toServer_ChangePersonalData);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Login, this, &TcpClient::getReplyFromSub_Login);
     connect(myThread, &MyThread::finished_ReceiveFile, this, &TcpClient::getReplyFromSub_ReceiveFile);
     connect(myThread, &MyThread::finished_SeverReceiveFile, this, &TcpClient::getReplyFromSub_SeverReceiveFile);
+    connect(myThread, &MyThread::getReply_GetPersonalData, this, &TcpClient::getReplyFromSub_GetPersonalData);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -64,6 +66,11 @@ void TcpClient::toServer_PrepareSendFile(const QString&url, const QString&id)
     emit toSubThread_PrepareSendFile(url, id);
 }
 
+void TcpClient::toServer_ChangePersonalData(const QJsonObject &doc)
+{
+    emit toSubThread_ChangePersonalData(doc);
+}
+
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
 {
     emit getReply_CheckAccountNumber(isExit);
@@ -82,5 +89,10 @@ void TcpClient::getReplyFromSub_ReceiveFile()
 void TcpClient::getReplyFromSub_SeverReceiveFile()
 {
     emit finished_SeverReceiveFile();
+}
+
+void TcpClient::getReplyFromSub_GetPersonalData(QJsonObject doc)
+{
+    emit getReply_GetPersonalData(doc);
 }
 

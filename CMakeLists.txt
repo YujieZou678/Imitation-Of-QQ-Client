@@ -29,7 +29,7 @@ qt_add_qml_module(appClient
         QML_FILES MyShapeLine.qml
         QML_FILES MyListView.qml
         QML_FILES MyMenuView.qml
-        QML_FILES PersonalSettingView.qml
+        QML_FILES PersonalDataEditView.qml
         QML_FILES PersonalDataView.qml
         QML_FILES ChangeAvatarView.qml
         SOURCES

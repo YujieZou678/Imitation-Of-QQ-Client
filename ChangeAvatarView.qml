@@ -141,7 +141,7 @@ Window {
                             Image {
                                 id: image
                                 anchors.fill: parent
-                                source: profileImage
+                                source: main_ProfileImage
                                 fillMode: Image.PreserveAspectCrop
                                 visible: false
                             }
@@ -155,9 +155,9 @@ Window {
                                 id: myProfileImage
                                 y: 10
                                 anchors.fill: parent
-                                imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
-                                imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
-                                imgSrc: profileImage
+                                imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                                imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? width*0.75:width
+                                imgSrc: main_ProfileImage
                                 imgRadius: 450
                             }
                         }
@@ -209,12 +209,12 @@ Window {
                             bacColor: "#11659a"
                             clickColor: "#5698c3"
                             onClicked: {
-                                if (profileImage === image.source+"") {
+                                if (main_ProfileImage === image.source+"") {
                                     self.close()
                                     return
                                 }
 
-                                profileImage = image.source
+                                main_ProfileImage = image.source
                                 console.log("开始缓冲")
                                 /* 上传到服务器 */
                                 function onReply() {
@@ -224,13 +224,13 @@ Window {
                                 onFinished_SeverReceiveFile.connect(onReply)  //连接
 
                                 /* 处理地址：file:///... */
-                                var source = profileImage.split("/")
+                                var source = main_ProfileImage.split("/")
                                 source.shift()
                                 source.shift()
                                 source.shift()
                                 source = source.join("/")
                                 source = "/"+source
-                                toServer_PrepareSendFile(source, id)  //准备发送文件
+                                toServer_PrepareSendFile(source, main_AccountNumber)  //准备发送文件
 
                                 self.close()
                             }
@@ -265,7 +265,7 @@ Window {
                 }
                 Item {
                     Layout.fillHeight: true
-                    Layout.preferredWidth: 20
+                    Layout.preferredWidth: 15
                 }
             }
         }

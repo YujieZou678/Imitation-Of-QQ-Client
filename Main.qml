@@ -20,8 +20,14 @@ ApplicationWindow {
     property alias layoutUserView: layoutUserView          //用户界面
 
     /* 个人数据 */
-    property string profileImage: "qrc:/image/profileImage.png"  //登陆头像
-    property string id: "2894841947"                             //登陆账号
+    property string main_ProfileImage: "qrc:/image/profileImage.png"     //登陆头像
+    property string main_AccountNumber: "0000000000"                                //登陆账号
+    property string main_NickName: "未知昵称"                             //昵称
+    property string main_Sex: "男"                                       //性别
+    property string main_ZodiacSign: "马"                                //生肖
+    property string main_Old: "0"                                        //Q龄
+    property string main_BloodGroup: "其他血型"                           //血型
+    property string main_PersonalSignature: "这个人很懒什么都没留下......"  //个性签名
 
     width: 520
     height: 400

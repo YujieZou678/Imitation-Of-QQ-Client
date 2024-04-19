@@ -109,6 +109,8 @@ void MyThread::onReadyRead()
         if (reply == "false") return;  //账号错误
         QString check = doc["Check"].toString();
         if (check == "Login") {
+            /* 接收个人信息 */
+            emit getReply_GetPersonalData(doc.object());
             /* 准备接收文件 */
             fileSize = doc["FileSize"].toInt();
             qDebug() << "子线程" << QThread::currentThread() << ":"
@@ -268,6 +270,17 @@ void MyThread::toServer_SendFile()
             hadSend_Size += oneWrite_Size;
         }
     }
+}
+
+void MyThread::toServer_ChangePersonalData(QJsonObject doc)
+{
+    doc.insert("Purpose", "ChangePersonalData");  //目的
+    QJsonDocument _doc(doc);
+    QByteArray send_Data = _doc.toJson();
+
+    socket->write(send_Data);
+    qDebug() << "子线程" << QThread::currentThread() << ":"
+             << "个人信息已上传";
 }
 
 

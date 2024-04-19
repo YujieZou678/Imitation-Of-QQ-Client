@@ -99,7 +99,7 @@ ColumnLayout {
                 topMargin: -55
                 horizontalCenter: parent.horizontalCenter
             }
-            imgSrc: profileImage
+            imgSrc: main_ProfileImage
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
@@ -189,10 +189,10 @@ ColumnLayout {
                                     checkAccountNumber.isRight = false
                                     checkAccountNumber.visible = true
 
-                                    profileImage = "qrc:/image/profileImage.png"
+                                    main_ProfileImage = "qrc:/image/profileImage.png"
                                 }
                                 else {
-                                    id = accountNumber.text  //改变id
+                                    main_AccountNumber = accountNumber.text  //改变id
                                     console.log("账号发送到服务器检测......")
                                     function onReply(isExit) {  //检测账号
                                         if (isExit === "true") {
@@ -202,13 +202,35 @@ ColumnLayout {
 
                                         onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
+
+                                    function onGet(doc) {  //收到个人信息 json数据
+                                        if (doc.NickName !== "") {
+                                            main_NickName = doc.NickName
+                                        }
+                                        if (doc.Sex !== "") {
+                                            main_Sex = doc.Sex
+                                        }
+                                        if (doc.ZodiacSign !== "") {
+                                            main_ZodiacSign = doc.ZodiacSign
+                                        }
+                                        if (doc.BloodGroup !== "") {
+                                            main_BloodGroup = doc.BloodGroup
+                                        }
+                                        if (doc.PersonalSignature !== "") {
+                                            main_PersonalSignature = doc.PersonalSignature
+                                        }
+
+                                        onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
+                                    }
+
                                     function onFinished() {  //收到图像文件
-                                        profileImage = "file:///root/my_test/Client/build/config/profileImage/"+id+".png"
+                                        main_ProfileImage = "file:///root/my_test/Client/build/config/profileImage/"+main_AccountNumber+".png"
                                         centerView.imageHeight = centerView.height*0.93
                                         centerView.imageWidth = centerView.width*0.93
                                         onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
                                     }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接
+                                    onGetReply_GetPersonalData.connect(onGet)       //连接
                                     onFinished_ReceiveFile.connect(onFinished)      //连接
 
                                     toServer_CheckAccountNumber(accountNumber.text, "Login")  //请求验证账号
@@ -363,7 +385,7 @@ ColumnLayout {
                                     if (isRight === "true") {
                                         console.log("登陆成功!")
                                         checkPassWord.isRight = true
-                                        id = accountNumber.text
+                                        main_AccountNumber = accountNumber.text
                                         switchUserView()
                                     }
                                     else {

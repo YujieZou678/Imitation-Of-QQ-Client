@@ -24,14 +24,16 @@ public:
     void toServer_Register(const QString&, const QString&);            //存入注册信息
     void toServer_Login(const QString&, const QString&);               //验证登陆信息
     void toServer_ReceiveFile(const QString&);                         //准备好接收文件
-    void toServer_PrepareSendFile(const QString&, const QString&);                                   //发送文件的准备
+    void toServer_PrepareSendFile(const QString&, const QString&);     //准备发送文件
     void toServer_SendFile();                                          //开始发送文件
+    void toServer_ChangePersonalData(QJsonObject);                     //更改个人资料
 
 signals:
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
     void getReply_Login(const QString&);               //信号：收到登陆的回复
     void finished_ReceiveFile();                       //信号：文件接收完毕
     void finished_SeverReceiveFile();                  //信号：服务端文件接收完毕
+    void getReply_GetPersonalData(const QJsonObject&);  //信号：收到个人信息
 
 public slots:
     void onConnected();     //连接到服务器

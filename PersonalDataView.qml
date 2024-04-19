@@ -65,11 +65,11 @@ Window {
                                 Layout.preferredWidth: parent.width*0.4
                                 MyProfileImage {
                                     id: myProfileImage
-                                    imgSrc: profileImage
+                                    imgSrc: main_ProfileImage
                                     width: 100
                                     height: 100
-                                    imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height*0.93
-                                    imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width*0.93
+                                    imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? height*0.75:height*0.93
+                                    imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? width*0.75:width*0.93
                                     anchors.centerIn: parent
                                     MouseArea {
                                         anchors.fill: parent
@@ -103,7 +103,7 @@ Window {
                                     Text {
                                         id: userName
                                         width: parent.width
-                                        text: "云坠入雾里"
+                                        text: main_NickName
                                         font {
                                             pointSize: 18
                                             family: mFONT_FAMILY
@@ -115,7 +115,7 @@ Window {
                                     Text {
                                         id: personalSignature
                                         width: parent.width
-                                        text: "风吹哪页读哪页......"
+                                        text: main_PersonalSignature
                                         anchors.top: userName.bottom
                                         anchors.topMargin: 15
                                         font {
@@ -178,7 +178,7 @@ Window {
                                     Layout.fillHeight: true
                                     Layout.preferredWidth: 100
                                     Text {
-                                        text: "2894841947"
+                                        text: main_AccountNumber
                                         font {
                                             pointSize: 12
                                             family: mFONT_FAMILY
@@ -208,7 +208,8 @@ Window {
                                                 cursorShape = Qt.PointingHandCursor
                                             }
                                             onClicked: {
-                                                //
+                                                personalDataEditView.visible = true
+                                                personalDataEditView.raise()
                                             }
                                         }
                                     }
@@ -237,7 +238,7 @@ Window {
                                     Layout.fillHeight: true
                                     Layout.fillWidth: true
                                     Text {
-                                        text: "属"+"狗"
+                                        text: "属"+main_ZodiacSign
                                         font {
                                             pointSize: 12
                                             family: mFONT_FAMILY
@@ -335,7 +336,7 @@ Window {
                                     Layout.fillWidth: true
                                     Text {
                                         anchors.verticalCenter: parent.verticalCenter
-                                        text: "Simple的空间"
+                                        text: main_NickName+"的空间"
                                         font {
                                             pointSize: 12
                                             family: mFONT_FAMILY
@@ -384,7 +385,7 @@ Window {
                                     Layout.fillHeight: true
                                     Layout.fillWidth: true
                                     Text {
-                                        text: "10" + "年"
+                                        text: main_Old + "年"
                                         anchors.verticalCenter: parent.verticalCenter
                                         font {
                                             pointSize: 13
@@ -423,7 +424,7 @@ Window {
                                     Layout.fillHeight: true
                                     Layout.fillWidth: true
                                     Text {
-                                        text: "其他血型"
+                                        text: main_BloodGroup
                                         anchors.verticalCenter: parent.verticalCenter
                                         font {
                                             pointSize: 13
@@ -551,6 +552,11 @@ Window {
 
     ChangeAvatarView {  //更换头像视图
         id: changeAvatarView
+        visible: false
+    }
+
+    PersonalDataEditView {  //个人信息编辑视图
+        id: personalDataEditView
         visible: false
     }
 }

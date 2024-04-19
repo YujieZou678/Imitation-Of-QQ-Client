@@ -44,8 +44,8 @@ Rectangle {
                     parent.color = "#00000000"
                 }
                 onClicked: {
-                    personalSettingView.visible = true
-                    personalSettingView.raise()
+//                    personalSettingView.visible = true
+//                    personalSettingView.raise()
                 }
             }
 
@@ -160,8 +160,8 @@ Rectangle {
         }
     }
 
-    PersonalSettingView {
-        id: personalSettingView
-        visible: false
-    }
+//    PersonalSettingView {
+//        id: personalSettingView
+//        visible: false
+//    }
 }

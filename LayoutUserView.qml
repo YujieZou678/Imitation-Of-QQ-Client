@@ -95,9 +95,9 @@ ColumnLayout {
                             width: 100
                             height: 100
                             anchors.centerIn: parent
-                            imgSrc: profileImage
-                            imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
-                            imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
+                            imgSrc: main_ProfileImage
+                            imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                            imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? width*0.75:width
                             MouseArea {
                                 anchors.fill: parent
                                 hoverEnabled: true
@@ -131,7 +131,7 @@ ColumnLayout {
                             Text {
                                 id: userName
                                 width: parent.width
-                                text: "云坠入雾里"
+                                text: main_NickName
                                 font {
                                     pointSize: 18
                                     family: mFONT_FAMILY
@@ -143,7 +143,7 @@ ColumnLayout {
                             Text {
                                 id: personalSignature
                                 width: parent.width
-                                text: "风吹哪页读哪页......"
+                                text: main_PersonalSignature
                                 anchors.top: userName.bottom
                                 anchors.topMargin: 15
                                 font {
