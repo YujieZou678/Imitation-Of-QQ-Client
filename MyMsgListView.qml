@@ -15,7 +15,8 @@ Item {
         /* 初始化消息列表 */
         var data = {}
         data.isMyMsg = true  //是否是本人发的消息
-        data.msg = "123"
+        data.msg = "一声渺远却嘹亮的鸡啼中，熟睡的小镇打个哈欠，揉揉惺忪的睡眼，渐渐地苏醒过来。小镇繁忙而又安适的一天开始了！我背上书包，蹑手蹑脚地下楼，生怕吵醒了仍在熟睡中的邻居们。
+楼下阿婆依旧在烧她的煤炉。阿婆用蒲扇轻"
 
         var data1 = {}
         data1.isMyMsg = false  //是否是本人发的消息
@@ -43,10 +44,21 @@ Item {
 
     Component {  //一条消息
         id: listViewDelegate
-        Item {
+        Rectangle {
             id: listViewDelegateItem
-            height: 70  //会变化
+            Text {  //提前获取消息的高度
+                id: testText
+                visible: false
+                text: msg
+                font.pointSize: 12
+                wrapMode: Text.WrapAnywhere
+                lineHeight: 1.4
+                width: 500  //设置最长宽度
+            }
+
+            height: testText.contentHeight+50  //弹性变化
             width: listView.width
+            //color: "red"
 
             RowLayout {
                 anchors.fill: parent
@@ -70,19 +82,38 @@ Item {
                     visible: !isMyMsg
 
                     Rectangle {  //消息
-                        width: myText1.width+25
-                        height: myText1.height+25
+                        height: testText.contentHeight+10
+                        width: testText.contentWidth+25
                         color: "lightblue"
                         radius: 5
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.left: parent.left
-                        Text {
-                            id: myText1
-                            anchors.centerIn: parent
-                            text: msg
-                            font {
-                                family: mFONT_FAMILY
-                                pointSize: 12
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 0
+
+                            Item {
+                                Layout.preferredHeight: 11
+                                Layout.fillWidth: true
+                            }
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: msg
+                                    font {
+                                        family: mFONT_FAMILY
+                                        pointSize: 12
+                                    }
+                                    wrapMode: Text.Wrap
+                                    lineHeight: 1.4
+                                    width: testText.contentWidth
+                                }
+                            }
+                            Item {
+                                Layout.preferredHeight: 5
+                                Layout.fillWidth: true
                             }
                         }
                     }
@@ -95,19 +126,38 @@ Item {
                     visible: isMyMsg
 
                     Rectangle {  //消息
-                        width: myText2.width+25
-                        height: myText2.height+25
+                        height: testText.contentHeight+10
+                        width: testText.contentWidth+25
                         color: "lightblue"
                         radius: 5
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
-                        Text {
-                            id: myText2
-                            anchors.centerIn: parent
-                            text: msg
-                            font {
-                                family: mFONT_FAMILY
-                                pointSize: 12
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 0
+
+                            Item {
+                                Layout.preferredHeight: 11
+                                Layout.fillWidth: true
+                            }
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: msg
+                                    font {
+                                        family: mFONT_FAMILY
+                                        pointSize: 12
+                                    }
+                                    wrapMode: Text.Wrap
+                                    lineHeight: 1.4
+                                    width: testText.contentWidth
+                                }
+                            }
+                            Item {
+                                Layout.preferredHeight: 5
+                                Layout.fillWidth: true
                             }
                         }
                     }

@@ -112,7 +112,7 @@ Window {
                         Item {  //线
                             Layout.fillWidth: true
                             Layout.preferredHeight: 10
-                            MenuSeparator { width: parent.width }
+                            MenuSeparator { width: parent.width; padding: 0 }
                         }
                         Item {  //昵称 性别
                             Layout.fillWidth: true
