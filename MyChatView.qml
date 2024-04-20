@@ -99,10 +99,13 @@ Window {
                 }
             }
         }
-        Rectangle {  //消息框
+        Item {  //消息框
             Layout.fillWidth: true
             Layout.fillHeight: true
             //color: "lightblue"
+            MyMsgListView {
+                id: myMsgListView
+            }
         }
         Rectangle {  //发送消息框
             Layout.fillWidth: true

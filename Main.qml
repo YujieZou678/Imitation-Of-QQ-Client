@@ -20,7 +20,7 @@ ApplicationWindow {
     property alias layoutUserView: layoutUserView          //用户界面
 
     /* 个人数据 */
-    property string main_ProfileImage: "qrc:/image/profileImage.png"     //登陆头像
+    property string main_ProfileImage: "qrc:/image/12.png"     //登陆头像
     property string main_AccountNumber: "0000000000"                                //登陆账号
     property string main_NickName: "未知昵称"                             //昵称
     property string main_Sex: "男"                                       //性别

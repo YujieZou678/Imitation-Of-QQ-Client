@@ -35,6 +35,7 @@ qt_add_qml_module(appClient
         SOURCES
         SOURCES mythread.h mythread.cpp
         QML_FILES MyChatView.qml
+        QML_FILES MyMsgListView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)
