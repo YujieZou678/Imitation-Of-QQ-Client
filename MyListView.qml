@@ -9,12 +9,32 @@ import QtQuick.Shapes
 import QtQuick.Layouts
 
 Item {
+
+    property var messageList: []  //消息列表
+    onMessageListChanged: {
+        /* 初始化消息列表 */
+        var data = {}
+        var profileImage = main_ProfileImage  //头像
+        var nickName = main_NickName          //昵称
+        var msgRow = ""                       //最后一行消息
+        var msgDate = "昨天"                   //日期
+        data.profileImage = profileImage  //json数据写法
+        data.nickName = nickName
+        data.msgRow = msgRow
+        data.msgDate = msgDate
+
+        listModel.append(data)
+        repeaterModel.append(data)
+    }
+
     anchors.fill: parent
 
     ListView {
         id: listView
         anchors.fill: parent
-        model: 10
+        model: ListModel {
+            id: listModel
+        }
         delegate: listViewDelegate
         highlight: Rectangle {
             opacity: 0.5
@@ -47,7 +67,15 @@ Item {
                     listView.currentIndex = index
                 }
                 onClicked: {
-                    listViewDelegateItem.forceActiveFocus()  //获取焦点
+                    listViewDelegateItem.forceActiveFocus()  //强制获取焦点
+                }
+                onDoubleClicked: {
+                    /* 为聊天窗口赋值 */
+                    var item = repeater.itemAt(index).item
+                    item.chatObj = nickName  //昵称
+
+                    item.visible = true
+                    item.raise()  //置顶
                 }
             }
 
@@ -63,9 +91,9 @@ Item {
                         width: 80
                         height: 80
                         anchors.centerIn: parent
-                        imgSrc: "qrc:/image/12.png"
-                        imageHeight: height
-                        imageWidth: width
+                        imgSrc: profileImage
+                        imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                        imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
                     }
                 }
                 Item {  //消息介绍/描述
@@ -90,7 +118,7 @@ Item {
                                     spacing: 0
 
                                     Text {
-                                        text: "21级-本科-班委群"
+                                        text: nickName
                                         font {
                                             pointSize: 14
                                             family: mFONT_FAMILY
@@ -101,7 +129,7 @@ Item {
                                     }
 
                                     Text {
-                                        text: "昨天"
+                                        text: msgDate
                                         font {
                                             pointSize: 13
                                             family: mFONT_FAMILY
@@ -120,7 +148,7 @@ Item {
 
                                 Text {
                                     width: 280
-                                    text: "李老师:@软12-李明-学委 祭司等级待机时间副isjfdisdsha"
+                                    text: msgRow
                                     font {
                                         pointSize: 11
                                         family: mFONT_FAMILY
@@ -135,4 +163,14 @@ Item {
             }
         }
     }  //end Component
+
+    Repeater {  //批量生产聊天窗口
+        id: repeater
+        model: ListModel {
+            id: repeaterModel
+        }
+        Loader {
+            source: "MyChatView.qml"
+        }
+    }
 }

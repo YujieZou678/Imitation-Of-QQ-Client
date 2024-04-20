@@ -26,5 +26,11 @@
         <file>image/ic_聊天.png</file>
         <file>image/上传.png</file>
         <file>image/profileImage.png</file>
+        <file>image/QQ空间1.png</file>
+        <file>image/呆.png</file>
+        <file>image/图片.png</file>
+        <file>image/文件.png</file>
+        <file>image/振动.png</file>
+        <file>image/更多.png</file>
     </qresource>
 </RCC>

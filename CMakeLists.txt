@@ -34,6 +34,7 @@ qt_add_qml_module(appClient
         QML_FILES ChangeAvatarView.qml
         SOURCES
         SOURCES mythread.h mythread.cpp
+        QML_FILES MyChatView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)
