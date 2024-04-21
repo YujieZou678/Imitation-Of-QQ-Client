@@ -185,7 +185,7 @@ Window {
                         anchors.verticalCenter: parent.verticalCenter
 
                         TextArea {
-                            id: personalSignature
+                            id: msgText
                             wrapMode: TextEdit.Wrap
 //                            background: Rectangle {
 //                                border.color: "gray"
@@ -194,7 +194,7 @@ Window {
                                 family: mFONT_FAMILY
                                 pointSize: 12
                             }
-                            text: main_PersonalSignature
+                            //text: main_PersonalSignature
                         }
                     }
                 }
@@ -257,6 +257,23 @@ Window {
                                     bacColor: "lightblue"
                                     clickColor: "#baccd9"
                                     borderWidth: 1
+                                    onClicked: {
+                                        /* 发送消息 */
+                                        var data = {}
+                                        data.isMyMsg = true
+                                        data.msg = msgText.text
+                                        if (data.msg === "") return
+                                        myMsgListView.listModel.append(data)
+                                        myMsgListView.scrollBar.position = 1
+                                        /* 上传到服务器转发 */
+                                        //
+
+                                        /* 获取对方消息回复 */
+                                        data.isMyMsg = false
+                                        data.msg = "自动回复"
+                                        myMsgListView.listModel.append(data)
+                                        myMsgListView.scrollBar.position = 1
+                                    }
                                 }
                             }
                         }

@@ -382,6 +382,10 @@ ColumnLayout {
                     icon.width: 32
                     clickColor: "#e2e1e4"
                     clickOpacity: 0.7
+                    onClicked: {
+                        myAddFriendView.visible = true
+                        myAddFriendView.raise()
+                    }
                 }
             }
             Item {
@@ -422,6 +426,10 @@ ColumnLayout {
 
     PersonalDataView {  //个人资料视图
         id: personalDataView
+        visible: false
+    }
+    MyAddFriendView {  //加好友视图
+        id: myAddFriendView
         visible: false
     }
 }

@@ -32,5 +32,6 @@
         <file>image/文件.png</file>
         <file>image/振动.png</file>
         <file>image/更多.png</file>
+        <file>image/搜索.png</file>
     </qresource>
 </RCC>

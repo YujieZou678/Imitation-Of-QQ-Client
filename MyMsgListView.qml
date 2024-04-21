@@ -9,6 +9,9 @@ import QtQuick.Layouts
 
 Item {
 
+    property alias listModel: listModel
+    property alias scrollBar: scrollBar
+
     anchors.fill: parent
     property var messageList: []  //消息列表
     onMessageListChanged: {
@@ -35,6 +38,7 @@ Item {
         delegate: listViewDelegate
         clip: true
         ScrollBar.vertical: ScrollBar {
+            id: scrollBar
             anchors.right: parent.right
             Component.onCompleted: {
                 position = 1
@@ -68,12 +72,26 @@ Item {
                     Layout.fillHeight: true
                     Layout.preferredWidth: 70
                     visible: !isMyMsg
-                    MyProfileImage {
+                    ColumnLayout {
                         anchors.fill: parent
-                        imgSrc: main_ProfileImage
-                        imageHeight: 50
-                        imageWidth: 50
-                        imgRadius: parent.width
+                        spacing: 0
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 5
+                        }
+                        MyProfileImage {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 70
+                            imgSrc: main_ProfileImage
+                            imageHeight: 50
+                            imageWidth: 50
+                            imgRadius: parent.width
+                        }
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                        }
                     }
                 }
                 Item {  //消息
@@ -166,12 +184,26 @@ Item {
                     Layout.fillHeight: true
                     Layout.preferredWidth: 70
                     visible: isMyMsg
-                    MyProfileImage {
+                    ColumnLayout {
                         anchors.fill: parent
-                        imgSrc: main_ProfileImage
-                        imageHeight: 50
-                        imageWidth: 50
-                        imgRadius: parent.width
+                        spacing: 0
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 5
+                        }
+                        MyProfileImage {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 70
+                            imgSrc: main_ProfileImage
+                            imageHeight: 50
+                            imageWidth: 50
+                            imgRadius: parent.width
+                        }
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                        }
                     }
                 }
             }

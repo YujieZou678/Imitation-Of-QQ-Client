@@ -14,6 +14,7 @@ ToolButton {
 
     property string clickColor: "#f07c82"
     property string bacColor: "#00000000"  //背景色
+    property int bacRadius: 0
     property real clickOpacity: 1
     property int borderWidth: 0  //边框宽度
 
@@ -28,5 +29,6 @@ ToolButton {
         opacity: clickOpacity
         border.width: borderWidth
         border.color: "lightgray"
+        radius: bacRadius
     }
 }
