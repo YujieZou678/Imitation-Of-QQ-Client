@@ -185,6 +185,10 @@ Window {
                             clickColor: "#93b5cf"
                             bacRadius: 5
                             clickOpacity: 0.6
+                            onClicked: {
+                                /* 服务器搜索 */
+                                /* 头像 昵称 账号 是不是好友 */
+                            }
                         }
                     }
                 }
@@ -229,7 +233,9 @@ Window {
                             ListView {
                                 id: listView
                                 anchors.fill: parent
-                                model: 1
+                                model: ListModel {
+                                    id: listModel
+                                }
                                 clip: true
                                 delegate: Item {
                                     height: 100
@@ -242,7 +248,7 @@ Window {
                                             Layout.preferredWidth: parent.height
                                             //color: "red"
                                             MyProfileImage {
-                                                imgSrc: main_ProfileImage
+                                                imgSrc: profileImage
                                                 width: 80
                                                 height: 80
                                                 imageHeight: 80
@@ -265,7 +271,7 @@ Window {
                                                     Layout.fillWidth: true
                                                     Layout.preferredHeight: 30
                                                     Text {
-                                                        text: main_NickName
+                                                        text: nickName
                                                         font {
                                                             family: mFONT_FAMILY
                                                             pointSize: 14
@@ -281,7 +287,7 @@ Window {
                                                     Layout.fillWidth: true
                                                     Layout.preferredHeight: 20
                                                     Text {
-                                                        text: main_AccountNumber
+                                                        text: accountNumber
                                                         font {
                                                             family: mFONT_FAMILY
                                                             pointSize: 11
@@ -304,7 +310,7 @@ Window {
                                                 width: 80
                                                 anchors.centerIn: parent
                                                 MyToolButton {
-                                                    text: "加好友"  //需要判断是不是好友
+                                                    text: isFriend? "发消息":"加好友"  //需要判断是不是好友
                                                     borderWidth: 1
                                                     bacRadius: 5
                                                     clickColor: "#e2e1e4"

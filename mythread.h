@@ -27,6 +27,7 @@ public:
     void toServer_PrepareSendFile(const QString&, const QString&);     //准备发送文件
     void toServer_SendFile();                                          //开始发送文件
     void toServer_ChangePersonalData(QJsonObject);                     //更改个人资料
+    void toServer_AddFriend(QJsonObject);                              //添加好友
 
 signals:
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复

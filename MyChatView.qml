@@ -9,7 +9,8 @@ import QtQuick.Layouts
 
 Window {
 
-    property string chatObj: ""  //聊天对象
+    property string friendAccountNumber: ""  //聊天对象账号
+    property string chatObj: ""              //聊天对象名
 
     id: self
     width: 700
@@ -105,6 +106,7 @@ Window {
             //color: "lightblue"
             MyMsgListView {
                 id: myMsgListView
+                friendAccountNumber: self.friendAccountNumber
             }
         }
         Rectangle {  //发送消息框
@@ -273,6 +275,10 @@ Window {
                                         data.msg = "自动回复"
                                         myMsgListView.listModel.append(data)
                                         myMsgListView.scrollBar.position = 1
+
+                                        /* 清空输入内容 */
+                                        msgText.clear()
+                                        msgText.forceActiveFocus()
                                     }
                                 }
                             }

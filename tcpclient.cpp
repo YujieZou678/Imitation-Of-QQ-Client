@@ -23,6 +23,7 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_Login, myThread, &MyThread::toServer_Login);
     connect(this, &TcpClient::toSubThread_PrepareSendFile, myThread, &MyThread::toServer_PrepareSendFile);
     connect(this, &TcpClient::toSubThread_ChangePersonalData, myThread, &MyThread::toServer_ChangePersonalData);
+    connect(this, &TcpClient::toSubThread_AddFriend, myThread, &MyThread::toServer_AddFriend);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Login, this, &TcpClient::getReplyFromSub_Login);
@@ -69,6 +70,11 @@ void TcpClient::toServer_PrepareSendFile(const QString&url, const QString&id)
 void TcpClient::toServer_ChangePersonalData(const QJsonObject &doc)
 {
     emit toSubThread_ChangePersonalData(doc);
+}
+
+void TcpClient::toServer_AddFriend(const QJsonObject &obj)
+{
+    emit toSubThread_AddFriend(obj);
 }
 
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)

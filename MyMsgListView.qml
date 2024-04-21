@@ -11,23 +11,28 @@ Item {
 
     property alias listModel: listModel
     property alias scrollBar: scrollBar
+    property string friendAccountNumber: ""
+    onFriendAccountNumberChanged: {
+        console.log("初始化与"+friendAccountNumber+"的聊天记录")
+        for (var i=0; i<main_FriendsList.length; i++) {
+            if (main_FriendsList[i].accountNumber === friendAccountNumber) {
+                /* 找到对应好友数据 */
+                var chatHistory = main_FriendsList[i].chatHistory  //聊天记录列表
+                for (var j=0; j<chatHistory.length; j++) {
+                    /* 初始化聊天记录 */
+                    var data = {}
+                    data.isMyMsg = chatHistory[i].isMyMsg
+                    data.msg = chatHistory[i].msg
+                    listModel.append(data)
+                }
+
+                break
+            }
+        }
+
+    }
 
     anchors.fill: parent
-    property var messageList: []  //消息列表
-    onMessageListChanged: {
-        /* 初始化消息列表 */
-        var data = {}
-        data.isMyMsg = true  //是否是本人发的消息
-        data.msg = "一声渺远却嘹亮的鸡啼中，熟睡的小镇打个哈欠，揉揉惺忪的睡眼，渐渐地苏醒过来。小镇繁忙而又安适的一天开始了！我背上书包，蹑手蹑脚地下楼，生怕吵醒了仍在熟睡中的邻居们。
-楼下阿婆依旧在烧她的煤炉。阿婆用蒲扇轻"
-
-        var data1 = {}
-        data1.isMyMsg = false  //是否是本人发的消息
-        data1.msg = "123"
-
-        listModel.append(data)
-        listModel.append(data1)
-    }
 
     ListView {
         id: listView

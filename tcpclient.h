@@ -26,6 +26,7 @@ public:
     Q_INVOKABLE void toServer_Login(const QString&, const QString&);               //验证登陆信息
     Q_INVOKABLE void toServer_PrepareSendFile(const QString&, const QString&);     //更改头像
     Q_INVOKABLE void toServer_ChangePersonalData(const QJsonObject&);              //更改个人资料
+    Q_INVOKABLE void toServer_AddFriend(const QJsonObject&);                       //添加好友
 
 signals:
     /* 与子线程通信 */
@@ -35,6 +36,7 @@ signals:
     void toSubThread_Login(const QString&, const QString&);
     void toSubThread_PrepareSendFile(const QString&, const QString&);
     void toSubThread_ChangePersonalData(QJsonObject);
+    void toSubThread_AddFriend(const QJsonObject&);
 
     /* 与qml通信 */
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复

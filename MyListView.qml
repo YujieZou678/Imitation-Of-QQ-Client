@@ -13,18 +13,23 @@ Item {
     property var messageList: []  //消息列表
     onMessageListChanged: {
         /* 初始化消息列表 */
-        var data = {}
-        var profileImage = main_ProfileImage  //头像
-        var nickName = main_NickName          //昵称
-        var msgRow = ""                       //最后一行消息
-        var msgDate = "昨天"                   //日期
-        data.profileImage = profileImage  //json数据写法
-        data.nickName = nickName
-        data.msgRow = msgRow
-        data.msgDate = msgDate
+        for (var i=0; i<main_FriendsList.length; i++) {
+            var data = {}
+            var accountNumber = main_FriendsList[i].accountNumber//好友账号
+            var profileImage = main_FriendsList[i].profileImage  //好友头像
+            var nickName = main_FriendsList[i].nickName          //好友昵称
+            var chatHistory = main_FriendsList[i].chatHistory
+            var msgRow = chatHistory[chatHistory.length-1].msg   //最后一行消息
+            var msgDate = "昨天"                                  //日期
+            data.accountNumber = accountNumber  //json数据写法
+            data.profileImage = profileImage
+            data.nickName = nickName
+            data.msgRow = msgRow
+            data.msgDate = msgDate
 
-        listModel.append(data)
-        repeaterModel.append(data)
+            listModel.append(data)
+            repeaterModel.append(data)
+        }
     }
 
     anchors.fill: parent
@@ -72,7 +77,8 @@ Item {
                 onDoubleClicked: {
                     /* 为聊天窗口赋值 */
                     var item = repeater.itemAt(index).item
-                    item.chatObj = nickName  //昵称
+                    item.chatObj = nickName  //好友昵称
+                    item.friendAccountNumber = accountNumber  //好友账号
 
                     item.visible = true
                     item.raise()  //置顶
@@ -134,7 +140,7 @@ Item {
                                             pointSize: 13
                                             family: mFONT_FAMILY
                                         }
-                                        color: "lightgray"
+                                        color: "gray"
                                     }
                                     Item {
                                         Layout.preferredWidth: 15
@@ -153,7 +159,7 @@ Item {
                                         pointSize: 11
                                         family: mFONT_FAMILY
                                     }
-                                    color: "lightgray"
+                                    color: "gray"
                                     elide: Text.ElideRight
                                 }
                             }

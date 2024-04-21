@@ -155,8 +155,8 @@ Window {
                                 id: myProfileImage
                                 y: 10
                                 anchors.fill: parent
-                                imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? height*0.75:height
-                                imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? width*0.75:width
+                                imageHeight: imgSrc==="qrc:/image/profileImage.png" ? height*0.75:height
+                                imageWidth: imgSrc==="qrc:/image/profileImage.png" ? width*0.75:width
                                 imgSrc: main_ProfileImage
                                 imgRadius: 450
                             }

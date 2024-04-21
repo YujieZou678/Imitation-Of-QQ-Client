@@ -283,6 +283,18 @@ void MyThread::toServer_ChangePersonalData(QJsonObject doc)
              << "个人信息已上传";
 }
 
+void MyThread::toServer_AddFriend(QJsonObject obj)
+{
+    obj.insert("Purpose", "AddFriend");
+    QJsonDocument doc(obj);
+    QByteArray send_Data = doc.toJson();
+
+    socket->write(send_Data);
+    QString friendAccountNumber = obj["FriendAccountNumber"].toString();
+    qDebug() << "子线程" << QThread::currentThread() << ":"
+             << "加好友"+friendAccountNumber;
+}
+
 
 
 
