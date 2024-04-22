@@ -24,8 +24,10 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_PrepareSendFile, myThread, &MyThread::toServer_PrepareSendFile);
     connect(this, &TcpClient::toSubThread_ChangePersonalData, myThread, &MyThread::toServer_ChangePersonalData);
     connect(this, &TcpClient::toSubThread_AddFriend, myThread, &MyThread::toServer_AddFriend);
+    connect(this, &TcpClient::toSubThread_RequestGetProfileAndName, myThread, &MyThread::toServer_RequestGetProfileAndName);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
+    connect(myThread, &MyThread::getReply_Register, this, &TcpClient::getReplyFromSub_Register);
     connect(myThread, &MyThread::getReply_Login, this, &TcpClient::getReplyFromSub_Login);
     connect(myThread, &MyThread::finished_ReceiveFile, this, &TcpClient::getReplyFromSub_ReceiveFile);
     connect(myThread, &MyThread::finished_SeverReceiveFile, this, &TcpClient::getReplyFromSub_SeverReceiveFile);
@@ -77,9 +79,19 @@ void TcpClient::toServer_AddFriend(const QJsonObject &obj)
     emit toSubThread_AddFriend(obj);
 }
 
+void TcpClient::toServer_RequestGetProfileAndName(const QString &accountNumber)
+{
+    emit toSubThread_RequestGetProfileAndName(accountNumber);
+}
+
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
 {
     emit getReply_CheckAccountNumber(isExit);
+}
+
+void TcpClient::getReplyFromSub_Register(const QString &isOk)
+{
+    emit getReply_Register(isOk);
 }
 
 void TcpClient::getReplyFromSub_Login(const QString &isRight)
@@ -87,9 +99,9 @@ void TcpClient::getReplyFromSub_Login(const QString &isRight)
     emit getReply_Login(isRight);
 }
 
-void TcpClient::getReplyFromSub_ReceiveFile()
+void TcpClient::getReplyFromSub_ReceiveFile(const QString&nickName)
 {
-    emit finished_ReceiveFile();
+    emit finished_ReceiveFile(nickName);
 }
 
 void TcpClient::getReplyFromSub_SeverReceiveFile()

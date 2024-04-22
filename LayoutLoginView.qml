@@ -12,6 +12,7 @@ ColumnLayout {
 
     property string accountNumberImage: "qrc:/image/QQ.png"  //账号前的图标
     property string passWordImage: "qrc:/image/bg-lock.png"  //密码前的图标
+    property int loadIndex: 0  //加载好友具体信息index
 
     function clearView() {  ////清空登陆视图数据
         accountNumber.text = ""
@@ -202,27 +203,6 @@ ColumnLayout {
 
                                         onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
-
-                                    function onGet(doc) {  //收到个人信息 json数据
-                                        if (doc.NickName !== "") {
-                                            main_NickName = doc.NickName
-                                        }
-                                        if (doc.Sex !== "") {
-                                            main_Sex = doc.Sex
-                                        }
-                                        if (doc.ZodiacSign !== "") {
-                                            main_ZodiacSign = doc.ZodiacSign
-                                        }
-                                        if (doc.BloodGroup !== "") {
-                                            main_BloodGroup = doc.BloodGroup
-                                        }
-                                        if (doc.PersonalSignature !== "") {
-                                            main_PersonalSignature = doc.PersonalSignature
-                                        }
-
-                                        onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
-                                    }
-
                                     function onFinished() {  //收到图像文件
                                         main_ProfileImage = "file:///root/my_test/Client/build/config/profileImage/"+main_AccountNumber+".png"
                                         centerView.imageHeight = centerView.height*0.93
@@ -230,7 +210,6 @@ ColumnLayout {
                                         onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
                                     }
                                     onGetReply_CheckAccountNumber.connect(onReply)  //连接
-                                    onGetReply_GetPersonalData.connect(onGet)       //连接
                                     onFinished_ReceiveFile.connect(onFinished)      //连接
 
                                     toServer_CheckAccountNumber(accountNumber.text, "Login")  //请求验证账号
@@ -380,7 +359,7 @@ ColumnLayout {
                                     return
                                 }
 
-                                //服务器检测
+                                /* 服务器检测 */
                                 function onReply(isRight) {  //密码是否正确
                                     if (isRight === "true") {
                                         console.log("登陆成功!")
@@ -397,7 +376,45 @@ ColumnLayout {
 
                                     onGetReply_Login.disconnect(onReply)
                                 }
-                                onGetReply_Login.connect(onReply)
+                                function onGet(doc) {  //收到个人信息+好友列表 json数据
+                                    /* 初始化个人信息 */
+                                    console.log("初始化个人信息")
+                                    if (doc.NickName !== "") {
+                                        main_NickName = doc.NickName
+                                    }
+                                    if (doc.Sex !== "") {
+                                        main_Sex = doc.Sex
+                                    }
+                                    if (doc.ZodiacSign !== "") {
+                                        main_ZodiacSign = doc.ZodiacSign
+                                    }
+                                    if (doc.BloodGroup !== "") {
+                                        main_BloodGroup = doc.BloodGroup
+                                    }
+                                    if (doc.PersonalSignature !== "") {
+                                        main_PersonalSignature = doc.PersonalSignature
+                                    }
+                                    /* 初始化好友列表 */
+                                    console.log("初始化好友列表")
+                                    var friendArray = doc.FriendArray
+                                    for (var i=0; i<friendArray.length; i++) {
+                                        var data = {}
+                                        data.accountNumber = friendArray[i]
+                                        data.nickName = friendArray[i]
+                                        data.profileImage = "qrc:/image/profileImage.png"  //默认赋值
+                                        data.chatHistory = []  //默认赋值
+                                        var temp = main_FriendsList
+                                        temp.push(data)
+                                        main_FriendsList = temp
+                                    }
+                                    /* 请求加载好友列表具体信息 头像+昵称 */
+                                    console.log("开始加载好友列表具体信息...")
+                                    requestFriendData()  //递归请求
+
+                                    onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
+                                }
+                                onGetReply_GetPersonalData.connect(onGet) //连接
+                                onGetReply_Login.connect(onReply)         //连接
 
                                 toServer_Login(accountNumber.text, passWord.text)  //请求登陆验证
                             }
@@ -438,6 +455,28 @@ ColumnLayout {
             }
         }
     }  // end 下半部分
-}  // end ColumnLayout
 
+    function requestFriendData() {
+        /* 当前加载好友账号 */
+        var accountNumber = main_FriendsList[loadIndex].accountNumber
+
+        function onFinished(nickName) {  //得到头像+昵称
+            loadIndex = loadIndex+1
+            if (loadIndex < main_FriendsList.length) {  //终止条件
+                requestFriendData()  //递归
+            }
+            /* 赋值 */
+            console.log("好友"+loadIndex+" "+accountNumber+"具体信息加载完毕")
+            var temp = main_FriendsList
+            temp[loadIndex-1].nickName = nickName
+            temp[loadIndex-1].profileImage = "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png"
+            main_FriendsList = temp
+
+            onFinished_ReceiveFile.disconnect(onFinished)  //连接
+        }
+        onFinished_ReceiveFile.connect(onFinished)  //连接
+
+        toServer_RequestGetProfileAndName(accountNumber)
+    }
+}  // end ColumnLayout
 

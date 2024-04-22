@@ -24,6 +24,7 @@ MyThread::MyThread(QObject *parent) :
         {"PrepareSendFile", Purpose::PrepareSendFile},
         {"SendFile", Purpose::SendFile},
         {"ReceiveFile", Purpose::ReceiveFile},
+        {"RequestGetProfileAndName", Purpose::RequestGetProfileAndName},
         {"SingleChat", Purpose::SingleChat}
     };
 
@@ -91,7 +92,7 @@ void MyThread::onReadyRead()
             ifNeedReceiveFile = false;
             qDebug() << "子线程" << QThread::currentThread() << ":"
                      << "图像文件接收完毕。";
-            emit finished_ReceiveFile();
+            emit finished_ReceiveFile(nickName);
         }
         return;
     }
@@ -109,14 +110,12 @@ void MyThread::onReadyRead()
         if (reply == "false") return;  //账号错误
         QString check = doc["Check"].toString();
         if (check == "Login") {
-            /* 接收个人信息 */
-            emit getReply_GetPersonalData(doc.object());
             /* 准备接收文件 */
             fileSize = doc["FileSize"].toInt();
-            qDebug() << "子线程" << QThread::currentThread() << ":"
-                     << "准备接收图像文件 大小："+QString::number(fileSize);
-            if (fileSize == 0) return;  //如果为0,服务端没有数据,就不需要接收文件
             accountNumber = doc["AccountNumber"].toString();
+            qDebug() << "子线程" << QThread::currentThread() << ":"
+                     << "准备接收"+accountNumber+"图像文件 大小："+QString::number(fileSize);
+            if (fileSize == 0) return;  //如果为0,服务端没有数据,就不需要接收文件
             file.clear();
             receiveSize = 0;
             count = 0;
@@ -126,11 +125,16 @@ void MyThread::onReadyRead()
         break;
     }
     case Purpose::Register: {
+        QString reply = doc["Reply"].toString();
+        emit getReply_Register(reply);
         break;
     }
     case Purpose::Login: {
         QString reply = doc["Reply"].toString();
         emit getReply_Login(reply);
+        if (reply == "false") return;  //密码错误
+        /* 接收个人信息+好友列表 */
+        emit getReply_GetPersonalData(doc.object());
         break;
     }
     case Purpose::PrepareSendFile: {
@@ -149,6 +153,22 @@ void MyThread::onReadyRead()
         break;
     }
     case Purpose::ReceiveFile: {
+        break;
+    }
+    case Purpose::RequestGetProfileAndName: {
+        /* 昵称赋值 */
+        nickName = doc["NickName"].toString();
+        /* 准备接收文件 */
+        fileSize = doc["FileSize"].toInt();
+        accountNumber = doc["AccountNumber"].toString();
+        qDebug() << "子线程" << QThread::currentThread() << ":"
+                 << "准备接收"+accountNumber+"图像文件 大小："+QString::number(fileSize);
+        if (fileSize == 0) return;  //如果为0,服务端没有数据,就不需要接收文件
+        file.clear();
+        receiveSize = 0;
+        count = 0;
+        ifNeedReceiveFile = true;
+        toServer_ReceiveFile(accountNumber);  //准备好接收文件
         break;
     }
     default:
@@ -186,6 +206,17 @@ void MyThread::toServer_Login(const QString &accountNumber, const QString &passw
     json.insert("Purpose", "Login");  //目的
     json.insert("AccountNumber", accountNumber);  //账号
     json.insert("Password", password);  //密码
+    QJsonDocument doc(json);
+    QByteArray data = doc.toJson();
+
+    socket->write(data);
+}
+
+void MyThread::toServer_RequestGetProfileAndName(const QString &accountNumber)
+{
+    QJsonObject json;
+    json.insert("Purpose", "RequestGetProfileAndName");  //目的: 获取该账号的头像+昵称
+    json.insert("AccountNumber", accountNumber);         //账号
     QJsonDocument doc(json);
     QByteArray data = doc.toJson();
 

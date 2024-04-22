@@ -27,6 +27,7 @@ public:
     Q_INVOKABLE void toServer_PrepareSendFile(const QString&, const QString&);     //更改头像
     Q_INVOKABLE void toServer_ChangePersonalData(const QJsonObject&);              //更改个人资料
     Q_INVOKABLE void toServer_AddFriend(const QJsonObject&);                       //添加好友
+    Q_INVOKABLE void toServer_RequestGetProfileAndName(const QString&);            //请求获取头像和昵称
 
 signals:
     /* 与子线程通信 */
@@ -37,19 +38,22 @@ signals:
     void toSubThread_PrepareSendFile(const QString&, const QString&);
     void toSubThread_ChangePersonalData(QJsonObject);
     void toSubThread_AddFriend(const QJsonObject&);
+    void toSubThread_RequestGetProfileAndName(const QString&);
 
     /* 与qml通信 */
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
+    void getReply_Register(const QString&);            //信号：收到注册的回复
     void getReply_Login(const QString&);               //信号：收到登陆的回复
-    void finished_ReceiveFile();                       //信号：文件接收完毕
+    void finished_ReceiveFile(const QString&);         //信号：文件接收完毕
     void finished_SeverReceiveFile();                  //信号：服务端文件接收完毕
     void getReply_GetPersonalData(const QJsonObject&); //信号：收到个人信息
 
 public slots:
     /* 与子线程通信 */
     void getReplyFromSub_CheckAccountNumber(const QString&);
+    void getReplyFromSub_Register(const QString &);
     void getReplyFromSub_Login(const QString&);
-    void getReplyFromSub_ReceiveFile();
+    void getReplyFromSub_ReceiveFile(const QString&);
     void getReplyFromSub_SeverReceiveFile();
     void getReplyFromSub_GetPersonalData(QJsonObject);
 

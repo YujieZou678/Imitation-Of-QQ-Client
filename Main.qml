@@ -28,17 +28,11 @@ ApplicationWindow {
     property string main_Old: "0"                                        //Q龄
     property string main_BloodGroup: "其他血型"                           //血型
     property string main_PersonalSignature: "这个人很懒什么都没留下......"  //个性签名
-    property var main_FriendsList: [                                 //好友列表
-//        {
-//            "accountNumber": main_AccountNumber,             //好友账号
-//            "nickName": main_NickName,                       //好友昵称
-//            "profileImage": main_ProfileImage,               //好友头像
-//            "chatHistory": [{                                //聊天记录
-//                    "msg": "我们成为好友了，现在开始聊天吧。",  //消息
-//                    "isMyMsg": true  //是不是自己发的
-//                }]
-//        }
-    ]
+    property var main_FriendsList: []                                   //好友列表
+    onMain_FriendsListChanged: {
+        layoutUserView.msgListView.updateData()
+    }
+
     width: 520
     height: 400
 //    width: 400

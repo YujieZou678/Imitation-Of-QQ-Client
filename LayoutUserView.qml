@@ -10,6 +10,8 @@ import QtQuick.Shapes
 
 ColumnLayout {
 
+    property alias msgListView: msgListView
+
     anchors.fill: parent
     spacing: 0
 
@@ -330,7 +332,7 @@ ColumnLayout {
                 Item {
                     anchors.fill: parent
                     MyListView {
-                        id: newsListView
+                        id: msgListView
                     }
                 }
             }

@@ -371,18 +371,24 @@ ColumnLayout {
                                 if (!checkAccountNumber.isRight|!checkPassWord1.isRight|!checkPassWord2.isRight|!myRadioButton.ifSelect) return
 
                                 /* 存入到服务器数据库 */
-                                toServer_Register(accountNumber.text, passWord.text)
-                                /* 添加自己为好友 */
-                                var data = {}
-                                data.AccountNumber = accountNumber.text      //自己的账号
-                                data.FriendAccountNumber = accountNumber.text//好友账号
-                                data.ChatHistory = {}                        //聊天记录
-                                data.ChatHistory.Msg = "我们成为好友了，现在开始聊天吧。"
-                                data.ChatHistory.IsMyMsg = true
-                                toServer_AddFriend(data)
+                                function onReply(isOk) {
+                                    if (isOk === "true") {
+                                        console.log("注册成功。")
+                                        /* 添加自己为好友 */
+                                        var data = {}
+                                        data.AccountNumber = accountNumber.text      //自己的账号
+                                        data.FriendAccountNumber = accountNumber.text//好友账号
+                                        data.ChatHistory = {}                        //聊天记录
+                                        data.ChatHistory.Msg = "我们成为好友了，现在开始聊天吧。"
+                                        data.ChatHistory.IsMyMsg = true
+                                        toServer_AddFriend(data)
+                                        switchLoginView()
+                                    }
+                                    onGetReply_Register.disconnect(onReply)  //断开连接
+                                }
+                                onGetReply_Register.connect(onReply)  //连接
 
-                                console.log("注册成功。")
-                                switchLoginView()
+                                toServer_Register(accountNumber.text, passWord.text)  //注册请求
                             }
                         }
                         Item {

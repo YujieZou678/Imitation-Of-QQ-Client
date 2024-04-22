@@ -89,8 +89,8 @@ Item {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 70
                             imgSrc: main_ProfileImage
-                            imageHeight: 50
-                            imageWidth: 50
+                            imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
+                            imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
                             imgRadius: parent.width
                         }
                         Item {
@@ -201,8 +201,8 @@ Item {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 70
                             imgSrc: main_ProfileImage
-                            imageHeight: 50
-                            imageWidth: 50
+                            imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
+                            imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
                             imgRadius: parent.width
                         }
                         Item {

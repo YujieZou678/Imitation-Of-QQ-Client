@@ -10,17 +10,23 @@ import QtQuick.Layouts
 
 Item {
 
-    property var messageList: []  //消息列表
-    onMessageListChanged: {
-        /* 初始化消息列表 */
+    function updateData() {
+        listModel.clear()  //清空数据
+        /* 更新消息列表 */
         for (var i=0; i<main_FriendsList.length; i++) {
             var data = {}
             var accountNumber = main_FriendsList[i].accountNumber//好友账号
             var profileImage = main_FriendsList[i].profileImage  //好友头像
             var nickName = main_FriendsList[i].nickName          //好友昵称
+            var msgRow                                           //最后一行消息
             var chatHistory = main_FriendsList[i].chatHistory
-            var msgRow = chatHistory[chatHistory.length-1].msg   //最后一行消息
+            if (chatHistory.length < 1) { msgRow = "" }
+            else {
+                var msgList = chatHistory[chatHistory.length-1]
+                msgRow = msgList.msg
+            }
             var msgDate = "昨天"                                  //日期
+
             data.accountNumber = accountNumber  //json数据写法
             data.profileImage = profileImage
             data.nickName = nickName
