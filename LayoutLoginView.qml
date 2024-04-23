@@ -409,7 +409,18 @@ ColumnLayout {
                                     }
                                     /* 请求加载好友列表具体信息 头像+昵称 */
                                     console.log("开始加载好友列表具体信息...")
-                                    requestFriendData()  //递归请求
+                                    requestFriendData()  //递归请求（头像+昵称）
+                                    /* 加载聊天记录最后一行 */
+                                    for (var i=0; i<main_FriendsList.length; i++) {
+                                        var friendAccountNumber = main_FriendsList[i].accountNumber
+                                        var temp = main_FriendsList
+                                        var data = {}
+                                        data.Msg = getLocalCache_ChatHistory(friendAccountNumber)
+                                        data.IsMyMsg = "true"
+                                        temp[i].chatHistory = []
+                                        temp[i].chatHistory.push(data)
+                                        main_FriendsList = temp
+                                    }
 
                                     onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
                                 }

@@ -32,6 +32,14 @@ ApplicationWindow {
     onMain_FriendsListChanged: {
         layoutUserView.msgListView.updateData()
     }
+    /*main_FriendsList 一个数据的json格式
+    1.accountNumber,
+    2.nickName,
+    3.profileImage,
+    4.chatHistory:
+           IsMyMsg,
+           Msg
+    */
 
     width: 520
     height: 400

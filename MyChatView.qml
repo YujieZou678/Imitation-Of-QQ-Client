@@ -12,6 +12,10 @@ Window {
     property string friendAccountNumber: ""  //聊天对象账号
     property string chatObj: ""              //聊天对象名
 
+    function updateData() {
+        myMsgListView.updateData()
+    }
+
     id: self
     width: 700
     height: 550
@@ -262,19 +266,32 @@ Window {
                                     onClicked: {
                                         /* 发送消息 */
                                         var data = {}
-                                        data.isMyMsg = true
+                                        data.isMyMsg = "true"
                                         data.msg = msgText.text
                                         if (data.msg === "") return
                                         myMsgListView.listModel.append(data)
                                         myMsgListView.scrollBar.position = 1
-                                        /* 上传到服务器转发 */
-                                        //
+                                        /* 本地缓存 */
+                                        saveLocalCache_ChatHistory(friendAccountNumber, msgText.text)
+                                        /* 上传到服务器缓存和转发 json数据*/
+                                        var chatHistory = {}
+                                        chatHistory.AccountNumber = main_AccountNumber
+                                        chatHistory.FriendAccountNumber = friendAccountNumber
+                                        chatHistory.ChatHistory = {}
+                                        chatHistory.ChatHistory.Msg = msgText.text
+                                        chatHistory.ChatHistory.IsMyMsg = "true"
 
-                                        /* 获取对方消息回复 */
-                                        data.isMyMsg = false
-                                        data.msg = "自动回复"
-                                        myMsgListView.listModel.append(data)
-                                        myMsgListView.scrollBar.position = 1
+                                        if (main_AccountNumber === friendAccountNumber) {
+                                            chatHistory.IsNeedTransmit = "false"
+                                        }
+                                        else chatHistory.IsNeedTransmit = "true"
+                                        toServer_SaveChatHistory(chatHistory)
+
+//                                        /* 获取对方消息回复 */
+//                                        data.isMyMsg = false
+//                                        data.msg = "自动回复"
+//                                        myMsgListView.listModel.append(data)
+//                                        myMsgListView.scrollBar.position = 1
 
                                         /* 清空输入内容 */
                                         msgText.clear()

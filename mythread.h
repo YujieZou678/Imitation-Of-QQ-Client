@@ -23,12 +23,14 @@ public:
     void toServer_CheckAccountNumber(const QString&, const QString&);  //验证账号是否存在
     void toServer_Register(const QString&, const QString&);            //存入注册信息
     void toServer_Login(const QString&, const QString&);               //验证登陆信息
-    void toServer_RequestGetProfileAndName(const QString&);            //请求获取头像和昵称
+    void toServer_RequestGetProfileAndName(const QString&);            //请求获取某好友的头像和昵称
     void toServer_ReceiveFile(const QString&);                         //准备好接收某文件
     void toServer_PrepareSendFile(const QString&, const QString&);     //更换头像：准备发送文件
     void toServer_SendFile();                                          //更换头像：开始发送文件
     void toServer_ChangePersonalData(QJsonObject);                     //更改个人资料
     void toServer_AddFriend(QJsonObject);                              //添加好友
+    void toServer_SaveChatHistory(QJsonObject);                        //上传聊天记录
+    void toServer_GetChatHistory(const QString&, const QString&);      //获取与某好友的聊天记录
 
 signals:
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
@@ -36,7 +38,8 @@ signals:
     void getReply_Login(const QString&);               //信号：收到登陆的回复
     void finished_ReceiveFile(const QString&);         //信号：文件接收完毕
     void finished_SeverReceiveFile();                  //信号：服务端文件接收完毕
-    void getReply_GetPersonalData(const QJsonObject&);  //信号：收到个人信息
+    void getReply_GetPersonalData(const QJsonObject&); //信号：收到个人信息
+    void getReply_GetChatHistory(const QJsonArray&);   //信号：收到与某好友的聊天信息
 
 public slots:
     void onConnected();     //连接到服务器
@@ -52,6 +55,7 @@ private:
         SendFile,
         ReceiveFile,
         RequestGetProfileAndName,
+        GetChatHistory,
         SingleChat
     };
     QMap<QString, enum Purpose> map_Switch;  //用于寻找信息是哪个目的

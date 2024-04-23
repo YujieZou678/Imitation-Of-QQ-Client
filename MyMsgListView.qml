@@ -21,15 +21,33 @@ Item {
                 for (var j=0; j<chatHistory.length; j++) {
                     /* 初始化聊天记录 */
                     var data = {}
-                    data.isMyMsg = chatHistory[i].isMyMsg
-                    data.msg = chatHistory[i].msg
+                    data.isMyMsg = chatHistory[i].IsMyMsg
+                    data.msg = chatHistory[i].Msg
                     listModel.append(data)
                 }
 
                 break
             }
         }
+    }
 
+    function updateData() {  //更新聊天记录
+        listModel.clear()
+        for (var i=0; i<main_FriendsList.length; i++) {
+            if (main_FriendsList[i].accountNumber === friendAccountNumber) {
+                /* 找到对应好友数据 */
+                var chatHistory = main_FriendsList[i].chatHistory  //聊天记录列表
+                for (var j=0; j<chatHistory.length; j++) {
+                    /* 初始化聊天记录 */
+                    var data = {}
+                    data.isMyMsg = chatHistory[j].IsMyMsg
+                    data.msg = chatHistory[j].Msg
+                    listModel.append(data)
+                }
+
+                break
+            }
+        }
     }
 
     anchors.fill: parent
@@ -76,7 +94,7 @@ Item {
                 Item {  //头像
                     Layout.fillHeight: true
                     Layout.preferredWidth: 70
-                    visible: !isMyMsg
+                    visible: isMyMsg==="true"? false:true
                     ColumnLayout {
                         anchors.fill: parent
                         spacing: 0
@@ -102,7 +120,7 @@ Item {
                 Item {  //消息
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    visible: !isMyMsg
+                    visible: isMyMsg==="true"? false:true
 
                     Rectangle {  //消息
                         height: testText.contentHeight+10
@@ -146,7 +164,7 @@ Item {
                 Item {  //消息
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    visible: isMyMsg
+                    visible: isMyMsg==="true"? true:false
 
                     Rectangle {  //消息
                         height: testText.contentHeight+10
@@ -188,7 +206,7 @@ Item {
                 Item {  //头像
                     Layout.fillHeight: true
                     Layout.preferredWidth: 70
-                    visible: isMyMsg
+                    visible: isMyMsg==="true"? true:false
                     ColumnLayout {
                         anchors.fill: parent
                         spacing: 0

@@ -380,7 +380,7 @@ ColumnLayout {
                                         data.FriendAccountNumber = accountNumber.text//好友账号
                                         data.ChatHistory = {}                        //聊天记录
                                         data.ChatHistory.Msg = "我们成为好友了，现在开始聊天吧。"
-                                        data.ChatHistory.IsMyMsg = true
+                                        data.ChatHistory.IsMyMsg = "true"
                                         toServer_AddFriend(data)
                                         switchLoginView()
                                     }

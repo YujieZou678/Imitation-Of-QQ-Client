@@ -9,6 +9,9 @@ date: 2024.3.18
 TcpClient::TcpClient(QObject *parent)
     : QObject(parent)
 {
+    /* settings */
+    settings = new QSettings("config/local.ini", QSettings::NativeFormat, this);
+
     /* 开启子线程 */
     thread = new QThread;     //不能设置父类
     myThread = new MyThread;  //不能设置父类
@@ -25,6 +28,8 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_ChangePersonalData, myThread, &MyThread::toServer_ChangePersonalData);
     connect(this, &TcpClient::toSubThread_AddFriend, myThread, &MyThread::toServer_AddFriend);
     connect(this, &TcpClient::toSubThread_RequestGetProfileAndName, myThread, &MyThread::toServer_RequestGetProfileAndName);
+    connect(this, &TcpClient::toSubThread_SaveChatHistory, myThread, &MyThread::toServer_SaveChatHistory);
+    connect(this, &TcpClient::toSubThread_GetChatHistory, myThread, &MyThread::toServer_GetChatHistory);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Register, this, &TcpClient::getReplyFromSub_Register);
@@ -32,6 +37,7 @@ TcpClient::TcpClient(QObject *parent)
     connect(myThread, &MyThread::finished_ReceiveFile, this, &TcpClient::getReplyFromSub_ReceiveFile);
     connect(myThread, &MyThread::finished_SeverReceiveFile, this, &TcpClient::getReplyFromSub_SeverReceiveFile);
     connect(myThread, &MyThread::getReply_GetPersonalData, this, &TcpClient::getReplyFromSub_GetPersonalData);
+    connect(myThread, &MyThread::getReply_GetChatHistory, this, &TcpClient::getReplyFromSub_GetChatHistory);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -84,6 +90,32 @@ void TcpClient::toServer_RequestGetProfileAndName(const QString &accountNumber)
     emit toSubThread_RequestGetProfileAndName(accountNumber);
 }
 
+void TcpClient::toServer_SaveChatHistory(const QJsonObject &obj)
+{
+    emit toSubThread_SaveChatHistory(obj);
+}
+
+void TcpClient::toServer_GetChatHistory(const QString &accountNumber, const QString &friendAccountNumber)
+{
+    emit toSubThread_GetChatHistory(accountNumber, friendAccountNumber);
+}
+
+void TcpClient::saveLocalCache_ChatHistory(const QString &friendAccountNumber, const QString &msg)
+{
+    /* 保存本地缓存聊天记录 */
+    settings->setValue("ChatHistory/"+friendAccountNumber, msg);
+}
+
+QString TcpClient::getLocalCache_ChatHistory(const QString &friendAccountNumber)
+{
+    /* 获取本地缓存聊天记录 */
+    settings->beginGroup("ChatHistory");  //进入目录
+    QString data = settings->value(friendAccountNumber).toString();
+    settings->endGroup();                 //退出目录
+
+    return data;
+}
+
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
 {
     emit getReply_CheckAccountNumber(isExit);
@@ -112,5 +144,10 @@ void TcpClient::getReplyFromSub_SeverReceiveFile()
 void TcpClient::getReplyFromSub_GetPersonalData(QJsonObject doc)
 {
     emit getReply_GetPersonalData(doc);
+}
+
+void TcpClient::getReplyFromSub_GetChatHistory(const QJsonArray &chatHistory)
+{
+    emit getReply_GetChatHistory(chatHistory);
 }
 

@@ -23,7 +23,7 @@ Item {
             if (chatHistory.length < 1) { msgRow = "" }
             else {
                 var msgList = chatHistory[chatHistory.length-1]
-                msgRow = msgList.msg
+                msgRow = msgList.Msg
             }
             var msgDate = "昨天"                                  //日期
 
@@ -85,6 +85,20 @@ Item {
                     var item = repeater.itemAt(index).item
                     item.chatObj = nickName  //好友昵称
                     item.friendAccountNumber = accountNumber  //好友账号
+
+                    function onReply(chatHistory) {  //获取和该好友的聊天记录
+                        for (var i=0; i<main_FriendsList.length; i++) {
+                            if (main_FriendsList[i].accountNumber === accountNumber) {
+                                main_FriendsList[i].chatHistory = chatHistory
+                                break
+                            }
+                        }
+
+                        item.updateData()  //更新数据
+                        onGetReply_GetChatHistory.disconnect(onReply)  //断开连接
+                    }
+                    onGetReply_GetChatHistory.connect(onReply)  //连接
+                    toServer_GetChatHistory(main_AccountNumber, accountNumber)  //请求
 
                     item.visible = true
                     item.raise()  //置顶
@@ -160,7 +174,7 @@ Item {
 
                                 Text {
                                     width: 280
-                                    text: msgRow
+                                    text: accountNumber===main_AccountNumber ? msgRow:nickName+":"+msgRow
                                     font {
                                         pointSize: 11
                                         family: mFONT_FAMILY

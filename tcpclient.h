@@ -9,6 +9,7 @@ date: 2024.3.18
 #include <QObject>
 #include <QThread>
 #include <QJsonObject>
+#include <QSettings>
 
 class MyThread;
 
@@ -27,7 +28,12 @@ public:
     Q_INVOKABLE void toServer_PrepareSendFile(const QString&, const QString&);     //更改头像
     Q_INVOKABLE void toServer_ChangePersonalData(const QJsonObject&);              //更改个人资料
     Q_INVOKABLE void toServer_AddFriend(const QJsonObject&);                       //添加好友
-    Q_INVOKABLE void toServer_RequestGetProfileAndName(const QString&);            //请求获取头像和昵称
+    Q_INVOKABLE void toServer_RequestGetProfileAndName(const QString&);            //请求获取某好友头像和昵称
+    Q_INVOKABLE void toServer_SaveChatHistory(const QJsonObject&);                 //上传聊天记录
+    Q_INVOKABLE void toServer_GetChatHistory(const QString&, const QString&);      //获取与某好友的聊天记录
+
+    Q_INVOKABLE void saveLocalCache_ChatHistory(const QString&, const QString&);   //保存本地缓存：聊天记录
+    Q_INVOKABLE QString getLocalCache_ChatHistory(const QString&);                 //获取本地缓存：聊天记录
 
 signals:
     /* 与子线程通信 */
@@ -39,6 +45,8 @@ signals:
     void toSubThread_ChangePersonalData(QJsonObject);
     void toSubThread_AddFriend(const QJsonObject&);
     void toSubThread_RequestGetProfileAndName(const QString&);
+    void toSubThread_SaveChatHistory(const QJsonObject&);
+    void toSubThread_GetChatHistory(const QString&, const QString&);
 
     /* 与qml通信 */
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
@@ -47,6 +55,7 @@ signals:
     void finished_ReceiveFile(const QString&);         //信号：文件接收完毕
     void finished_SeverReceiveFile();                  //信号：服务端文件接收完毕
     void getReply_GetPersonalData(const QJsonObject&); //信号：收到个人信息
+    void getReply_GetChatHistory(const QJsonArray&);   //信号：收到与某好友的聊天信息
 
 public slots:
     /* 与子线程通信 */
@@ -56,8 +65,11 @@ public slots:
     void getReplyFromSub_ReceiveFile(const QString&);
     void getReplyFromSub_SeverReceiveFile();
     void getReplyFromSub_GetPersonalData(QJsonObject);
+    void getReplyFromSub_GetChatHistory(const QJsonArray&);
 
 private:
+    QSettings *settings;  //缓存对象
+
     QThread *thread;
     MyThread *myThread;  //子线程
 };
