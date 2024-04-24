@@ -203,8 +203,8 @@ ColumnLayout {
 
                                         onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
-                                    function onFinished() {  //收到图像文件
-                                        main_ProfileImage = "file:///root/my_test/Client/build/config/profileImage/"+main_AccountNumber+".png"
+                                    function onFinished(nickName, isReceive) {  //收到图像文件
+                                        main_ProfileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+main_AccountNumber+".png":main_ProfileImage
                                         centerView.imageHeight = centerView.height*0.93
                                         centerView.imageWidth = centerView.width*0.93
                                         onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
@@ -403,9 +403,8 @@ ColumnLayout {
                                         data.nickName = friendArray[i]
                                         data.profileImage = "qrc:/image/profileImage.png"  //默认赋值
                                         data.chatHistory = []  //默认赋值
-                                        var temp = main_FriendsList
-                                        temp.push(data)
-                                        main_FriendsList = temp
+                                        main_FriendsList.push(data)
+                                        updateFriendListView() //更新视图
                                     }
                                     /* 请求加载好友列表具体信息 头像+昵称 */
                                     console.log("开始加载好友列表具体信息...")
@@ -413,13 +412,13 @@ ColumnLayout {
                                     /* 加载聊天记录最后一行 */
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         var friendAccountNumber = main_FriendsList[i].accountNumber
-                                        var temp = main_FriendsList
                                         var data = {}
-                                        data.Msg = getLocalCache_ChatHistory(friendAccountNumber)
-                                        data.IsMyMsg = "true"
-                                        temp[i].chatHistory = []
-                                        temp[i].chatHistory.push(data)
-                                        main_FriendsList = temp
+                                        var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
+                                        data.Msg = msgLocalCache.Msg===undefined? "":msgLocalCache.Msg
+                                        data.IsMyMsg = msgLocalCache.IsMyMsg===undefined? "":msgLocalCache.IsMyMsg
+                                        main_FriendsList[i].chatHistory = []
+                                        main_FriendsList[i].chatHistory.push(data)
+                                        updateFriendListView()  //更新视图
                                     }
 
                                     onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
@@ -471,17 +470,17 @@ ColumnLayout {
         /* 当前加载好友账号 */
         var accountNumber = main_FriendsList[loadIndex].accountNumber
 
-        function onFinished(nickName) {  //得到头像+昵称
+        function onFinished(nickName, isReceive) {  //昵称 是否接收了头像
             loadIndex = loadIndex+1
             if (loadIndex < main_FriendsList.length) {  //终止条件
                 requestFriendData()  //递归
             }
             /* 赋值 */
             console.log("好友"+loadIndex+" "+accountNumber+"具体信息加载完毕")
-            var temp = main_FriendsList
-            temp[loadIndex-1].nickName = nickName
-            temp[loadIndex-1].profileImage = "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png"
-            main_FriendsList = temp
+            main_FriendsList[loadIndex-1].nickName = nickName===""? "未知昵称":nickName
+            main_FriendsList[loadIndex-1].profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png":"qrc:/image/profileImage.png"
+
+            updateFriendListView()  //更新视图
 
             onFinished_ReceiveFile.disconnect(onFinished)  //连接
         }

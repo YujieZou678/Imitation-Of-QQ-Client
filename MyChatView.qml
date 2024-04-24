@@ -271,8 +271,7 @@ Window {
                                         if (data.msg === "") return
                                         myMsgListView.listModel.append(data)
                                         myMsgListView.scrollBar.position = 1
-                                        /* 本地缓存 */
-                                        saveLocalCache_ChatHistory(friendAccountNumber, msgText.text)
+
                                         /* 上传到服务器缓存和转发 json数据*/
                                         var chatHistory = {}
                                         chatHistory.AccountNumber = main_AccountNumber
@@ -280,11 +279,14 @@ Window {
                                         chatHistory.ChatHistory = {}
                                         chatHistory.ChatHistory.Msg = msgText.text
                                         chatHistory.ChatHistory.IsMyMsg = "true"
+                                        /* 本地缓存 */
+                                        saveLocalCache_ChatHistory(chatHistory)
 
                                         if (main_AccountNumber === friendAccountNumber) {
                                             chatHistory.IsNeedTransmit = "false"
                                         }
                                         else chatHistory.IsNeedTransmit = "true"
+                                        /* 云缓存 */
                                         toServer_SaveChatHistory(chatHistory)
 
 //                                        /* 获取对方消息回复 */

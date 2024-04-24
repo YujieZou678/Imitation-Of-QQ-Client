@@ -123,6 +123,9 @@ Window {
                                 TextField {
                                     id: textField
                                     anchors.fill: parent
+                                    validator: RegularExpressionValidator {
+                                        regularExpression: /[1-9]\d{9}/
+                                    }
                                     background: Rectangle {
                                         color: "#00000000"
                                     }
@@ -186,8 +189,53 @@ Window {
                             bacRadius: 5
                             clickOpacity: 0.6
                             onClicked: {
-                                /* 服务器搜索 */
-                                /* 头像 昵称 账号 是不是好友 */
+                                /* 判断是否有效 */
+                                if (!textField.acceptableInput) {
+                                    console.log("输入不合法！")
+                                    return
+                                }
+                                /* 验证号码是否存在 */
+                                var accountNumber = textField.text  //查找的账号
+                                function onReply(isExit) {  //检测账号
+                                    if (isExit === "true") {
+                                        /* 获取头像 昵称 账号 是不是好友 */
+                                        function onFinished(nickName, isReceive) {  //昵称 是否接收了头像
+                                            var data = {}
+                                            data.profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png":"qrc:/image/profileImage.png"
+                                            data.nickName = nickName===""? "未知昵称":nickName
+                                            data.accountNumber = accountNumber
+                                            /* 判断是否为好友 */
+                                            var isFriend = false
+                                            for (var i=0; i<main_FriendsList.length; i++) {
+                                                if (accountNumber === main_FriendsList[i].accountNumber) {
+                                                    isFriend = true
+                                                    if (nickName !== main_FriendsList[i].nickName) {
+                                                        if (nickName !== "") {
+                                                            main_FriendsList[i].nickName = nickName
+                                                        }
+                                                    }
+                                                    /* 刷新好友列表视图数据 */
+                                                    updateFriendListView()
+                                                }
+                                            }
+                                            data.isFriend = isFriend  //bool
+                                            listModel.clear()
+                                            listModel.append(data)
+
+                                            onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
+                                        }
+                                        onFinished_ReceiveFile.connect(onFinished)  //连接
+
+                                        toServer_RequestGetProfileAndName(accountNumber)  //请求获取数据
+                                    } else {  //账号不存在
+                                        console.log("该账号不存在")
+                                    }
+
+                                    onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
+                                }  //验证账号
+                                onGetReply_CheckAccountNumber.connect(onReply)  //连接
+
+                                toServer_CheckAccountNumber(accountNumber, "Register")  //请求验证账号
                             }
                         }
                     }
@@ -239,7 +287,7 @@ Window {
                                 clip: true
                                 delegate: Item {
                                     height: 100
-                                    width: parent.width
+                                    width: listView.width
                                     RowLayout {
                                         anchors.fill: parent
                                         spacing: 0
@@ -251,8 +299,8 @@ Window {
                                                 imgSrc: profileImage
                                                 width: 80
                                                 height: 80
-                                                imageHeight: 80
-                                                imageWidth: 80
+                                                imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                                                imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
                                                 anchors.verticalCenter: parent.verticalCenter
                                             }
                                         }
@@ -315,6 +363,23 @@ Window {
                                                     bacRadius: 5
                                                     clickColor: "#e2e1e4"
                                                     clickOpacity: 0.8
+                                                    font.family: mFONT_FAMILY
+                                                    onClicked: {
+                                                        /* 判断发消息 or 加好友 */
+                                                        if (text === "发消息") {
+                                                            /* 发消息 */
+                                                            //
+                                                        } else {
+                                                            /* 加好友 */
+                                                            var data = {}
+                                                            data.AccountNumber = main_AccountNumber      //自己的账号
+                                                            data.FriendAccountNumber = accountNumber     //好友账号
+                                                            data.ChatHistory = {}                        //聊天记录
+                                                            data.ChatHistory.Msg = "我们成为好友了，现在开始聊天吧。"
+                                                            data.ChatHistory.IsMyMsg = "false"
+                                                            toServer_AddFriend(data)
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }

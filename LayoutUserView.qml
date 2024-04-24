@@ -10,7 +10,7 @@ import QtQuick.Shapes
 
 ColumnLayout {
 
-    property alias msgListView: msgListView
+    property alias msgListView: msgListView  //消息列表
 
     anchors.fill: parent
     spacing: 0

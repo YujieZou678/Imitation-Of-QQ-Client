@@ -28,10 +28,11 @@ ApplicationWindow {
     property string main_Old: "0"                                        //Q龄
     property string main_BloodGroup: "其他血型"                           //血型
     property string main_PersonalSignature: "这个人很懒什么都没留下......"  //个性签名
-    property var main_FriendsList: []                                   //好友列表
-    onMain_FriendsListChanged: {
+    property var main_FriendsList: []  //好友列表
+    function updateFriendListView() {  //更新好友列表视图
         layoutUserView.msgListView.updateData()
     }
+
     /*main_FriendsList 一个数据的json格式
     1.accountNumber,
     2.nickName,

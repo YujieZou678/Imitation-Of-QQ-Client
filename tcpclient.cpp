@@ -3,6 +3,9 @@ function: 仿QQ客户端。
 author: zouyujie
 date: 2024.3.18
 */
+#include <QJsonArray>
+#include <QDir>
+
 #include "tcpclient.h"
 #include "mythread.h"
 
@@ -100,20 +103,43 @@ void TcpClient::toServer_GetChatHistory(const QString &accountNumber, const QStr
     emit toSubThread_GetChatHistory(accountNumber, friendAccountNumber);
 }
 
-void TcpClient::saveLocalCache_ChatHistory(const QString &friendAccountNumber, const QString &msg)
+void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
 {
+/* json格式
+ * AccountNumber,
+ * FriendAccountNumber,
+ * ChatHistory:
+ *          Msg,
+ *          IsMyMsg
+*/
     /* 保存本地缓存聊天记录 */
-    settings->setValue("ChatHistory/"+friendAccountNumber, msg);
+    QString accountNumber = obj["AccountNumber"].toString();
+    QString friendAccountNumber = obj["FriendAccountNumber"].toString();
+    QJsonObject historyArray = obj["ChatHistory"].toObject();
+    qDebug() << historyArray;
+
+    settings->setValue(accountNumber+"/ChatHistory/"+friendAccountNumber, historyArray);
 }
 
-QString TcpClient::getLocalCache_ChatHistory(const QString &friendAccountNumber)
+QJsonObject TcpClient::getLocalCache_ChatHistory(const QString &accountNumber, const QString &friendAccountNumber)
 {
     /* 获取本地缓存聊天记录 */
+    settings->beginGroup(accountNumber);  //进入目录
     settings->beginGroup("ChatHistory");  //进入目录
-    QString data = settings->value(friendAccountNumber).toString();
+    QJsonObject data = settings->value(friendAccountNumber).toJsonObject();
+    settings->endGroup();                 //退出目录
     settings->endGroup();                 //退出目录
 
     return data;
+}
+
+bool TcpClient::fileIsExit(const QString &file)
+{
+    /* 判断某个文件是否存在 */
+    QDir dir;
+    bool exit = dir.exists(file);
+
+    return exit;
 }
 
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
@@ -131,9 +157,9 @@ void TcpClient::getReplyFromSub_Login(const QString &isRight)
     emit getReply_Login(isRight);
 }
 
-void TcpClient::getReplyFromSub_ReceiveFile(const QString&nickName)
+void TcpClient::getReplyFromSub_ReceiveFile(const QString&nickName, bool isReceive)
 {
-    emit finished_ReceiveFile(nickName);
+    emit finished_ReceiveFile(nickName, isReceive);
 }
 
 void TcpClient::getReplyFromSub_SeverReceiveFile()

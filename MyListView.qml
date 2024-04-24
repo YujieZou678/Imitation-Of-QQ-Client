@@ -10,8 +10,10 @@ import QtQuick.Layouts
 
 Item {
 
-    function updateData() {
-        listModel.clear()  //清空数据
+    property alias repeater: repeater
+
+    function updateData() {  //更新好友列表
+        listModel.clear()    //清空数据
         /* 更新消息列表 */
         for (var i=0; i<main_FriendsList.length; i++) {
             var data = {}
@@ -19,11 +21,13 @@ Item {
             var profileImage = main_FriendsList[i].profileImage  //好友头像
             var nickName = main_FriendsList[i].nickName          //好友昵称
             var msgRow                                           //最后一行消息
+            var isMyMsg                                          //是不是自己发的
             var chatHistory = main_FriendsList[i].chatHistory
-            if (chatHistory.length < 1) { msgRow = "" }
+            if (chatHistory.length < 1) { msgRow = ""; isMyMsg = "true" }
             else {
                 var msgList = chatHistory[chatHistory.length-1]
                 msgRow = msgList.Msg
+                isMyMsg = msgList.IsMyMsg===""? "true":msgList.IsMyMsg
             }
             var msgDate = "昨天"                                  //日期
 
@@ -31,6 +35,7 @@ Item {
             data.profileImage = profileImage
             data.nickName = nickName
             data.msgRow = msgRow
+            data.isMyMsg = isMyMsg
             data.msgDate = msgDate
 
             listModel.append(data)
@@ -174,7 +179,7 @@ Item {
 
                                 Text {
                                     width: 280
-                                    text: accountNumber===main_AccountNumber ? msgRow:nickName+":"+msgRow
+                                    text: isMyMsg==="true" ? msgRow:nickName+":"+msgRow
                                     font {
                                         pointSize: 11
                                         family: mFONT_FAMILY

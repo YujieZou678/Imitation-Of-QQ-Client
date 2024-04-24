@@ -94,7 +94,7 @@ void MyThread::onReadyRead()
             ifNeedReceiveFile = false;
             qDebug() << "子线程" << QThread::currentThread() << ":"
                      << "图像文件接收完毕。";
-            emit finished_ReceiveFile(nickName);
+            emit finished_ReceiveFile(nickName, true);
         }
         return;
     }
@@ -165,7 +165,10 @@ void MyThread::onReadyRead()
         accountNumber = doc["AccountNumber"].toString();
         qDebug() << "子线程" << QThread::currentThread() << ":"
                  << "准备接收"+accountNumber+"图像文件 大小："+QString::number(fileSize);
-        if (fileSize == 0) return;  //如果为0,服务端没有数据,就不需要接收文件
+        if (fileSize == 0) {  //如果为0,需要发送默认信号
+            emit finished_ReceiveFile(nickName, false); //昵称 是否接收了头像
+            return;
+        }
         file.clear();
         receiveSize = 0;
         count = 0;

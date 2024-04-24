@@ -32,8 +32,9 @@ public:
     Q_INVOKABLE void toServer_SaveChatHistory(const QJsonObject&);                 //上传聊天记录
     Q_INVOKABLE void toServer_GetChatHistory(const QString&, const QString&);      //获取与某好友的聊天记录
 
-    Q_INVOKABLE void saveLocalCache_ChatHistory(const QString&, const QString&);   //保存本地缓存：聊天记录
-    Q_INVOKABLE QString getLocalCache_ChatHistory(const QString&);                 //获取本地缓存：聊天记录
+    Q_INVOKABLE void saveLocalCache_ChatHistory(const QJsonObject&);                   //保存本地缓存：聊天记录
+    Q_INVOKABLE QJsonObject getLocalCache_ChatHistory(const QString&, const QString&); //获取本地缓存：聊天记录
+    Q_INVOKABLE bool fileIsExit(const QString&);                                       //某个文件是否存在
 
 signals:
     /* 与子线程通信 */
@@ -52,7 +53,7 @@ signals:
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
     void getReply_Register(const QString&);            //信号：收到注册的回复
     void getReply_Login(const QString&);               //信号：收到登陆的回复
-    void finished_ReceiveFile(const QString&);         //信号：文件接收完毕
+    void finished_ReceiveFile(const QString&, bool);         //信号：文件接收完毕
     void finished_SeverReceiveFile();                  //信号：服务端文件接收完毕
     void getReply_GetPersonalData(const QJsonObject&); //信号：收到个人信息
     void getReply_GetChatHistory(const QJsonArray&);   //信号：收到与某好友的聊天信息
@@ -62,7 +63,7 @@ public slots:
     void getReplyFromSub_CheckAccountNumber(const QString&);
     void getReplyFromSub_Register(const QString &);
     void getReplyFromSub_Login(const QString&);
-    void getReplyFromSub_ReceiveFile(const QString&);
+    void getReplyFromSub_ReceiveFile(const QString&, bool);
     void getReplyFromSub_SeverReceiveFile();
     void getReplyFromSub_GetPersonalData(QJsonObject);
     void getReplyFromSub_GetChatHistory(const QJsonArray&);

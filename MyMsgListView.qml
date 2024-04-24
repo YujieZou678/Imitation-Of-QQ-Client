@@ -13,7 +13,7 @@ Item {
     property alias scrollBar: scrollBar
     property string friendAccountNumber: ""
     onFriendAccountNumberChanged: {
-        console.log("初始化与"+friendAccountNumber+"的聊天记录")
+        console.log("本地初始化与"+friendAccountNumber+"的聊天记录")
         for (var i=0; i<main_FriendsList.length; i++) {
             if (main_FriendsList[i].accountNumber === friendAccountNumber) {
                 /* 找到对应好友数据 */
@@ -21,8 +21,9 @@ Item {
                 for (var j=0; j<chatHistory.length; j++) {
                     /* 初始化聊天记录 */
                     var data = {}
-                    data.isMyMsg = chatHistory[i].IsMyMsg
-                    data.msg = chatHistory[i].Msg
+                    data.isMyMsg = chatHistory[j].IsMyMsg
+                    data.msg = chatHistory[j].Msg
+                    data.profileImage = main_FriendsList[i].profileImage
                     listModel.append(data)
                 }
 
@@ -42,6 +43,7 @@ Item {
                     var data = {}
                     data.isMyMsg = chatHistory[j].IsMyMsg
                     data.msg = chatHistory[j].Msg
+                    data.profileImage = main_FriendsList[i].profileImage
                     listModel.append(data)
                 }
 
@@ -106,9 +108,9 @@ Item {
                         MyProfileImage {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 70
-                            imgSrc: main_ProfileImage
-                            imageHeight: main_ProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
-                            imageWidth: main_ProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
+                            imgSrc: profileImage
+                            imageHeight: profileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
+                            imageWidth: profileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
                             imgRadius: parent.width
                         }
                         Item {
