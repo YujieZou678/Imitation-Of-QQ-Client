@@ -41,6 +41,8 @@ TcpClient::TcpClient(QObject *parent)
     connect(myThread, &MyThread::finished_SeverReceiveFile, this, &TcpClient::getReplyFromSub_SeverReceiveFile);
     connect(myThread, &MyThread::getReply_GetPersonalData, this, &TcpClient::getReplyFromSub_GetPersonalData);
     connect(myThread, &MyThread::getReply_GetChatHistory, this, &TcpClient::getReplyFromSub_GetChatHistory);
+    connect(myThread, &MyThread::getReply_RefreshFriendList, this, &TcpClient::getReplyFromSub_RefreshFriendList);
+    connect(myThread, &MyThread::getReply_TransmitMsg, this, &TcpClient::getReplyFromSub_TransmitMsg);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -116,7 +118,6 @@ void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
     QString accountNumber = obj["AccountNumber"].toString();
     QString friendAccountNumber = obj["FriendAccountNumber"].toString();
     QJsonObject historyArray = obj["ChatHistory"].toObject();
-    qDebug() << historyArray;
 
     settings->setValue(accountNumber+"/ChatHistory/"+friendAccountNumber, historyArray);
 }
@@ -175,5 +176,15 @@ void TcpClient::getReplyFromSub_GetPersonalData(QJsonObject doc)
 void TcpClient::getReplyFromSub_GetChatHistory(const QJsonArray &chatHistory)
 {
     emit getReply_GetChatHistory(chatHistory);
+}
+
+void TcpClient::getReplyFromSub_RefreshFriendList(const QJsonObject &doc)
+{
+    emit getReply_RefreshFriendList(doc);
+}
+
+void TcpClient::getReplyFromSub_TransmitMsg(const QJsonObject &doc)
+{
+    emit getReply_TransmitMsg(doc);
 }
 

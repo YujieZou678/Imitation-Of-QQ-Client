@@ -376,7 +376,9 @@ ColumnLayout {
 
                                     onGetReply_Login.disconnect(onReply)
                                 }
-                                function onGet(doc) {  //收到个人信息+好友列表 json数据
+
+                                /* 收到个人信息+好友列表 json数据 */
+                                function onGet(doc) {
                                     /* 初始化个人信息 */
                                     console.log("初始化个人信息")
                                     if (doc.NickName !== "") {
@@ -422,9 +424,55 @@ ColumnLayout {
                                     }
 
                                     onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
+                                }  //end 收到个人信息+好友列表
+
+                                /* 刷新好友列表(一直接收信号) */
+                                function onRefresh(doc) {
+                                    console.log("接收到服务器消息：刷新好友列表")
+                                    /* 清空之前数据 */
+                                    main_FriendsList = []
+                                    /* 初始化好友列表 */
+                                    var friendArray = doc.FriendArray
+                                    for (var i=0; i<friendArray.length; i++) {
+                                        var data = {}
+                                        data.accountNumber = friendArray[i]
+                                        data.nickName = friendArray[i]
+                                        data.profileImage = "qrc:/image/profileImage.png"  //默认赋值
+                                        data.chatHistory = []  //默认赋值
+                                        main_FriendsList.push(data)
+                                        updateFriendListView() //更新视图
+                                    }
+                                    /* 请求加载好友列表具体信息 头像+昵称 */
+                                    console.log("开始加载好友列表具体信息...")
+                                    requestFriendData()  //递归请求（头像+昵称）
+                                    /* 加载聊天记录最后一行 */
+                                    for (var i=0; i<main_FriendsList.length; i++) {
+                                        var friendAccountNumber = main_FriendsList[i].accountNumber
+                                        var data = {}
+                                        var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
+                                        data.Msg = msgLocalCache.Msg===undefined? "":msgLocalCache.Msg
+                                        data.IsMyMsg = msgLocalCache.IsMyMsg===undefined? "":msgLocalCache.IsMyMsg
+                                        main_FriendsList[i].chatHistory = []
+                                        main_FriendsList[i].chatHistory.push(data)
+                                        updateFriendListView()  //更新视图
+                                    }
                                 }
-                                onGetReply_GetPersonalData.connect(onGet) //连接
-                                onGetReply_Login.connect(onReply)         //连接
+
+                                /* 接收好友信息(一直接收信号) */
+                                function onReceiveMsg(doc) {
+                                    var sendPerson = doc.SendPerson
+                                    for (var i=0; i<main_FriendsList.length; i++) {
+                                        if (main_FriendsList[i].accountNumber === sendPerson) {
+                                            var item = layoutUserView.msgListView.repeater.itemAt(i).item
+                                            item.addMsgData(doc.Msg)
+                                            break;
+                                        }
+                                    }
+                                }
+                                onGetReply_TransmitMsg.connect(onReceiveMsg)  //连接（接收好友消息）
+                                onGetReply_RefreshFriendList.connect(onRefresh)  //连接（刷新好友列表）
+                                onGetReply_GetPersonalData.connect(onGet) //连接（个人信息+好友列表）
+                                onGetReply_Login.connect(onReply)         //连接（密码检测）
 
                                 toServer_Login(accountNumber.text, passWord.text)  //请求登陆验证
                             }
@@ -471,18 +519,18 @@ ColumnLayout {
         var accountNumber = main_FriendsList[loadIndex].accountNumber
 
         function onFinished(nickName, isReceive) {  //昵称 是否接收了头像
+            /* 赋值 */
+            console.log("好友"+(loadIndex+1)+" "+accountNumber+"具体信息加载完毕")
+            main_FriendsList[loadIndex].nickName = nickName===""? accountNumber:nickName
+            main_FriendsList[loadIndex].profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png":"qrc:/image/profileImage.png"
+
+            updateFriendListView()  //更新视图
+            onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
+
             loadIndex = loadIndex+1
             if (loadIndex < main_FriendsList.length) {  //终止条件
                 requestFriendData()  //递归
-            }
-            /* 赋值 */
-            console.log("好友"+loadIndex+" "+accountNumber+"具体信息加载完毕")
-            main_FriendsList[loadIndex-1].nickName = nickName===""? "未知昵称":nickName
-            main_FriendsList[loadIndex-1].profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png":"qrc:/image/profileImage.png"
-
-            updateFriendListView()  //更新视图
-
-            onFinished_ReceiveFile.disconnect(onFinished)  //连接
+            } else loadIndex = 0  //终止：还原loadIndex
         }
         onFinished_ReceiveFile.connect(onFinished)  //连接
 

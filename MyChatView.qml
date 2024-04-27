@@ -16,6 +16,10 @@ Window {
         myMsgListView.updateData()
     }
 
+    function addMsgData(Msg) {
+        myMsgListView.addMsgData(Msg)
+    }
+
     id: self
     width: 700
     height: 550
@@ -276,9 +280,12 @@ Window {
                                         var chatHistory = {}
                                         chatHistory.AccountNumber = main_AccountNumber
                                         chatHistory.FriendAccountNumber = friendAccountNumber
-                                        chatHistory.ChatHistory = {}
-                                        chatHistory.ChatHistory.Msg = msgText.text
-                                        chatHistory.ChatHistory.IsMyMsg = "true"
+                                        chatHistory.ChatHistory1 = {}
+                                        chatHistory.ChatHistory1.Msg = msgText.text
+                                        chatHistory.ChatHistory1.IsMyMsg = "true"
+                                        chatHistory.ChatHistory2 = {}
+                                        chatHistory.ChatHistory2.Msg = msgText.text
+                                        chatHistory.ChatHistory2.IsMyMsg = "false"
                                         /* 本地缓存 */
                                         saveLocalCache_ChatHistory(chatHistory)
 

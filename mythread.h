@@ -36,10 +36,12 @@ signals:
     void getReply_CheckAccountNumber(const QString&);           //信号：收到验证账号的回复
     void getReply_Register(const QString&);                     //信号：收到注册的回复
     void getReply_Login(const QString&);                        //信号：收到登陆的回复
-    void finished_ReceiveFile(const QString&, bool);  //信号：文件接收完毕
+    void finished_ReceiveFile(const QString&, bool);            //信号：文件接收完毕
     void finished_SeverReceiveFile();                           //信号：服务端文件接收完毕
     void getReply_GetPersonalData(const QJsonObject&);          //信号：收到个人信息
     void getReply_GetChatHistory(const QJsonArray&);            //信号：收到与某好友的聊天信息
+    void getReply_RefreshFriendList(const QJsonObject&);        //信号：刷新好友列表
+    void getReply_TransmitMsg(const QJsonObject&);              //信号：转发消息（有好友发消息）
 
 public slots:
     void onConnected();     //连接到服务器
@@ -56,7 +58,8 @@ private:
         ReceiveFile,
         RequestGetProfileAndName,
         GetChatHistory,
-        SingleChat
+        RefreshFriendList,
+        TransmitMsg
     };
     QMap<QString, enum Purpose> map_Switch;  //用于寻找信息是哪个目的
 

@@ -27,7 +27,8 @@ MyThread::MyThread(QObject *parent) :
         {"ReceiveFile", Purpose::ReceiveFile},
         {"RequestGetProfileAndName", Purpose::RequestGetProfileAndName},
         {"GetChatHistory", Purpose::GetChatHistory},
-        {"SingleChat", Purpose::SingleChat}
+        {"RefreshFriendList", Purpose::RefreshFriendList},
+        {"TransmitMsg", Purpose::TransmitMsg}
     };
 
     //buffer
@@ -180,6 +181,20 @@ void MyThread::onReadyRead()
         /* 得到与某好友的聊天记录 */
         QJsonArray chatHistory = doc["ChatHistory"].toArray();
         emit getReply_GetChatHistory(chatHistory);
+        break;
+    }
+    case Purpose::RefreshFriendList: {
+        emit getReply_RefreshFriendList(doc.object());
+        break;
+    }
+    case Purpose::TransmitMsg: {
+        /* json格式
+         * Msg:
+         *  Msg,
+         *  IsMyMsg
+         * SendPerson
+        */
+        emit getReply_TransmitMsg(doc.object());
         break;
     }
     default:

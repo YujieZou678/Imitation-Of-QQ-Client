@@ -11,6 +11,7 @@ import QtQuick.Layouts
 Item {
 
     property alias repeater: repeater
+    property bool isNeedCloudChatHistory: true
 
     function updateData() {  //更新好友列表
         listModel.clear()    //清空数据
@@ -91,19 +92,22 @@ Item {
                     item.chatObj = nickName  //好友昵称
                     item.friendAccountNumber = accountNumber  //好友账号
 
-                    function onReply(chatHistory) {  //获取和该好友的聊天记录
-                        for (var i=0; i<main_FriendsList.length; i++) {
-                            if (main_FriendsList[i].accountNumber === accountNumber) {
-                                main_FriendsList[i].chatHistory = chatHistory
-                                break
+                    if (isNeedCloudChatHistory) {
+                        isNeedCloudChatHistory = false  //只执行一次
+                        function onReply(chatHistory) {  //获取和该好友的聊天记录
+                            for (var i=0; i<main_FriendsList.length; i++) {
+                                if (main_FriendsList[i].accountNumber === accountNumber) {
+                                    main_FriendsList[i].chatHistory = chatHistory
+                                    break
+                                }
                             }
-                        }
 
-                        item.updateData()  //更新数据
-                        onGetReply_GetChatHistory.disconnect(onReply)  //断开连接
+                            item.updateData()  //更新数据
+                            onGetReply_GetChatHistory.disconnect(onReply)  //断开连接
+                        }
+                        onGetReply_GetChatHistory.connect(onReply)  //连接
+                        toServer_GetChatHistory(main_AccountNumber, accountNumber)  //请求
                     }
-                    onGetReply_GetChatHistory.connect(onReply)  //连接
-                    toServer_GetChatHistory(main_AccountNumber, accountNumber)  //请求
 
                     item.visible = true
                     item.raise()  //置顶

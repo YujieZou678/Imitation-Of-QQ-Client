@@ -12,6 +12,9 @@ Item {
     property alias listModel: listModel
     property alias scrollBar: scrollBar
     property string friendAccountNumber: ""
+
+    property string friendProfileImage: "qrc:/image/profileImage.png"  //好友头像
+
     onFriendAccountNumberChanged: {
         console.log("本地初始化与"+friendAccountNumber+"的聊天记录")
         for (var i=0; i<main_FriendsList.length; i++) {
@@ -23,7 +26,7 @@ Item {
                     var data = {}
                     data.isMyMsg = chatHistory[j].IsMyMsg
                     data.msg = chatHistory[j].Msg
-                    data.profileImage = main_FriendsList[i].profileImage
+                    friendProfileImage = main_FriendsList[i].profileImage
                     listModel.append(data)
                 }
 
@@ -43,13 +46,21 @@ Item {
                     var data = {}
                     data.isMyMsg = chatHistory[j].IsMyMsg
                     data.msg = chatHistory[j].Msg
-                    data.profileImage = main_FriendsList[i].profileImage
+                    friendProfileImage = main_FriendsList[i].profileImage
                     listModel.append(data)
                 }
 
                 break
             }
         }
+    }
+
+    function addMsgData(Msg) {  //增加聊天信息
+        var data = {}
+        data.isMyMsg = Msg.IsMyMsg
+        data.msg = Msg.Msg
+        listModel.append(data)
+        scrollBar.position = 1
     }
 
     anchors.fill: parent
@@ -108,9 +119,9 @@ Item {
                         MyProfileImage {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 70
-                            imgSrc: profileImage
-                            imageHeight: profileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
-                            imageWidth: profileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
+                            imgSrc: friendProfileImage
+                            imageHeight: friendProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
+                            imageWidth: friendProfileImage==="qrc:/image/profileImage.png" ? 50*0.75:50
                             imgRadius: parent.width
                         }
                         Item {
