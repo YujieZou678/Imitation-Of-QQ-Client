@@ -204,7 +204,7 @@ ColumnLayout {
                                         onGetReply_CheckAccountNumber.disconnect(onReply)  //断开连接
                                     }
                                     function onFinished(nickName, isReceive) {  //收到图像文件
-                                        main_ProfileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+main_AccountNumber+".png":main_ProfileImage
+                                        main_ProfileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+main_AccountNumber+".jpg":main_ProfileImage
                                         centerView.imageHeight = centerView.height*0.93
                                         centerView.imageWidth = centerView.width*0.93
                                         onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
@@ -406,21 +406,25 @@ ColumnLayout {
                                         data.profileImage = "qrc:/image/profileImage.png"  //默认赋值
                                         data.chatHistory = []  //默认赋值
                                         main_FriendsList.push(data)
-                                        updateFriendListView() //更新视图
                                     }
+                                    updateFriendListView() //刷新视图
                                     /* 请求加载好友列表具体信息 头像+昵称 */
                                     console.log("开始加载好友列表具体信息...")
                                     requestFriendData()  //递归请求（头像+昵称）
-                                    /* 加载聊天记录最后一行 */
+                                    /* 本地加载聊天记录最后一行 */
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         var friendAccountNumber = main_FriendsList[i].accountNumber
                                         var data = {}
                                         var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
-                                        data.Msg = msgLocalCache.Msg===undefined? "":msgLocalCache.Msg
-                                        data.IsMyMsg = msgLocalCache.IsMyMsg===undefined? "":msgLocalCache.IsMyMsg
-                                        main_FriendsList[i].chatHistory = []
+                                        if (msgLocalCache.Msg === undefined) {
+                                            data.Msg = "我们成为好友了，现在开始聊天吧。"
+                                            data.IsMyMsg = "true"
+                                        } else {
+                                            data.Msg = msgLocalCache.Msg
+                                            data.IsMyMsg = msgLocalCache.IsMyMsg
+                                        }
                                         main_FriendsList[i].chatHistory.push(data)
-                                        updateFriendListView()  //更新视图
+                                        updateFriendListViewOneRow(i, data.Msg)  //更新视图
                                     }
 
                                     onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
@@ -440,21 +444,25 @@ ColumnLayout {
                                         data.profileImage = "qrc:/image/profileImage.png"  //默认赋值
                                         data.chatHistory = []  //默认赋值
                                         main_FriendsList.push(data)
-                                        updateFriendListView() //更新视图
                                     }
+                                    updateFriendListView() //更新视图
                                     /* 请求加载好友列表具体信息 头像+昵称 */
                                     console.log("开始加载好友列表具体信息...")
                                     requestFriendData()  //递归请求（头像+昵称）
-                                    /* 加载聊天记录最后一行 */
+                                    /* 本地加载聊天记录最后一行 */
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         var friendAccountNumber = main_FriendsList[i].accountNumber
                                         var data = {}
                                         var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
-                                        data.Msg = msgLocalCache.Msg===undefined? "":msgLocalCache.Msg
-                                        data.IsMyMsg = msgLocalCache.IsMyMsg===undefined? "":msgLocalCache.IsMyMsg
-                                        main_FriendsList[i].chatHistory = []
+                                        if (msgLocalCache.Msg === undefined) {
+                                            data.Msg = "我们成为好友了，现在开始聊天吧。"
+                                            data.IsMyMsg = "false"
+                                        } else {
+                                            data.Msg = msgLocalCache.Msg
+                                            data.IsMyMsg = msgLocalCache.IsMyMsg
+                                        }
                                         main_FriendsList[i].chatHistory.push(data)
-                                        updateFriendListView()  //更新视图
+                                        updateFriendListViewOneRow(i, data.Msg)  //更新视图
                                     }
                                 }
 
@@ -464,7 +472,21 @@ ColumnLayout {
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         if (main_FriendsList[i].accountNumber === sendPerson) {
                                             var item = layoutUserView.msgListView.repeater.itemAt(i).item
+                                            main_FriendsList[i].chatHistory.push(doc.Msg)
                                             item.addMsgData(doc.Msg)
+                                            /* 刷新最后一行 */
+                                            updateFriendListViewOneRow(i, doc.Msg.Msg)
+                                            /* 本地缓存最后一行 */
+                                            var chatHistory = {}
+                                            chatHistory.AccountNumber = main_AccountNumber
+                                            chatHistory.FriendAccountNumber = sendPerson
+                                            chatHistory.ChatHistory1 = {}
+                                            chatHistory.ChatHistory1.Msg = doc.Msg.Msg
+                                            chatHistory.ChatHistory1.IsMyMsg = "false"
+                                            chatHistory.ChatHistory2 = {}
+                                            chatHistory.ChatHistory2.Msg = doc.Msg.Msg
+                                            chatHistory.ChatHistory2.IsMyMsg = "false"
+                                            saveLocalCache_ChatHistory(chatHistory)
                                             break;
                                         }
                                     }
@@ -521,10 +543,20 @@ ColumnLayout {
         function onFinished(nickName, isReceive) {  //昵称 是否接收了头像
             /* 赋值 */
             console.log("好友"+(loadIndex+1)+" "+accountNumber+"具体信息加载完毕")
-            main_FriendsList[loadIndex].nickName = nickName===""? accountNumber:nickName
-            main_FriendsList[loadIndex].profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png":"qrc:/image/profileImage.png"
+            var data = {}
+            data.accountNumber = main_FriendsList[loadIndex].accountNumber
+            data.nickName = nickName===""? accountNumber:nickName
+            data.profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".jpg":"qrc:/image/profileImage.png"
+            var chatHistory = main_FriendsList[loadIndex].chatHistory
+            data.msgRow = chatHistory.length>0 ? chatHistory[chatHistory.length-1].Msg:""
+            data.isMyMsg = chatHistory.length>0 ? chatHistory[chatHistory.length-1].IsMyMsg:"true"
+            data.msgDate = "昨天"
+            data.isNeedCloudChatHistory = true  //默认赋值
 
-            updateFriendListView()  //更新视图
+            main_FriendsList[loadIndex].profileImage = data.profileImage
+            main_FriendsList[loadIndex].nickName = data.nickName
+
+            updateFriendListViewOneData(loadIndex, data)   //更新视图
             onFinished_ReceiveFile.disconnect(onFinished)  //断开连接
 
             loadIndex = loadIndex+1

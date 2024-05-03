@@ -12,11 +12,11 @@ Window {
     property string friendAccountNumber: ""  //聊天对象账号
     property string chatObj: ""              //聊天对象名
 
-    function updateData() {
+    function updateData() {     //刷新所有聊天记录
         myMsgListView.updateData()
     }
 
-    function addMsgData(Msg) {
+    function addMsgData(Msg) {  //增加一条聊天信息
         myMsgListView.addMsgData(Msg)
     }
 
@@ -270,11 +270,10 @@ Window {
                                     onClicked: {
                                         /* 发送消息 */
                                         var data = {}
-                                        data.isMyMsg = "true"
-                                        data.msg = msgText.text
+                                        data.IsMyMsg = "true"
+                                        data.Msg = msgText.text
                                         if (data.msg === "") return
-                                        myMsgListView.listModel.append(data)
-                                        myMsgListView.scrollBar.position = 1
+                                        myMsgListView.addMsgData(data)
 
                                         /* 上传到服务器缓存和转发 json数据*/
                                         var chatHistory = {}
@@ -296,11 +295,13 @@ Window {
                                         /* 云缓存 */
                                         toServer_SaveChatHistory(chatHistory)
 
-//                                        /* 获取对方消息回复 */
-//                                        data.isMyMsg = false
-//                                        data.msg = "自动回复"
-//                                        myMsgListView.listModel.append(data)
-//                                        myMsgListView.scrollBar.position = 1
+                                        /* 刷新对应好友的最后一行聊天记录视图 */
+                                        for (var i=0; i<main_FriendsList.length; i++) {
+                                            if (friendAccountNumber === main_FriendsList[i].accountNumber) {
+                                                updateFriendListViewOneRow(i, msgText.text)  //更新视图
+                                                break;
+                                            }
+                                        }
 
                                         /* 清空输入内容 */
                                         msgText.clear()

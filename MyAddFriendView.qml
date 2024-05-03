@@ -201,7 +201,7 @@ Window {
                                         /* 获取头像 昵称 账号 是不是好友 */
                                         function onFinished(nickName, isReceive) {  //昵称 是否接收了头像
                                             var data = {}
-                                            data.profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".png":"qrc:/image/profileImage.png"
+                                            data.profileImage = isReceive? "file:///root/my_test/Client/build/config/profileImage/"+accountNumber+".jpg":"qrc:/image/profileImage.png"
                                             data.nickName = nickName===""? "未知昵称":nickName
                                             data.accountNumber = accountNumber
                                             /* 判断是否为好友 */
@@ -378,6 +378,8 @@ Window {
                                                             data.ChatHistory.Msg = "我们成为好友了，现在开始聊天吧。"
                                                             data.ChatHistory.IsMyMsg = "false"
                                                             toServer_AddFriend(data)
+
+                                                            isFriend = true
                                                         }
                                                     }
                                                 }

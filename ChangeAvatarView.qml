@@ -215,6 +215,11 @@ Window {
                                 }
 
                                 main_ProfileImage = image.source
+                                /* 好友列表刷新（只有自己） */
+                                var data = layoutUserView.msgListView.listModel.get(0)
+                                data.profileImage = main_ProfileImage
+                                layoutUserView.msgListView.listModel.set(0, data)
+
                                 console.log("开始缓冲")
                                 /* 上传到服务器 */
                                 function onReply() {

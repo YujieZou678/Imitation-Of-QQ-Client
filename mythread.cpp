@@ -88,7 +88,7 @@ void MyThread::onReadyRead()
 
             QImage image;
             image.loadFromData(file);
-            if (!image.save("/root/my_test/Client/build/config/profileImage/"+accountNumber+".png", "PNG", 0)) {
+            if (!image.save("/root/my_test/Client/build/config/profileImage/"+accountNumber+".jpg", "JPG", 80)) {
                 qDebug() << "接收文件：图像文件保存失败！";
             }
 
@@ -184,6 +184,7 @@ void MyThread::onReadyRead()
         break;
     }
     case Purpose::RefreshFriendList: {
+        /* 成功加好友 */
         emit getReply_RefreshFriendList(doc.object());
         break;
     }
@@ -272,7 +273,7 @@ void MyThread::toServer_PrepareSendFile(const QString&url, const QString&id)
 
     buffer->open(QIODevice::WriteOnly);  //打开
     QImage image(url);
-    if (!image.save(buffer, "PNG", 0)) {
+    if (!image.save(buffer, "JPG", 80)) {
         qDebug() << "准备发送：图像文件保存失败";
     }
     buffer->close();  //关闭

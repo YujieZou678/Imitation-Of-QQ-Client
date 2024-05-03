@@ -11,9 +11,9 @@ import QtQuick.Layouts
 Item {
 
     property alias repeater: repeater
-    property bool isNeedCloudChatHistory: true
+    property alias listModel: listModel
 
-    function updateData() {  //更新好友列表
+    function updateAllData() {  //更新所有好友列表
         listModel.clear()    //清空数据
         /* 更新消息列表 */
         for (var i=0; i<main_FriendsList.length; i++) {
@@ -38,10 +38,22 @@ Item {
             data.msgRow = msgRow
             data.isMyMsg = isMyMsg
             data.msgDate = msgDate
+            data.isNeedCloudChatHistory = true  //默认赋值
 
             listModel.append(data)
             repeaterModel.append(data)
         }
+    }
+
+    function updateOneData(index, oneData) {  //更新一个好友信息视图
+        listModel.set(index, oneData)
+    }
+
+    function updateOneDataRow(index, row) {  //更新一个好友最后一行聊天记录
+        var data = listModel.get(index)
+        data.msgRow = row
+
+        listModel.set(index, data)
     }
 
     anchors.fill: parent
@@ -52,6 +64,7 @@ Item {
         model: ListModel {
             id: listModel
         }
+
         delegate: listViewDelegate
         highlight: Rectangle {
             opacity: 0.5
@@ -102,7 +115,7 @@ Item {
                                 }
                             }
 
-                            item.updateData()  //更新数据
+                            item.updateData()  //刷新所有聊天记录
                             onGetReply_GetChatHistory.disconnect(onReply)  //断开连接
                         }
                         onGetReply_GetChatHistory.connect(onReply)  //连接
@@ -154,10 +167,12 @@ Item {
 
                                     Text {
                                         text: nickName
+                                        maximumLineCount: 1
                                         font {
                                             pointSize: 14
                                             family: mFONT_FAMILY
                                         }
+                                        elide: Text.ElideRight
                                     }
                                     Item {
                                         Layout.fillWidth: true
@@ -183,7 +198,8 @@ Item {
 
                                 Text {
                                     width: 280
-                                    text: isMyMsg==="true" ? msgRow:nickName+":"+msgRow
+                                    text: msgRow
+                                    maximumLineCount: 1
                                     font {
                                         pointSize: 11
                                         family: mFONT_FAMILY

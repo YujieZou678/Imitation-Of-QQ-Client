@@ -110,14 +110,17 @@ void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
 /* json格式
  * AccountNumber,
  * FriendAccountNumber,
- * ChatHistory:
+ * ChatHistory1:
+ *          Msg,
+ *          IsMyMsg
+ * ChatHistory2:
  *          Msg,
  *          IsMyMsg
 */
     /* 保存本地缓存聊天记录 */
     QString accountNumber = obj["AccountNumber"].toString();
     QString friendAccountNumber = obj["FriendAccountNumber"].toString();
-    QJsonObject historyArray = obj["ChatHistory"].toObject();
+    QJsonObject historyArray = obj["ChatHistory1"].toObject();
 
     settings->setValue(accountNumber+"/ChatHistory/"+friendAccountNumber, historyArray);
 }

@@ -15,18 +15,18 @@ Item {
 
     property string friendProfileImage: "qrc:/image/profileImage.png"  //好友头像
 
-    onFriendAccountNumberChanged: {
+    onFriendAccountNumberChanged: {  //初始化，只有最后一行
         console.log("本地初始化与"+friendAccountNumber+"的聊天记录")
         for (var i=0; i<main_FriendsList.length; i++) {
             if (main_FriendsList[i].accountNumber === friendAccountNumber) {
                 /* 找到对应好友数据 */
+                friendProfileImage = main_FriendsList[i].profileImage
                 var chatHistory = main_FriendsList[i].chatHistory  //聊天记录列表
                 for (var j=0; j<chatHistory.length; j++) {
                     /* 初始化聊天记录 */
                     var data = {}
                     data.isMyMsg = chatHistory[j].IsMyMsg
                     data.msg = chatHistory[j].Msg
-                    friendProfileImage = main_FriendsList[i].profileImage
                     listModel.append(data)
                 }
 
@@ -35,18 +35,18 @@ Item {
         }
     }
 
-    function updateData() {  //更新聊天记录
+    function updateData() {  //刷新所有聊天记录
         listModel.clear()
         for (var i=0; i<main_FriendsList.length; i++) {
             if (main_FriendsList[i].accountNumber === friendAccountNumber) {
                 /* 找到对应好友数据 */
+                friendProfileImage = main_FriendsList[i].profileImage
                 var chatHistory = main_FriendsList[i].chatHistory  //聊天记录列表
                 for (var j=0; j<chatHistory.length; j++) {
                     /* 初始化聊天记录 */
                     var data = {}
                     data.isMyMsg = chatHistory[j].IsMyMsg
                     data.msg = chatHistory[j].Msg
-                    friendProfileImage = main_FriendsList[i].profileImage
                     listModel.append(data)
                 }
 
@@ -55,7 +55,7 @@ Item {
         }
     }
 
-    function addMsgData(Msg) {  //增加聊天信息
+    function addMsgData(Msg) {  //增加一条聊天信息
         var data = {}
         data.isMyMsg = Msg.IsMyMsg
         data.msg = Msg.Msg

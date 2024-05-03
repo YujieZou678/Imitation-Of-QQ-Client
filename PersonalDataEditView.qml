@@ -363,6 +363,11 @@ Window {
                                     main_PersonalSignature = personalSignature.text  //个性签名
                                 } else personalSignature.text = main_PersonalSignature
 
+                                /* 好友列表刷新（只有自己） */
+                                var data = layoutUserView.msgListView.listModel.get(0)
+                                data.nickName = main_NickName
+                                layoutUserView.msgListView.listModel.set(0, data)
+
                                 /* 服务器保存所有数据 json数组*/
                                 var data = {}
                                 data.AccountNumber = main_AccountNumber
