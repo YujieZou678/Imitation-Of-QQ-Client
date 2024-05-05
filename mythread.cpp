@@ -28,7 +28,8 @@ MyThread::MyThread(QObject *parent) :
         {"RequestGetProfileAndName", Purpose::RequestGetProfileAndName},
         {"GetChatHistory", Purpose::GetChatHistory},
         {"RefreshFriendList", Purpose::RefreshFriendList},
-        {"TransmitMsg", Purpose::TransmitMsg}
+        {"TransmitMsg", Purpose::TransmitMsg},
+        {"CheckGroupNumber", Purpose::CheckGroupNumber}
     };
 
     //buffer
@@ -196,6 +197,11 @@ void MyThread::onReadyRead()
          * SendPerson
         */
         emit getReply_TransmitMsg(doc.object());
+        break;
+    }
+    case Purpose::CheckGroupNumber: {
+        qDebug() << "子线程" << QThread::currentThread() << ":"
+                 << "群号已存在，群聊创建失败！";
         break;
     }
     default:
@@ -399,6 +405,21 @@ void MyThread::toServer_GetChatHistory(const QString &accountNumber, const QStri
     socket->write(send_Data);
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "加载与"+friendAccountNumber+"的聊天记录...";
+}
+
+void MyThread::toServer_CreateGroup(const QString &groupNumber, const QString &accountNumber)
+{
+    /* 群号 当前用户账号 */
+    QJsonObject json;
+    json.insert("Purpose", "CreateGroup");  //目的
+    json.insert("GroupNumber", groupNumber);
+    json.insert("AccountNumber", accountNumber);
+    QJsonDocument doc(json);
+    QByteArray send_Data = doc.toJson();
+
+    socket->write(send_Data);
+    qDebug() << "子线程" << QThread::currentThread() << ":"
+             << "准备创建群聊 "+groupNumber;
 }
 
 

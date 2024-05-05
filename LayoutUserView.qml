@@ -394,11 +394,17 @@ ColumnLayout {
                 Layout.fillHeight: true
                 Layout.preferredWidth: 80
                 MyToolButton {
-                    iconSource: "qrc:/image/游戏_填充.png"
+                    iconSource: "qrc:/image/发起群聊.png"
                     icon.height: 32
                     icon.width: 32
                     clickColor: "#e2e1e4"
                     clickOpacity: 0.7
+                    onClicked: {
+//                        myCreateGroupView.visible = true
+//                        myCreateGroupView.raise()
+                        myGroupChatView.visible = true
+                        myGroupChatView.raise()
+                    }
                 }
             }
             Item {
@@ -432,6 +438,14 @@ ColumnLayout {
     }
     MyAddFriendView {  //加好友视图
         id: myAddFriendView
+        visible: false
+    }
+    MyCreateGroupView {  //创建群聊视图
+        id: myCreateGroupView
+        visible: false
+    }
+    MyGroupChatView {
+        id: myGroupChatView
         visible: false
     }
 }

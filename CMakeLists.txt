@@ -37,6 +37,8 @@ qt_add_qml_module(appClient
         QML_FILES MyChatView.qml
         QML_FILES MyMsgListView.qml
         QML_FILES MyAddFriendView.qml
+        QML_FILES MyCreateGroupView.qml
+        QML_FILES MyGroupChatView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)

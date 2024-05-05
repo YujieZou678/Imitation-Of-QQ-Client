@@ -31,6 +31,7 @@ public:
     Q_INVOKABLE void toServer_RequestGetProfileAndName(const QString&);            //请求获取某好友头像和昵称
     Q_INVOKABLE void toServer_SaveChatHistory(const QJsonObject&);                 //上传聊天记录
     Q_INVOKABLE void toServer_GetChatHistory(const QString&, const QString&);      //获取与某好友的聊天记录
+    Q_INVOKABLE void toServer_CreateGroup(const QString&, const QString&);         //创建群聊
 
     Q_INVOKABLE void saveLocalCache_ChatHistory(const QJsonObject&);                   //保存本地缓存：聊天记录
     Q_INVOKABLE QJsonObject getLocalCache_ChatHistory(const QString&, const QString&); //获取本地缓存：聊天记录
@@ -48,6 +49,7 @@ signals:
     void toSubThread_RequestGetProfileAndName(const QString&);
     void toSubThread_SaveChatHistory(const QJsonObject&);
     void toSubThread_GetChatHistory(const QString&, const QString&);
+    void toSubThread_CreateGroup(const QString&, const QString&);
 
     /* 与qml通信 */
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复

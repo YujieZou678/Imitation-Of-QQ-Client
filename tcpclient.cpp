@@ -33,6 +33,7 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_RequestGetProfileAndName, myThread, &MyThread::toServer_RequestGetProfileAndName);
     connect(this, &TcpClient::toSubThread_SaveChatHistory, myThread, &MyThread::toServer_SaveChatHistory);
     connect(this, &TcpClient::toSubThread_GetChatHistory, myThread, &MyThread::toServer_GetChatHistory);
+    connect(this, &TcpClient::toSubThread_CreateGroup, myThread, &MyThread::toServer_CreateGroup);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Register, this, &TcpClient::getReplyFromSub_Register);
@@ -103,6 +104,11 @@ void TcpClient::toServer_SaveChatHistory(const QJsonObject &obj)
 void TcpClient::toServer_GetChatHistory(const QString &accountNumber, const QString &friendAccountNumber)
 {
     emit toSubThread_GetChatHistory(accountNumber, friendAccountNumber);
+}
+
+void TcpClient::toServer_CreateGroup(const QString &groupNumber, const QString &accountNumber)
+{
+    emit toSubThread_CreateGroup(groupNumber, accountNumber);  //群号 当前用户账号
 }
 
 void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
