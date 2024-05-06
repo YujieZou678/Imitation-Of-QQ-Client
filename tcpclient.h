@@ -32,10 +32,15 @@ public:
     Q_INVOKABLE void toServer_SaveChatHistory(const QJsonObject&);                 //上传聊天记录
     Q_INVOKABLE void toServer_GetChatHistory(const QString&, const QString&);      //获取与某好友的聊天记录
     Q_INVOKABLE void toServer_CreateGroup(const QString&, const QString&);         //创建群聊
+    Q_INVOKABLE void toServer_GetFriendList(const QString&);                       //获取好友列表
+    Q_INVOKABLE void toServer_SaveGroupChatHistory(const QJsonObject&);            //上传群聊天记录
+    Q_INVOKABLE void toServer_GetGroupChatHistory(const QString&);                 //获取某群聊的聊天记录
 
     Q_INVOKABLE void saveLocalCache_ChatHistory(const QJsonObject&);                   //保存本地缓存：聊天记录
     Q_INVOKABLE QJsonObject getLocalCache_ChatHistory(const QString&, const QString&); //获取本地缓存：聊天记录
     Q_INVOKABLE bool fileIsExit(const QString&);                                       //某个文件是否存在
+    Q_INVOKABLE void saveLocalCache_GroupChatHistory(const QJsonObject&);              //保存本地缓存：群聊聊天记录
+    Q_INVOKABLE QJsonObject getLocalCache_GroupChatHistory(const QString&);            //获取本地缓存：聊天记录
 
 signals:
     /* 与子线程通信 */
@@ -50,6 +55,9 @@ signals:
     void toSubThread_SaveChatHistory(const QJsonObject&);
     void toSubThread_GetChatHistory(const QString&, const QString&);
     void toSubThread_CreateGroup(const QString&, const QString&);
+    void toSubThread_GetFriendList(const QString&);
+    void toSubThread_SaveGroupChatHistory(const QJsonObject&);
+    void toSubThread_GetGroupChatHistory(const QString&);
 
     /* 与qml通信 */
     void getReply_CheckAccountNumber(const QString&);  //信号：收到验证账号的回复
@@ -61,6 +69,8 @@ signals:
     void getReply_GetChatHistory(const QJsonArray&);   //信号：收到与某好友的聊天信息
     void getReply_RefreshFriendList(const QJsonObject&);//信号：刷新好友列表
     void getReply_TransmitMsg(const QJsonObject&);     //信号：转发消息（有好友发消息）
+    void getReply_GetFriendList(const QJsonArray&);    //信号：获取好友列表
+    void getReply_GetGroupChatHistory(const QJsonArray&);//信号：收到某群的聊天信息
 
 public slots:
     /* 与子线程通信 */
@@ -73,6 +83,8 @@ public slots:
     void getReplyFromSub_GetChatHistory(const QJsonArray&);
     void getReplyFromSub_RefreshFriendList(const QJsonObject&);
     void getReplyFromSub_TransmitMsg(const QJsonObject&);
+    void getReplyFromSub_GetFriendList(const QJsonArray&);
+    void getReplyFromSub_GetGroupChatHistory(const QJsonArray&);
 
 private:
     QSettings *settings;  //缓存对象

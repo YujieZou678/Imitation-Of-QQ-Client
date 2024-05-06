@@ -9,19 +9,22 @@ import QtQuick.Layouts
 
 Window {
 
-    property var friendAccountNumber: []  //聊天对象账号
-    property var chatObj: []              //聊天对象名
+    property string groupNumber: "123456789"  //群聊账号
+    property string groupName: "XX群"    //群聊名
 
     function updateData() {     //刷新所有聊天记录
-        myMsgListView.updateData()
+        myGroupMsgListView.updateData()
     }
 
     function addMsgData(Msg) {  //增加一条聊天信息
-        myMsgListView.addMsgData(Msg)
+        myGroupMsgListView.addMsgData(Msg)
+    }
+    function addFriend(data) {  //列表添加一个好友
+        listModel.append(data)
     }
 
     id: self
-    width: 700
+    width: 900
     height: 550
     visible: false
     flags: Qt.Window|Qt.FramelessWindowHint  //无边框全套处理
@@ -65,7 +68,7 @@ Window {
                     Text {
                         id: objText
                         anchors.centerIn: parent
-                        text: chatObj
+                        text: groupName
                         font {
                             family: mFONT_FAMILY
                             pointSize: 13
@@ -108,204 +111,405 @@ Window {
                 }
             }
         }
-        Item {  //消息框
+        Item {  //下
             Layout.fillWidth: true
             Layout.fillHeight: true
             //color: "lightblue"
-            MyMsgListView {
-                id: myMsgListView
-                friendAccountNumber: self.friendAccountNumber
-            }
-        }
-        Rectangle {  //发送消息框
-            Layout.fillWidth: true
-            Layout.preferredHeight: 180
-
-            ColumnLayout {
+            RowLayout {
                 anchors.fill: parent
                 spacing: 0
 
-                Item {  //线
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 5
-                    MenuSeparator { width: parent.width; padding: 0 }
-                }
-                Item {  //菜单栏
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 35
-                    RowLayout {
-                        anchors.fill: parent
-                        spacing: 0
-
-                        Item {  //表情
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 40
-                            MyToolButton {
-                                iconSource: "qrc:/image/呆.png"
-                                clickColor: "#00000000"
-                            }
-                        }
-                        Item {  //文件
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 40
-                            MyToolButton {
-                                iconSource: "qrc:/image/文件.png"
-                                clickColor: "#00000000"
-                            }
-                        }
-                        Item {  //图片
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 40
-                            MyToolButton {
-                                iconSource: "qrc:/image/图片.png"
-                                clickColor: "#00000000"
-                            }
-                        }
-                        Item {  //振动
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 40
-                            MyToolButton {
-                                iconSource: "qrc:/image/振动.png"
-                                clickColor: "#00000000"
-                                scale: 1.15
-                            }
-                        }
-                        Item {  //更多
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 40
-                            MyToolButton {
-                                iconSource: "qrc:/image/更多.png"
-                                clickColor: "#00000000"
-                                scale: 1.2
-                            }
-                        }
-                        Item {
-                            Layout.fillHeight: true
-                            Layout.fillWidth: true
-                        }
-                    }
-                }
-                Item {  //发送消息框
-                    Layout.fillWidth: true
+                Item {  //聊天框
                     Layout.fillHeight: true
-
-                    ScrollView {
-                        width: parent.width
-                        height: parent.height
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        TextArea {
-                            id: msgText
-                            wrapMode: TextEdit.Wrap
-//                            background: Rectangle {
-//                                border.color: "gray"
-//                            }
-                            font {
-                                family: mFONT_FAMILY
-                                pointSize: 12
-                            }
-                            //text: main_PersonalSignature
-                        }
-                    }
-                }
-                Item {  //关闭，发送按钮
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 50
-
-                    RowLayout {
+                    Layout.preferredWidth: 700
+                    ColumnLayout {
                         anchors.fill: parent
                         spacing: 0
 
-                        Item {
+                        Item {  //消息框
                             Layout.fillHeight: true
                             Layout.fillWidth: true
+                            MyGroupMsgListView {
+                                id: myGroupMsgListView
+                                groupNumber: self.groupNumber
+                            }
                         }
-                        Item {  //关闭
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 100
-                            Item {
-                                width: 85
-                                height: parent.height*0.6
-                                anchors.centerIn: parent
-                                MyToolButton {
-                                    text: "关闭"
-                                    font {
-                                        family: mFONT_FAMILY
-                                        pointSize: 10
+                        Rectangle {  //发送消息框
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 180
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                spacing: 0
+
+                                Item {  //线
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 5
+                                    MenuSeparator { width: parent.width; padding: 0 }
+                                }
+                                Item {  //菜单栏
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 35
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        spacing: 0
+
+                                        Item {  //表情
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 40
+                                            MyToolButton {
+                                                iconSource: "qrc:/image/呆.png"
+                                                clickColor: "#00000000"
+                                            }
+                                        }
+                                        Item {  //文件
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 40
+                                            MyToolButton {
+                                                iconSource: "qrc:/image/文件.png"
+                                                clickColor: "#00000000"
+                                            }
+                                        }
+                                        Item {  //图片
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 40
+                                            MyToolButton {
+                                                iconSource: "qrc:/image/图片.png"
+                                                clickColor: "#00000000"
+                                            }
+                                        }
+                                        Item {  //振动
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 40
+                                            MyToolButton {
+                                                iconSource: "qrc:/image/振动.png"
+                                                clickColor: "#00000000"
+                                                scale: 1.15
+                                            }
+                                        }
+                                        Item {  //更多
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 40
+                                            MyToolButton {
+                                                iconSource: "qrc:/image/更多.png"
+                                                clickColor: "#00000000"
+                                                scale: 1.2
+                                            }
+                                        }
+                                        Item {
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: true
+                                        }
                                     }
-                                    bacColor: "white"
-                                    borderWidth: 1
-                                    clickColor: "lightgray"
-                                    clickOpacity: 0.6
-                                    onClicked: {
-                                        self.close()
+                                }
+                                Item {  //发送消息框
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    ScrollView {
+                                        width: parent.width
+                                        height: parent.height
+                                        anchors.verticalCenter: parent.verticalCenter
+
+                                        TextArea {
+                                            id: msgText
+                                            wrapMode: TextEdit.Wrap
+                //                            background: Rectangle {
+                //                                border.color: "gray"
+                //                            }
+                                            font {
+                                                family: mFONT_FAMILY
+                                                pointSize: 12
+                                            }
+                                            //text: main_PersonalSignature
+                                        }
+                                    }
+                                }
+                                Item {  //关闭，发送按钮
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 50
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        spacing: 0
+
+                                        Item {
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: true
+                                        }
+                                        Item {  //关闭
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 100
+                                            Item {
+                                                width: 85
+                                                height: parent.height*0.6
+                                                anchors.centerIn: parent
+                                                MyToolButton {
+                                                    text: "关闭"
+                                                    font {
+                                                        family: mFONT_FAMILY
+                                                        pointSize: 10
+                                                    }
+                                                    bacColor: "white"
+                                                    borderWidth: 1
+                                                    clickColor: "lightgray"
+                                                    clickOpacity: 0.6
+                                                    onClicked: {
+                                                        self.close()
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        Item {  //发送
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 100
+                                            Item {
+                                                width: 85
+                                                height: parent.height*0.6
+                                                anchors.centerIn: parent
+                                                MyToolButton {
+                                                    Text {
+                                                        text: "发送"
+                                                        anchors.centerIn: parent
+                                                        color: "#eeffffff"
+                                                        font {
+                                                            family: mFONT_FAMILY
+                                                            pointSize: 10
+                                                        }
+                                                    }
+                                                    font {
+                                                        family: mFONT_FAMILY
+                                                        pointSize: 10
+                                                    }
+                                                    bacColor: "lightblue"
+                                                    clickColor: "#baccd9"
+                                                    borderWidth: 1
+                                                    onClicked: {
+                                                        /* 发送消息 */
+                                                        var data = {}
+                                                        data.IsMyMsg = "true"
+                                                        data.Msg = msgText.text
+                                                        data.SendMsgNumber = main_AccountNumber
+                                                        if (data.Msg === "") { console.log("不能发送空消息！"); return }
+                                                        myGroupMsgListView.addMsgData(data)
+
+                                                        /* 上传到服务器缓存和转发 json数据*/
+                                                        var chatHistory = {}
+                                                        chatHistory.GroupNumber = groupNumber
+                                                        chatHistory.ChatHistory = {}
+                                                        chatHistory.ChatHistory.SendMsgNumber = main_AccountNumber
+                                                        chatHistory.ChatHistory.Msg = msgText.text
+                                                        chatHistory.ChatHistory.IsMyMsg = ""
+                                                        /* 本地缓存 */
+                                                        saveLocalCache_GroupChatHistory(chatHistory)
+                                                        /* 云缓存 */
+                                                        toServer_SaveGroupChatHistory(chatHistory)
+
+                                                        /* 刷新对应好友的最后一行聊天记录视图 */
+                                                        for (var i=0; i<main_FriendsList.length; i++) {
+                                                            if (groupNumber === main_FriendsList[i].accountNumber) {
+                                                                updateFriendListViewOneRow(i, msgText.text)  //更新视图
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        /* 清空输入内容 */
+                                                        msgText.clear()
+                                                        msgText.forceActiveFocus()
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-                        Item {  //发送
+                    }
+                }
+                Item {  //群栏
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 200
+
+                    RowLayout {
+                        anchors.fill: parent
+                        spacing: 0
+
+                        MenuSeparator {  //竖线
                             Layout.fillHeight: true
-                            Layout.preferredWidth: 100
-                            Item {
-                                width: 85
-                                height: parent.height*0.6
-                                anchors.centerIn: parent
-                                MyToolButton {
-                                    Text {
-                                        text: "发送"
-                                        anchors.centerIn: parent
-                                        color: "#eeffffff"
-                                        font {
-                                            family: mFONT_FAMILY
-                                            pointSize: 10
-                                        }
-                                    }
-                                    font {
-                                        family: mFONT_FAMILY
-                                        pointSize: 10
-                                    }
-                                    bacColor: "lightblue"
-                                    clickColor: "#baccd9"
-                                    borderWidth: 1
-                                    onClicked: {
-                                        /* 发送消息 */
-                                        var data = {}
-                                        data.IsMyMsg = "true"
-                                        data.Msg = msgText.text
-                                        if (data.msg === "") return
-                                        myMsgListView.addMsgData(data)
+                            Layout.preferredWidth: 1
+                            padding: 0
+                        }
+                        Item {  //内容
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            ColumnLayout {
+                                anchors.fill: parent
+                                spacing: 0
 
-                                        /* 上传到服务器缓存和转发 json数据*/
-                                        var chatHistory = {}
-                                        chatHistory.AccountNumber = main_AccountNumber
-                                        chatHistory.FriendAccountNumber = friendAccountNumber
-                                        chatHistory.ChatHistory1 = {}
-                                        chatHistory.ChatHistory1.Msg = msgText.text
-                                        chatHistory.ChatHistory1.IsMyMsg = "true"
-                                        chatHistory.ChatHistory2 = {}
-                                        chatHistory.ChatHistory2.Msg = msgText.text
-                                        chatHistory.ChatHistory2.IsMyMsg = "false"
-                                        /* 本地缓存 */
-                                        saveLocalCache_ChatHistory(chatHistory)
-
-                                        if (main_AccountNumber === friendAccountNumber) {
-                                            chatHistory.IsNeedTransmit = "false"
-                                        }
-                                        else chatHistory.IsNeedTransmit = "true"
-                                        /* 云缓存 */
-                                        toServer_SaveChatHistory(chatHistory)
-
-                                        /* 刷新对应好友的最后一行聊天记录视图 */
-                                        for (var i=0; i<main_FriendsList.length; i++) {
-                                            if (friendAccountNumber === main_FriendsList[i].accountNumber) {
-                                                updateFriendListViewOneRow(i, msgText.text)  //更新视图
-                                                break;
+                                Rectangle {  //群号
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 50
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        spacing: 0
+                                        Rectangle {
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 60
+                                            Text {
+                                                text: "群号"
+                                                font {
+                                                    family: mFONT_FAMILY
+                                                    pointSize: 12
+                                                }
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                x: 10
                                             }
                                         }
-
-                                        /* 清空输入内容 */
-                                        msgText.clear()
-                                        msgText.forceActiveFocus()
+                                        Rectangle {
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: true
+                                            TextEdit {
+                                                text: groupNumber
+                                                font {
+                                                    family: mFONT_FAMILY
+                                                    pointSize: 13
+                                                    underline: true
+                                                }
+                                                anchors.centerIn: parent
+                                                color: "lightblue"
+                                                readOnly: true
+                                                selectionColor: "lightgray"
+                                            }
+                                        }
+                                        Item {
+                                            Layout.fillHeight: true
+                                            Layout.preferredWidth: 50
+                                        }
+                                    }
+                                }
+                                Rectangle {  //群通知
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 200
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        spacing: 0
+                                        Item {  //群通知
+                                            Layout.fillWidth: true
+                                            Layout.preferredHeight: 0
+                                            RowLayout {
+                                                anchors.fill: parent
+                                                spacing: 0
+                                                Item {
+                                                    Layout.fillHeight: true
+                                                    Layout.preferredWidth: 60
+                                                    Text {
+                                                        text: "群通知"
+                                                        font {
+                                                            family: mFONT_FAMILY
+                                                            pointSize: 12
+                                                        }
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        x: 10
+                                                    }
+                                                }
+                                                Item {
+                                                    Layout.fillHeight: true
+                                                    Layout.fillWidth: true
+                                                }
+                                            }
+                                        }
+                                        Item {  //没有通知的背景图
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+                                            Image {
+                                                width: 40
+                                                height: 40
+                                                anchors.centerIn: parent
+                                                source: "qrc:/image/没有通知.png"
+                                            }
+                                        }
+                                    }
+                                }
+                                Rectangle {  //群成员
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    ColumnLayout {
+                                        anchors.fill: parent
+                                        spacing: 0
+                                        Item {  //横线
+                                            Layout.fillWidth: true
+                                            Layout.preferredHeight: 5
+                                            MenuSeparator { width: parent.width; padding: 0 }
+                                        }
+                                        Item {  //群成员
+                                            Layout.fillWidth: true
+                                            Layout.preferredHeight: 40
+                                            Text {
+                                                text: "群成员"
+                                                font {
+                                                    family: mFONT_FAMILY
+                                                    pointSize: 12
+                                                }
+                                                anchors.verticalCenter: parent.verticalCenter
+                                                x: 10
+                                            }
+                                        }
+                                        Rectangle {  //list
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+                                            ListView {
+                                                id: listView
+                                                model: ListModel {
+                                                    id: listModel
+                                                }
+                                                anchors.fill: parent
+                                                clip: true
+                                                delegate: Item {
+                                                    height: 40
+                                                    width: listView.width
+                                                    RowLayout {
+                                                        anchors.fill: parent
+                                                        spacing: 0
+                                                        Item {
+                                                            Layout.fillHeight: true
+                                                            Layout.preferredWidth: 10+40
+                                                            MyProfileImage {  //头像
+                                                                x: 10
+                                                                imgSrc: profileImage
+                                                                width: 35
+                                                                height: 35
+                                                                imageHeight: profileImage==="qrc:/image/profileImage.png" ? height*0.75:height
+                                                                imageWidth: profileImage==="qrc:/image/profileImage.png" ? width*0.75:width
+                                                                anchors.verticalCenter: parent.verticalCenter
+                                                            }
+                                                        }
+                                                        Rectangle {  //昵称
+                                                            Layout.fillHeight: true
+                                                            Layout.fillWidth: true
+                                                            Text {
+                                                                text: nickName
+                                                                font {
+                                                                    family: mFONT_FAMILY
+                                                                    pointSize: 11
+                                                                }
+                                                                anchors.verticalCenter: parent.verticalCenter
+                                                            }
+                                                        }
+                                                        Item {  //群用户图像
+                                                            Layout.fillHeight: true
+                                                            Layout.preferredWidth: 40
+                                                            Image {
+                                                                width: 35
+                                                                height: 35
+                                                                scale: 0.8
+                                                                anchors.centerIn: parent
+                                                                source: "qrc:/image/用户.png"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }

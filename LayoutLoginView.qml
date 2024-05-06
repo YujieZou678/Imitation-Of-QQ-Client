@@ -414,17 +414,38 @@ ColumnLayout {
                                     /* 本地加载聊天记录最后一行 */
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         var friendAccountNumber = main_FriendsList[i].accountNumber
-                                        var data = {}
-                                        var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
-                                        if (msgLocalCache.Msg === undefined) {
-                                            data.Msg = "我们成为好友了，现在开始聊天吧。"
-                                            data.IsMyMsg = "true"
+                                        /* 判断是不是群聊 */
+                                        if (friendAccountNumber.match(/[1-9]\d{9}/)) {
+                                            /* 不是 */
+                                            var data = {}
+                                            var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
+                                            if (msgLocalCache.Msg === undefined) {
+                                                data.Msg = "我们成为好友了，现在开始聊天吧。"
+                                                data.IsMyMsg = "true"
+                                                data.SendMsgNumber = main_AccountNumber
+                                            } else {
+                                                data.Msg = msgLocalCache.Msg
+                                                data.IsMyMsg = msgLocalCache.IsMyMsg
+                                                data.SendMsgNumber = main_AccountNumber
+                                            }
+                                            main_FriendsList[i].chatHistory.push(data)
+                                            updateFriendListViewOneRow(i, data.Msg)  //更新视图
                                         } else {
-                                            data.Msg = msgLocalCache.Msg
-                                            data.IsMyMsg = msgLocalCache.IsMyMsg
+                                            /* 是 */
+                                            var data = {}
+                                            var msgLocalCache = getLocalCache_GroupChatHistory(friendAccountNumber)
+                                            if (msgLocalCache.Msg === undefined) {
+                                                data.Msg = ""
+                                                data.IsMyMsg = ""
+                                                data.SendMsgNumber = ""
+                                            } else {
+                                                data.Msg = msgLocalCache.Msg
+                                                data.IsMyMsg = msgLocalCache.IsMyMsg
+                                                data.SendMsgNumber = msgLocalCache.SendMsgNumber
+                                            }
+                                            main_FriendsList[i].chatHistory.push(data)
+                                            updateFriendListViewOneRow(i, data.Msg)  //更新视图
                                         }
-                                        main_FriendsList[i].chatHistory.push(data)
-                                        updateFriendListViewOneRow(i, data.Msg)  //更新视图
                                     }
 
                                     onGetReply_GetPersonalData.disconnect(onGet)  //断开连接
@@ -460,6 +481,7 @@ ColumnLayout {
                                         } else {
                                             data.Msg = msgLocalCache.Msg
                                             data.IsMyMsg = msgLocalCache.IsMyMsg
+                                            data.SendMsgNumber = msgLocalCache.SendMsgNumber
                                         }
                                         main_FriendsList[i].chatHistory.push(data)
                                         updateFriendListViewOneRow(i, data.Msg)  //更新视图
@@ -483,9 +505,11 @@ ColumnLayout {
                                             chatHistory.ChatHistory1 = {}
                                             chatHistory.ChatHistory1.Msg = doc.Msg.Msg
                                             chatHistory.ChatHistory1.IsMyMsg = "false"
+                                            chatHistory.ChatHistory1.SendMsgNumber = sendPerson
                                             chatHistory.ChatHistory2 = {}
                                             chatHistory.ChatHistory2.Msg = doc.Msg.Msg
                                             chatHistory.ChatHistory2.IsMyMsg = "false"
+                                            chatHistory.ChatHistory2.SendMsgNumber = sendPerson
                                             saveLocalCache_ChatHistory(chatHistory)
                                             break;
                                         }

@@ -32,6 +32,9 @@ public:
     void toServer_SaveChatHistory(QJsonObject);                        //上传聊天记录
     void toServer_GetChatHistory(const QString&, const QString&);      //获取与某好友的聊天记录
     void toServer_CreateGroup(const QString&, const QString&);         //创建群聊
+    void toServer_GetFriendList(const QString&);                       //获取好友列表
+    void toServer_SaveGroupChatHistory(QJsonObject);                   //上传群聊天记录
+    void toServer_GetGroupChatHistory(const QString&);                 //获取某群聊的聊天记录
 
 signals:
     void getReply_CheckAccountNumber(const QString&);           //信号：收到验证账号的回复
@@ -43,6 +46,8 @@ signals:
     void getReply_GetChatHistory(const QJsonArray&);            //信号：收到与某好友的聊天信息
     void getReply_RefreshFriendList(const QJsonObject&);        //信号：刷新好友列表
     void getReply_TransmitMsg(const QJsonObject&);              //信号：转发消息（有好友发消息）
+    void getReply_GetFriendList(const QJsonArray&);             //信号：获取好友列表
+    void getReply_GetGroupChatHistory(const QJsonArray&);       //信号：收到某群的聊天信息
 
 public slots:
     void onConnected();     //连接到服务器
@@ -61,7 +66,9 @@ private:
         GetChatHistory,
         RefreshFriendList,
         TransmitMsg,
-        CheckGroupNumber
+        CheckGroupNumber,
+        GetFriendList,
+        GetGroupChatHistory
     };
     QMap<QString, enum Purpose> map_Switch;  //用于寻找信息是哪个目的
 

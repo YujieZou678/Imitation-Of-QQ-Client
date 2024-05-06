@@ -282,9 +282,11 @@ Window {
                                         chatHistory.ChatHistory1 = {}
                                         chatHistory.ChatHistory1.Msg = msgText.text
                                         chatHistory.ChatHistory1.IsMyMsg = "true"
+                                        chatHistory.ChatHistory1.SendMsgNumber = main_AccountNumber
                                         chatHistory.ChatHistory2 = {}
                                         chatHistory.ChatHistory2.Msg = msgText.text
                                         chatHistory.ChatHistory2.IsMyMsg = "false"
+                                        chatHistory.ChatHistory2.SendMsgNumber = main_AccountNumber
                                         /* 本地缓存 */
                                         saveLocalCache_ChatHistory(chatHistory)
 

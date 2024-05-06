@@ -34,6 +34,9 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_SaveChatHistory, myThread, &MyThread::toServer_SaveChatHistory);
     connect(this, &TcpClient::toSubThread_GetChatHistory, myThread, &MyThread::toServer_GetChatHistory);
     connect(this, &TcpClient::toSubThread_CreateGroup, myThread, &MyThread::toServer_CreateGroup);
+    connect(this, &TcpClient::toSubThread_GetFriendList, myThread, &MyThread::toServer_GetFriendList);
+    connect(this, &TcpClient::toSubThread_SaveGroupChatHistory, myThread, &MyThread::toServer_SaveGroupChatHistory);
+    connect(this, &TcpClient::toSubThread_GetGroupChatHistory, myThread, &MyThread::toServer_GetGroupChatHistory);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Register, this, &TcpClient::getReplyFromSub_Register);
@@ -44,6 +47,8 @@ TcpClient::TcpClient(QObject *parent)
     connect(myThread, &MyThread::getReply_GetChatHistory, this, &TcpClient::getReplyFromSub_GetChatHistory);
     connect(myThread, &MyThread::getReply_RefreshFriendList, this, &TcpClient::getReplyFromSub_RefreshFriendList);
     connect(myThread, &MyThread::getReply_TransmitMsg, this, &TcpClient::getReplyFromSub_TransmitMsg);
+    connect(myThread, &MyThread::getReply_GetFriendList, this, &TcpClient::getReplyFromSub_GetFriendList);
+    connect(myThread, &MyThread::getReply_GetGroupChatHistory, this, &TcpClient::getReplyFromSub_GetGroupChatHistory);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -111,6 +116,21 @@ void TcpClient::toServer_CreateGroup(const QString &groupNumber, const QString &
     emit toSubThread_CreateGroup(groupNumber, accountNumber);  //群号 当前用户账号
 }
 
+void TcpClient::toServer_GetFriendList(const QString &accountNumber)
+{
+    emit toSubThread_GetFriendList(accountNumber);
+}
+
+void TcpClient::toServer_SaveGroupChatHistory(const QJsonObject &obj)
+{
+    emit toSubThread_SaveGroupChatHistory(obj);
+}
+
+void TcpClient::toServer_GetGroupChatHistory(const QString &groupNumber)
+{
+    emit toSubThread_GetGroupChatHistory(groupNumber);
+}
+
 void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
 {
 /* json格式
@@ -118,10 +138,12 @@ void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
  * FriendAccountNumber,
  * ChatHistory1:
  *          Msg,
- *          IsMyMsg
+ *          IsMyMsg,
+ *          SendMsgNumber
  * ChatHistory2:
  *          Msg,
- *          IsMyMsg
+ *          IsMyMsg,
+ *          SendMsgNumber
 */
     /* 保存本地缓存聊天记录 */
     QString accountNumber = obj["AccountNumber"].toString();
@@ -150,6 +172,31 @@ bool TcpClient::fileIsExit(const QString &file)
     bool exit = dir.exists(file);
 
     return exit;
+}
+
+void TcpClient::saveLocalCache_GroupChatHistory(const QJsonObject &obj)
+{
+/* json格式
+ * GroupNumber,
+ * ChatHistory:
+ *          Msg,
+ *          IsMyMsg,
+ *          SendMsgNumber
+*/
+    QString groupNumber = obj["GroupNumber"].toString();
+    QJsonObject historyArray = obj["ChatHistory"].toObject();
+
+    settings->setValue(groupNumber+"/ChatHistory/", historyArray);
+}
+
+QJsonObject TcpClient::getLocalCache_GroupChatHistory(const QString &groupNumber)
+{
+    /* 获取本地缓存聊天记录 */
+    settings->beginGroup(groupNumber);  //进入目录
+    QJsonObject data = settings->value("ChatHistory").toJsonObject();
+    settings->endGroup();               //退出目录
+
+    return data;
 }
 
 void TcpClient::getReplyFromSub_CheckAccountNumber(const QString &isExit)
@@ -195,5 +242,15 @@ void TcpClient::getReplyFromSub_RefreshFriendList(const QJsonObject &doc)
 void TcpClient::getReplyFromSub_TransmitMsg(const QJsonObject &doc)
 {
     emit getReply_TransmitMsg(doc);
+}
+
+void TcpClient::getReplyFromSub_GetFriendList(const QJsonArray &friendList)
+{
+    emit getReply_GetFriendList(friendList);
+}
+
+void TcpClient::getReplyFromSub_GetGroupChatHistory(const QJsonArray &data)
+{
+    emit getReply_GetGroupChatHistory(data);
 }
 

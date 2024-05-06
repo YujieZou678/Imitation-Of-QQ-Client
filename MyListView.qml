@@ -12,6 +12,7 @@ Item {
 
     property alias repeater: repeater
     property alias listModel: listModel
+    property string loaderSource: ""
 
     function updateAllData() {  //更新所有好友列表
         listModel.clear()    //清空数据
@@ -23,12 +24,14 @@ Item {
             var nickName = main_FriendsList[i].nickName          //好友昵称
             var msgRow                                           //最后一行消息
             var isMyMsg                                          //是不是自己发的
+            var sendMsgNumber                                    //发消息的号码
             var chatHistory = main_FriendsList[i].chatHistory
-            if (chatHistory.length < 1) { msgRow = ""; isMyMsg = "true" }
+            if (chatHistory.length < 1) { msgRow = ""; isMyMsg = "true"; sendMsgNumber = main_AccountNumber }
             else {
                 var msgList = chatHistory[chatHistory.length-1]
                 msgRow = msgList.Msg
                 isMyMsg = msgList.IsMyMsg===""? "true":msgList.IsMyMsg
+                sendMsgNumber = msgList.SendMsgNumber
             }
             var msgDate = "昨天"                                  //日期
 
@@ -36,8 +39,9 @@ Item {
             data.profileImage = profileImage
             data.nickName = nickName
             data.msgRow = msgRow
-            data.isMyMsg = isMyMsg
+            data.isMyMsg = isMyMsg  //没使用
             data.msgDate = msgDate
+            data.sendMsgNumber = sendMsgNumber
             data.isNeedCloudChatHistory = true  //默认赋值
 
             listModel.append(data)
@@ -100,30 +104,84 @@ Item {
                     listViewDelegateItem.forceActiveFocus()  //强制获取焦点
                 }
                 onDoubleClicked: {
-                    /* 为聊天窗口赋值 */
-                    var item = repeater.itemAt(index).item
-                    item.chatObj = nickName  //好友昵称
-                    item.friendAccountNumber = accountNumber  //好友账号
+                    /* 判断是单个好友还是群聊(9位数字) */
+                    if (accountNumber.match(/[1-9]\d{9}/)) {
+                        /* 是单个好友 */
+                        /* 为聊天窗口赋值 */
+                        loaderSource = "MyChatView.qml"
+                        var item = repeater.itemAt(index).item
+                        item.chatObj = nickName  //好友昵称
+                        item.friendAccountNumber = accountNumber  //好友账号
 
-                    if (isNeedCloudChatHistory) {
-                        isNeedCloudChatHistory = false  //只执行一次
-                        function onReply(chatHistory) {  //获取和该好友的聊天记录
-                            for (var i=0; i<main_FriendsList.length; i++) {
-                                if (main_FriendsList[i].accountNumber === accountNumber) {
-                                    main_FriendsList[i].chatHistory = chatHistory
-                                    break
+                        if (isNeedCloudChatHistory) {
+                            isNeedCloudChatHistory = false  //只执行一次
+                            function onReply(chatHistory) {  //获取和该好友的聊天记录
+                                for (var i=0; i<main_FriendsList.length; i++) {
+                                    if (main_FriendsList[i].accountNumber === accountNumber) {
+                                        main_FriendsList[i].chatHistory = chatHistory
+                                        break
+                                    }
                                 }
+
+                                item.updateData()  //刷新所有聊天记录
+                                onGetReply_GetChatHistory.disconnect(onReply)  //断开连接
                             }
-
-                            item.updateData()  //刷新所有聊天记录
-                            onGetReply_GetChatHistory.disconnect(onReply)  //断开连接
+                            onGetReply_GetChatHistory.connect(onReply)  //连接
+                            toServer_GetChatHistory(main_AccountNumber, accountNumber)  //请求
                         }
-                        onGetReply_GetChatHistory.connect(onReply)  //连接
-                        toServer_GetChatHistory(main_AccountNumber, accountNumber)  //请求
-                    }
 
-                    item.visible = true
-                    item.raise()  //置顶
+                        item.visible = true
+                        item.raise()  //置顶
+                    } else {
+                        /* 是群聊 */
+                        /* 为群聊天窗口赋值 */
+                        loaderSource = "MyGroupChatView.qml"
+                        var item = repeater.itemAt(index).item
+                        item.groupName = nickName
+                        item.groupNumber = accountNumber
+
+                        if (isNeedCloudChatHistory) {
+                            isNeedCloudChatHistory = false  //只执行一次
+                            /* 获取好友列表 */
+                            function onReply(friendList) {
+                                for (var i=0; i<friendList.length; i++) {
+                                    /* 遍历添加 */
+                                    var list = main_FriendsList.filter(item=>item.accountNumber===friendList[i])
+                                    if (list.length === 0) {
+                                        /* 不是自己好友(需要网络请求) */
+                                        var data = {}
+                                        data.profileImage = "qrc:/image/profileImage.png"
+                                        data.nickName = friendList[i]
+                                        item.addFriend(data)
+                                    } else {
+                                        /* 是自己好友 */
+                                        item.addFriend(list[0])
+                                    }
+                                }
+                                onGetReply_GetFriendList.disconnect(onReply)  //断开连接
+
+                                /* 获取聊天记录 */
+                                function onGet(chatHistory) {
+                                    for (var i=0; i<main_FriendsList.length; i++) {
+                                        if (main_FriendsList[i].accountNumber === accountNumber) {
+                                            main_FriendsList[i].chatHistory = chatHistory
+                                            break
+                                        }
+                                    }
+
+                                    item.updateData()  //刷新所有聊天记录
+                                    onGetReply_GetGroupChatHistory.disconnect(onGet)  //断开连接
+                                }
+                                onGetReply_GetGroupChatHistory.connect(onGet)  //连接
+                                toSubThread_GetGroupChatHistory(accountNumber)
+                            }
+                            onGetReply_GetFriendList.connect(onReply)  //连接
+                            toServer_GetFriendList(accountNumber);
+                        }
+
+                        item.visible = true
+                        item.raise()  //置顶
+                    }
                 }
             }
 
@@ -198,7 +256,14 @@ Item {
 
                                 Text {
                                     width: 280
-                                    text: msgRow
+                                    text: {
+                                        if (sendMsgNumber === main_AccountNumber) {
+                                            return msgRow
+                                        } else {
+                                            return nickName+":"+msgRow
+                                        }
+                                    }
+
                                     maximumLineCount: 1
                                     font {
                                         pointSize: 11
@@ -221,7 +286,7 @@ Item {
             id: repeaterModel
         }
         Loader {
-            source: "MyChatView.qml"
+            source: loaderSource
         }
     }
 }

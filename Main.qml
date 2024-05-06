@@ -44,13 +44,14 @@ ApplicationWindow {
     3.profileImage,
     4.chatHistory:
            IsMyMsg,
-           Msg
+           Msg,
+           SendMsgNumber
     */
 
-//    width: 520
-//    height: 400
-    width: 400
-    height: 800
+    width: 520
+    height: 400
+//    width: 400
+//    height: 800
     visible: true
 
     flags: Qt.Window|Qt.FramelessWindowHint  //无边框全套处理
@@ -68,7 +69,7 @@ ApplicationWindow {
 
     LayoutLoginView {  //登陆界面
         id: layoutLoginView
-        visible: false
+        //visible: false
     }
 
     LayoutRegisterView {  //注册界面
@@ -78,7 +79,7 @@ ApplicationWindow {
 
     LayoutUserView {  //登陆成功进入用户界面
         id: layoutUserView
-        //visible: false
+        visible: false
     }
 
     function switchRegisterView() {  //切换到注册界面

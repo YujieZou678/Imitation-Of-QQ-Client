@@ -124,7 +124,7 @@ Window {
                                     id: textField
                                     anchors.fill: parent
                                     validator: RegularExpressionValidator {
-                                        regularExpression: /[1-9]\d{9}/
+                                        regularExpression: /[1-9]\d{8,9}/
                                     }
                                     background: Rectangle {
                                         color: "#00000000"
@@ -358,7 +358,15 @@ Window {
                                                 width: 80
                                                 anchors.centerIn: parent
                                                 MyToolButton {
-                                                    text: isFriend? "发消息":"加好友"  //需要判断是不是好友
+                                                    text: {
+                                                        if (isFriend) return "发消息"
+                                                        else {
+                                                            if (accountNumber.match(/[1-9]\d{9}/)) {
+                                                                return "加好友"
+                                                            } else return "加群"
+                                                        }
+                                                    }
+
                                                     borderWidth: 1
                                                     bacRadius: 5
                                                     clickColor: "#e2e1e4"
@@ -369,7 +377,7 @@ Window {
                                                         if (text === "发消息") {
                                                             /* 发消息 */
                                                             //
-                                                        } else {
+                                                        } else if (text === "加好友"){
                                                             /* 加好友 */
                                                             var data = {}
                                                             data.AccountNumber = main_AccountNumber      //自己的账号
@@ -377,9 +385,13 @@ Window {
                                                             data.ChatHistory = {}                        //聊天记录
                                                             data.ChatHistory.Msg = "我们成为好友了，现在开始聊天吧。"
                                                             data.ChatHistory.IsMyMsg = "false"
+                                                            data.ChatHistory.SendMsgNumber = accountNumber
                                                             toServer_AddFriend(data)
 
                                                             isFriend = true
+                                                        } else {
+                                                            /* 加群 */
+                                                            //
                                                         }
                                                     }
                                                 }
