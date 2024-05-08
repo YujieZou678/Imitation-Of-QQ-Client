@@ -399,6 +399,8 @@ Window {
                                                             data.ChatHistory.IsMyMsg = ""
                                                             data.ChatHistory.SendMsgNumber = main_AccountNumber
                                                             toServer_AddGroup(data)
+
+                                                            isFriend = true
                                                         }
                                                     }
                                                 }
