@@ -15,7 +15,13 @@ Item {
     property string groupNumber: ""  //群号
 
     function friendProfileImage(SendMsgNumber) {  //获取好友头像
-        return "file:///root/my_test/Client/build/config/profileImage/"+SendMsgNumber+".jpg"
+        var file = "/root/my_test/Client/build/config/profileImage/"+SendMsgNumber+".jpg"
+        if (fileIsExit(file)) {
+            /* 该头像存在 */
+            return "file:///root/my_test/Client/build/config/profileImage/"+SendMsgNumber+".jpg"
+        }
+
+        return "qrc:/image/profileImage.png"
     }
 
     function updateData() {  //刷新所有聊天记录

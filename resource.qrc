@@ -35,5 +35,7 @@
         <file>image/搜索.png</file>
         <file>image/发起群聊.png</file>
         <file>image/没有通知.png</file>
+        <file>image/编辑.png</file>
+        <file>image/群主.png</file>
     </qresource>
 </RCC>

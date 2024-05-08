@@ -300,7 +300,7 @@ Window {
                                         /* 刷新对应好友的最后一行聊天记录视图 */
                                         for (var i=0; i<main_FriendsList.length; i++) {
                                             if (friendAccountNumber === main_FriendsList[i].accountNumber) {
-                                                updateFriendListViewOneRow(i, msgText.text)  //更新视图
+                                                updateFriendListViewOneRow(i, msgText.text, main_AccountNumber)  //更新视图
                                                 break;
                                             }
                                         }

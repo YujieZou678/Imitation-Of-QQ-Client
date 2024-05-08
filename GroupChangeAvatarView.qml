@@ -1,7 +1,7 @@
 /*
-function: 更换头像视图。
+function: 更换群头像视图。
 author: zouyujie
-date: 2024.4.12
+date: 2024.5.8
 */
 import QtQuick
 import QtQuick.Controls
@@ -10,6 +10,9 @@ import Qt.labs.platform
 import Qt5Compat.GraphicalEffects
 
 Window {
+
+    property int index: -1  //该群聊位于好友列表index
+    property string profileImage: "qrc:/image/profileImage.png"
 
     id: self
 
@@ -141,7 +144,7 @@ Window {
                             Image {
                                 id: image
                                 anchors.fill: parent
-                                source: main_ProfileImage
+                                source: profileImage
                                 fillMode: Image.PreserveAspectCrop
                                 visible: false
                             }
@@ -157,7 +160,7 @@ Window {
                                 anchors.fill: parent
                                 imageHeight: imgSrc==="qrc:/image/profileImage.png" ? height*0.75:height
                                 imageWidth: imgSrc==="qrc:/image/profileImage.png" ? width*0.75:width
-                                imgSrc: main_ProfileImage
+                                imgSrc: profileImage
                                 imgRadius: 450
                             }
                         }
@@ -209,16 +212,16 @@ Window {
                             bacColor: "#11659a"
                             clickColor: "#5698c3"
                             onClicked: {
-                                if (main_ProfileImage === image.source+"") {
+                                if (main_FriendsList[index].profileImage === image.source+"") {
                                     self.close()
                                     return
                                 }
 
-                                main_ProfileImage = image.source+""
+                                main_FriendsList[index].profileImage = image.source+""
                                 /* 好友列表刷新（只有自己） */
-                                var data = layoutUserView.msgListView.listModel.get(0)
-                                data.profileImage = main_ProfileImage
-                                layoutUserView.msgListView.listModel.set(0, data)
+                                var data = layoutUserView.msgListView.listModel.get(index)
+                                data.profileImage = main_FriendsList[index].profileImage
+                                layoutUserView.msgListView.listModel.set(index, data)
 
                                 console.log("开始缓冲")
                                 /* 上传到服务器 */
@@ -229,13 +232,13 @@ Window {
                                 onFinished_SeverReceiveFile.connect(onReply)  //连接
 
                                 /* 处理地址：file:///... */
-                                var source = main_ProfileImage.split("/")
+                                var source = main_FriendsList[index].profileImage.split("/")
                                 source.shift()
                                 source.shift()
                                 source.shift()
                                 source = source.join("/")
                                 source = "/"+source
-                                toServer_PrepareSendFile(source, main_AccountNumber)  //准备发送文件
+                                toServer_PrepareSendFile(source, groupNumber)  //准备发送文件
 
                                 self.close()
                             }

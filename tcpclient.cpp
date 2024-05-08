@@ -37,6 +37,8 @@ TcpClient::TcpClient(QObject *parent)
     connect(this, &TcpClient::toSubThread_GetFriendList, myThread, &MyThread::toServer_GetFriendList);
     connect(this, &TcpClient::toSubThread_SaveGroupChatHistory, myThread, &MyThread::toServer_SaveGroupChatHistory);
     connect(this, &TcpClient::toSubThread_GetGroupChatHistory, myThread, &MyThread::toServer_GetGroupChatHistory);
+    connect(this, &TcpClient::toSubThread_AddGroup, myThread, &MyThread::toServer_AddGroup);
+    connect(this, &TcpClient::toSubThread_GetGroupLeader, myThread, &MyThread::toServer_GetGroupLeader);
     /* 子——>主 */
     connect(myThread, &MyThread::getReply_CheckAccountNumber, this, &TcpClient::getReplyFromSub_CheckAccountNumber);
     connect(myThread, &MyThread::getReply_Register, this, &TcpClient::getReplyFromSub_Register);
@@ -49,6 +51,7 @@ TcpClient::TcpClient(QObject *parent)
     connect(myThread, &MyThread::getReply_TransmitMsg, this, &TcpClient::getReplyFromSub_TransmitMsg);
     connect(myThread, &MyThread::getReply_GetFriendList, this, &TcpClient::getReplyFromSub_GetFriendList);
     connect(myThread, &MyThread::getReply_GetGroupChatHistory, this, &TcpClient::getReplyFromSub_GetGroupChatHistory);
+    connect(myThread, &MyThread::getReply_GetGroupLeader, this, &TcpClient::getReplyFromSub_GetGroupLeader);
 
     emit buildConnection();  //子线程与服务器建立连接
 }
@@ -129,6 +132,16 @@ void TcpClient::toServer_SaveGroupChatHistory(const QJsonObject &obj)
 void TcpClient::toServer_GetGroupChatHistory(const QString &groupNumber)
 {
     emit toSubThread_GetGroupChatHistory(groupNumber);
+}
+
+void TcpClient::toServer_AddGroup(const QJsonObject &obj)
+{
+    emit toSubThread_AddGroup(obj);
+}
+
+void TcpClient::toServer_GetGroupLeader(const QString &groupNumber)
+{
+    emit toSubThread_GetGroupLeader(groupNumber);
 }
 
 void TcpClient::saveLocalCache_ChatHistory(const QJsonObject& obj)
@@ -252,5 +265,10 @@ void TcpClient::getReplyFromSub_GetFriendList(const QJsonArray &friendList)
 void TcpClient::getReplyFromSub_GetGroupChatHistory(const QJsonArray &data)
 {
     emit getReply_GetGroupChatHistory(data);
+}
+
+void TcpClient::getReplyFromSub_GetGroupLeader(const QString &groupLeader)
+{
+    emit getReply_GetGroupLeader(groupLeader);
 }
 

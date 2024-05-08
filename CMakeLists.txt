@@ -41,6 +41,9 @@ qt_add_qml_module(appClient
         QML_FILES MyGroupChatView.qml
         QML_FILES
         QML_FILES MyGroupMsgListView.qml
+        QML_FILES GroupDataView.qml
+        QML_FILES GroupChangeAvatarView.qml
+        QML_FILES GroupDataEditView.qml
 )
 
 target_compile_features(appClient PRIVATE cxx_std_20)

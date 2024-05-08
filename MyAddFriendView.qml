@@ -391,7 +391,14 @@ Window {
                                                             isFriend = true
                                                         } else {
                                                             /* 加群 */
-                                                            //
+                                                            var data = {}
+                                                            data.AccountNumber = main_AccountNumber      //自己的账号
+                                                            data.GroupNumber = accountNumber             //好友账号
+                                                            data.ChatHistory = {}                        //聊天记录
+                                                            data.ChatHistory.Msg = "我是"+main_NickName+"。"
+                                                            data.ChatHistory.IsMyMsg = ""
+                                                            data.ChatHistory.SendMsgNumber = main_AccountNumber
+                                                            toServer_AddGroup(data)
                                                         }
                                                     }
                                                 }

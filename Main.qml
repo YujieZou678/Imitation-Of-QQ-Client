@@ -35,8 +35,8 @@ ApplicationWindow {
     function updateFriendListViewOneData(index, oneData) {  //更新对应好友
         layoutUserView.msgListView.updateOneData(index, oneData)
     }
-    function updateFriendListViewOneRow(index, row) {  //更新对应好友最后一排聊天记录
-        layoutUserView.msgListView.updateOneDataRow(index, row)
+    function updateFriendListViewOneRow(index, row, sendMsgNumber) {  //更新对应好友最后一排聊天记录
+        layoutUserView.msgListView.updateOneDataRow(index, row, sendMsgNumber)
     }
     /*main_FriendsList 一个数据的json格式
     1.accountNumber,
@@ -46,6 +46,13 @@ ApplicationWindow {
            IsMyMsg,
            Msg,
            SendMsgNumber
+    5.groupLeader(群聊：群主账号)
+    */
+    property var main_ExtralFriendList: []  //群好友里不是当前用户好友的列表
+    /*main_ExtralFriendList 一个数据的json格式
+    1.accountNumber,
+    2.nickName,
+    3.profileImage,
     */
 
     width: 520

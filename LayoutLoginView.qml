@@ -429,7 +429,7 @@ ColumnLayout {
                                                 data.SendMsgNumber = main_AccountNumber
                                             }
                                             main_FriendsList[i].chatHistory.push(data)
-                                            updateFriendListViewOneRow(i, data.Msg)  //更新视图
+                                            updateFriendListViewOneRow(i, data.Msg, data.SendMsgNumber)  //更新视图
                                         } else {
                                             /* 是 */
                                             var data = {}
@@ -444,7 +444,7 @@ ColumnLayout {
                                                 data.SendMsgNumber = msgLocalCache.SendMsgNumber
                                             }
                                             main_FriendsList[i].chatHistory.push(data)
-                                            updateFriendListViewOneRow(i, data.Msg)  //更新视图
+                                            updateFriendListViewOneRow(i, data.Msg, data.SendMsgNumber)  //更新视图
                                         }
                                     }
 
@@ -473,18 +473,38 @@ ColumnLayout {
                                     /* 本地加载聊天记录最后一行 */
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         var friendAccountNumber = main_FriendsList[i].accountNumber
-                                        var data = {}
-                                        var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
-                                        if (msgLocalCache.Msg === undefined) {
-                                            data.Msg = "我们成为好友了，现在开始聊天吧。"
-                                            data.IsMyMsg = "false"
+                                        /* 判断是不是群聊 */
+                                        if (friendAccountNumber.match(/[1-9]\d{9}/)) {
+                                            /* 不是 */
+                                            var data = {}
+                                            var msgLocalCache = getLocalCache_ChatHistory(accountNumber.text, friendAccountNumber)
+                                            if (msgLocalCache.Msg === undefined) {
+                                                data.Msg = "我们成为好友了，现在开始聊天吧。"
+                                                data.IsMyMsg = "true"
+                                                data.SendMsgNumber = main_AccountNumber
+                                            } else {
+                                                data.Msg = msgLocalCache.Msg
+                                                data.IsMyMsg = msgLocalCache.IsMyMsg
+                                                data.SendMsgNumber = main_AccountNumber
+                                            }
+                                            main_FriendsList[i].chatHistory.push(data)
+                                            updateFriendListViewOneRow(i, data.Msg, data.SendMsgNumber)  //更新视图
                                         } else {
-                                            data.Msg = msgLocalCache.Msg
-                                            data.IsMyMsg = msgLocalCache.IsMyMsg
-                                            data.SendMsgNumber = msgLocalCache.SendMsgNumber
+                                            /* 是 */
+                                            var data = {}
+                                            var msgLocalCache = getLocalCache_GroupChatHistory(friendAccountNumber)
+                                            if (msgLocalCache.Msg === undefined) {
+                                                data.Msg = ""
+                                                data.IsMyMsg = ""
+                                                data.SendMsgNumber = ""
+                                            } else {
+                                                data.Msg = msgLocalCache.Msg
+                                                data.IsMyMsg = msgLocalCache.IsMyMsg
+                                                data.SendMsgNumber = msgLocalCache.SendMsgNumber
+                                            }
+                                            main_FriendsList[i].chatHistory.push(data)
+                                            updateFriendListViewOneRow(i, data.Msg, data.SendMsgNumber)  //更新视图
                                         }
-                                        main_FriendsList[i].chatHistory.push(data)
-                                        updateFriendListViewOneRow(i, data.Msg)  //更新视图
                                     }
                                 }
 
@@ -493,25 +513,44 @@ ColumnLayout {
                                     var sendPerson = doc.SendPerson
                                     for (var i=0; i<main_FriendsList.length; i++) {
                                         if (main_FriendsList[i].accountNumber === sendPerson) {
-                                            var item = layoutUserView.msgListView.repeater.itemAt(i).item
-                                            main_FriendsList[i].chatHistory.push(doc.Msg)
-                                            item.addMsgData(doc.Msg)
-                                            /* 刷新最后一行 */
-                                            updateFriendListViewOneRow(i, doc.Msg.Msg)
-                                            /* 本地缓存最后一行 */
-                                            var chatHistory = {}
-                                            chatHistory.AccountNumber = main_AccountNumber
-                                            chatHistory.FriendAccountNumber = sendPerson
-                                            chatHistory.ChatHistory1 = {}
-                                            chatHistory.ChatHistory1.Msg = doc.Msg.Msg
-                                            chatHistory.ChatHistory1.IsMyMsg = "false"
-                                            chatHistory.ChatHistory1.SendMsgNumber = sendPerson
-                                            chatHistory.ChatHistory2 = {}
-                                            chatHistory.ChatHistory2.Msg = doc.Msg.Msg
-                                            chatHistory.ChatHistory2.IsMyMsg = "false"
-                                            chatHistory.ChatHistory2.SendMsgNumber = sendPerson
-                                            saveLocalCache_ChatHistory(chatHistory)
-                                            break;
+                                            /* 判断是不是群聊 */
+                                            if (sendPerson.match(/[1-9]\d{9}/)) {
+                                                /* 不是 */
+                                                layoutUserView.msgListView.loaderSource = "MyChatView.qml"
+                                                var item = layoutUserView.msgListView.repeater.itemAt(i).item
+                                                main_FriendsList[i].chatHistory.push(doc.Msg)
+                                                item.addMsgData(doc.Msg)
+                                                /* 刷新最后一行 */
+                                                updateFriendListViewOneRow(i, doc.Msg.Msg, main_AccountNumber)
+                                                /* 本地缓存最后一行 */
+                                                var chatHistory = {}
+                                                chatHistory.AccountNumber = main_AccountNumber
+                                                chatHistory.FriendAccountNumber = sendPerson
+                                                chatHistory.ChatHistory1 = {}
+                                                chatHistory.ChatHistory1.Msg = doc.Msg.Msg
+                                                chatHistory.ChatHistory1.IsMyMsg = "false"
+                                                chatHistory.ChatHistory1.SendMsgNumber = sendPerson
+                                                chatHistory.ChatHistory2 = {}
+                                                chatHistory.ChatHistory2.Msg = doc.Msg.Msg
+                                                chatHistory.ChatHistory2.IsMyMsg = "false"
+                                                chatHistory.ChatHistory2.SendMsgNumber = sendPerson
+                                                saveLocalCache_ChatHistory(chatHistory)
+                                                break;
+                                            } else {
+                                                /* 是 */
+                                                layoutUserView.msgListView.loaderSource = "MyGroupChatView.qml"
+                                                var item = layoutUserView.msgListView.repeater.itemAt(i).item
+                                                main_FriendsList[i].chatHistory.push(doc.Msg)
+                                                item.addMsgData(doc.Msg)
+                                                /* 刷新最后一行 */
+                                                updateFriendListViewOneRow(i, doc.Msg.Msg, doc.Msg.SendMsgNumber)
+                                                /* 本地缓存最后一行 */
+                                                var chatHistory = {}
+                                                chatHistory.GroupNumber = sendPerson
+                                                chatHistory.ChatHistory = doc.Msg
+                                                saveLocalCache_GroupChatHistory(chatHistory)
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -586,7 +625,7 @@ ColumnLayout {
             loadIndex = loadIndex+1
             if (loadIndex < main_FriendsList.length) {  //终止条件
                 requestFriendData()  //递归
-            } else loadIndex = 0  //终止：还原loadIndex
+            } else { loadIndex = 0; updateFriendListView() }  //终止：还原loadIndex, 并再次刷新视图
         }
         onFinished_ReceiveFile.connect(onFinished)  //连接
 

@@ -175,8 +175,6 @@ Window {
                                         if (textField.acceptableInput) {
                                             toServer_CreateGroup(textField.text, main_AccountNumber)
                                         } else console.log("输入不合法！")
-
-                                        /* 当前账号加好友：该群聊 */
                                     }
                                 }
                             }

@@ -400,10 +400,10 @@ ColumnLayout {
                     clickColor: "#e2e1e4"
                     clickOpacity: 0.7
                     onClicked: {
-                        myCreateGroupView.visible = true
-                        myCreateGroupView.raise()
-//                        myGroupChatView.visible = true
-//                        myGroupChatView.raise()
+//                        myCreateGroupView.visible = true
+//                        myCreateGroupView.raise()
+                        myGroupChatView.visible = true
+                        myGroupChatView.raise()
                     }
                 }
             }
@@ -444,8 +444,8 @@ ColumnLayout {
         id: myCreateGroupView
         visible: false
     }
-//    MyGroupChatView {
-//        id: myGroupChatView
-//        visible: false
-//    }
+    MyGroupChatView {
+        id: myGroupChatView
+        visible: false
+    }
 }

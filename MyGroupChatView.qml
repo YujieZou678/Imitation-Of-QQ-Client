@@ -10,7 +10,10 @@ import QtQuick.Layouts
 Window {
 
     property string groupNumber: "123456789"  //群聊账号
-    property string groupName: "XX群"    //群聊名
+    property string groupName: "XX群"         //群聊名
+    property string groupLeader: ""           //群主
+    property int index: -1                    //该群聊位于好友列表index
+    property string groupProfileImage: ""     //群头像
 
     function updateData() {     //刷新所有聊天记录
         myGroupMsgListView.updateData()
@@ -21,6 +24,12 @@ Window {
     }
     function addFriend(data) {  //列表添加一个好友
         listModel.append(data)
+    }
+    function updateOneData(index, oneData) {  //更新一个好友信息视图
+        listModel.set(index, oneData)
+    }
+    function clearFriendList() {  //清空列表数据
+        listModel.clear()
     }
 
     id: self
@@ -80,10 +89,31 @@ Window {
                         width: 30
                         anchors.left: objText.right
                         Image {
-                            height: 18
-                            width: 18
-                            source: "qrc:/image/QQ空间1.png"
+                            id: editGroup
+                            height: 17
+                            width: 17
+                            source: "qrc:/image/编辑.png"
                             anchors.centerIn: parent
+                            MouseArea {
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onEntered: {
+                                    cursorShape = Qt.PointingHandCursor
+                                    editGroup.scale = 1.2
+                                }
+                                onExited: {
+                                    cursorShape = Qt.CustomCursor
+                                    editGroup.scale = 1
+                                }
+                                Behavior on scale {
+                                    NumberAnimation { duration: 800; easing.type: Easing.OutQuad }
+                                }
+                                onClicked: {
+                                    /* 进入群资料视图 */
+                                    groupDataView.visible = true
+                                    groupDataView.raise()
+                                }
+                            }
                         }
                     }
                 }
@@ -303,12 +333,13 @@ Window {
                                                         /* 本地缓存 */
                                                         saveLocalCache_GroupChatHistory(chatHistory)
                                                         /* 云缓存 */
+                                                        chatHistory.AccountNumber = main_AccountNumber
                                                         toServer_SaveGroupChatHistory(chatHistory)
 
                                                         /* 刷新对应好友的最后一行聊天记录视图 */
                                                         for (var i=0; i<main_FriendsList.length; i++) {
                                                             if (groupNumber === main_FriendsList[i].accountNumber) {
-                                                                updateFriendListViewOneRow(i, msgText.text)  //更新视图
+                                                                updateFriendListViewOneRow(i, msgText.text, main_AccountNumber)  //更新视图
                                                                 break;
                                                             }
                                                         }
@@ -503,7 +534,13 @@ Window {
                                                                 height: 35
                                                                 scale: 0.8
                                                                 anchors.centerIn: parent
-                                                                source: "qrc:/image/用户.png"
+                                                                source: {
+                                                                    /* 判断是否是群主 */
+                                                                    if (accountNumber === groupLeader) {
+                                                                        /* 群主 */
+                                                                        return "qrc:/image/群主.png"
+                                                                    } else return "qrc:/image/用户.png"
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -518,5 +555,15 @@ Window {
                 }
             }
         }
+    }
+
+    GroupDataView {  //个人资料视图
+        id: groupDataView
+        visible: false
+        profileImage: self.groupProfileImage
+        accountNumber: self.groupNumber
+        nickName: self.groupName
+        groupLeader: self.groupLeader
+        index: self.index
     }
 }

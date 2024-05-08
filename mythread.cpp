@@ -31,7 +31,8 @@ MyThread::MyThread(QObject *parent) :
         {"TransmitMsg", Purpose::TransmitMsg},
         {"CheckGroupNumber", Purpose::CheckGroupNumber},
         {"GetFriendList", Purpose::GetFriendList},
-        {"GetGroupChatHistory", Purpose::GetGroupChatHistory}
+        {"GetGroupChatHistory", Purpose::GetGroupChatHistory},
+        {"GetGroupLeader", Purpose::GetGroupLeader}
     };
 
     //buffer
@@ -216,6 +217,11 @@ void MyThread::onReadyRead()
         /* 得到某群聊的聊天记录 */
         QJsonArray chatHistory = doc["ChatHistory"].toArray();
         emit getReply_GetGroupChatHistory(chatHistory);
+        break;
+    }
+    case Purpose::GetGroupLeader: {
+        QString groupLeader = doc["GroupLeader"].toString();
+        emit getReply_GetGroupLeader(groupLeader);
         break;
     }
     default:
@@ -453,6 +459,7 @@ void MyThread::toServer_SaveGroupChatHistory(QJsonObject obj)
 {
     /* json格式
      * GroupNumber,
+     * AccountNumber,
      * ChatHistory:
      *      Msg,
      *      IsMyMsg,
@@ -478,6 +485,38 @@ void MyThread::toServer_GetGroupChatHistory(const QString &groupNumber)
     socket->write(send_Data);
     qDebug() << "子线程" << QThread::currentThread() << ":"
              << "加载群"+groupNumber+"的聊天记录...";
+}
+
+void MyThread::toServer_AddGroup(QJsonObject obj)
+{
+    /* json格式
+     * GroupNumber,
+     * AccountNumber,
+     * ChatHistory:
+     *      Msg,
+     *      IsMyMsg,
+     *      SendMsgNumber
+    */
+    obj.insert("Purpose", "AddGroup");  //目的
+    QJsonDocument doc(obj);
+    QByteArray send_Data = doc.toJson();
+
+    socket->write(send_Data);
+    qDebug() << "子线程" << QThread::currentThread() << ":"
+             << "添加群聊";
+}
+
+void MyThread::toServer_GetGroupLeader(const QString &groupNumber)
+{
+    QJsonObject json;
+    json.insert("Purpose", "GetGroupLeader");  //目的
+    json.insert("GroupNumber", groupNumber);
+    QJsonDocument doc(json);
+    QByteArray send_Data = doc.toJson();
+
+    socket->write(send_Data);
+    qDebug() << "子线程" << QThread::currentThread() << ":"
+             << "获取群主账号";
 }
 
 
