@@ -159,6 +159,9 @@ Window {
                             MyToolButton {
                                 iconSource: "qrc:/image/图片.png"
                                 clickColor: "#00000000"
+                                onClicked: {
+                                    //
+                                }
                             }
                         }
                         Item {  //振动

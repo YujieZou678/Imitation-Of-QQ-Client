@@ -11,6 +11,7 @@ date: 2024.4.16
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QJsonArray>
+#include <QFile>
 
 #include "mythread.h"
 
@@ -138,6 +139,12 @@ void MyThread::onReadyRead()
     }
     case Purpose::Login: {
         QString reply = doc["Reply"].toString();
+        QString isRepeatOnline = doc["IsRepeatOnline"].toString();
+        if (isRepeatOnline == "true") {
+            qDebug() << "重复登陆！";
+            emit getReply_Login("false");
+            return;
+        }
         emit getReply_Login(reply);
         if (reply == "false") return;  //密码错误
         /* 接收个人信息+好友列表 */
